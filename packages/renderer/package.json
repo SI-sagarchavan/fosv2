@@ -1,0 +1,56 @@
+{
+  "name": "@fanos/renderer",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Web SDUI renderer + visual diff harness for FanOS trees",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./styles.css": "./dist/styles.css"
+  },
+  "bin": {
+    "fos-render": "./dist/bin.js"
+  },
+  "files": ["dist", "fixtures", "public"],
+  "scripts": {
+    "build": "tsup && node scripts/copy-styles.mjs",
+    "watch": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist .next",
+    "dev": "next dev --port 3415",
+    "start": "next start --port 3415",
+    "playwright:install": "playwright install chromium",
+    "fos-render": "node dist/bin.js"
+  },
+
+  "dependencies": {
+    "@fanos/dsl": "workspace:*",
+    "@fanos/tokens": "workspace:*",
+    "next": "^15.1.0",
+    "pixelmatch": "^6.0.0",
+    "playwright": "^1.49.0",
+    "pngjs": "^7.0.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/pngjs": "^6.0.5",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

@@ -1,0 +1,149 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <style>
+      :root {
+        color-scheme: light dark;
+        --fg: var(--figma-color-text, #1a1a1a);
+        --fg-muted: var(--figma-color-text-secondary, #6b6b6b);
+        --bg: var(--figma-color-bg, #ffffff);
+        --border: var(--figma-color-border, #e0e0e0);
+        --accent: var(--figma-color-bg-brand, #0d99ff);
+        --accent-fg: var(--figma-color-text-onbrand, #ffffff);
+        --danger: var(--figma-color-text-danger, #d93025);
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 16px;
+        font:
+          11px/1.5 "Inter",
+          -apple-system,
+          BlinkMacSystemFont,
+          sans-serif;
+        color: var(--fg);
+        background: var(--bg);
+      }
+      h1 {
+        font-size: 12px;
+        font-weight: 600;
+        margin: 0 0 4px;
+      }
+      p.sub {
+        margin: 0 0 14px;
+        color: var(--fg-muted);
+      }
+      button {
+        width: 100%;
+        padding: 8px 12px;
+        border: none;
+        border-radius: 6px;
+        background: var(--accent);
+        color: var(--accent-fg);
+        font-size: 11px;
+        font-weight: 600;
+        cursor: pointer;
+      }
+      button:disabled {
+        opacity: 0.5;
+        cursor: default;
+      }
+      button.secondary {
+        background: transparent;
+        color: var(--fg);
+        border: 1px solid var(--border);
+      }
+      #downloads {
+        margin-top: 12px;
+      }
+      #downloads .hint {
+        color: var(--fg-muted);
+        margin: 8px 0 0;
+      }
+      details {
+        margin-top: 8px;
+      }
+      summary {
+        cursor: pointer;
+        color: var(--fg-muted);
+      }
+      #fileLinks {
+        display: flex;
+        flex-direction: column;
+        gap: 2px;
+        margin-top: 6px;
+      }
+      #fileLinks a {
+        color: var(--accent);
+        text-decoration: none;
+      }
+      #fileLinks a:hover {
+        text-decoration: underline;
+      }
+      #progress {
+        margin-top: 12px;
+        min-height: 16px;
+        color: var(--fg-muted);
+        font-variant-numeric: tabular-nums;
+      }
+      #progress.error {
+        color: var(--danger);
+      }
+      #summary {
+        margin-top: 12px;
+        border-top: 1px solid var(--border);
+        padding-top: 12px;
+        display: none;
+      }
+      #summary.visible {
+        display: block;
+      }
+      dl {
+        margin: 0;
+        display: grid;
+        grid-template-columns: 1fr auto;
+        gap: 4px 12px;
+      }
+      dt {
+        color: var(--fg-muted);
+      }
+      dd {
+        margin: 0;
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+      }
+      dd.warn {
+        color: var(--danger);
+      }
+      .files {
+        margin-top: 12px;
+        color: var(--fg-muted);
+        word-break: break-all;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>FanOS IR Extractor</h1>
+    <p class="sub" id="selection">Select one root frame to begin.</p>
+    <button id="export">Export IR</button>
+    <div id="progress"></div>
+    <div id="summary">
+      <dl id="stats"></dl>
+      <div id="downloads">
+        <button id="saveAll" class="secondary"></button>
+        <p class="hint" id="hint"></p>
+        <details>
+          <summary>Individual files</summary>
+          <div id="fileLinks"></div>
+        </details>
+      </div>
+      <div class="files" id="files"></div>
+    </div>
+    <script>
+      /* __UI_BUNDLE__ */
+    </script>
+  </body>
+</html>

@@ -1,0 +1,39 @@
+{
+  "name": "@fanos/tokens",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Canonical design-token compiler: normalizes a raw theme export, validates it, emits CSS + TypeScript types",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    }
+  },
+  "bin": {
+    "fos-tokens": "./dist/bin.js"
+  },
+  "files": ["dist", "fixtures", "surfaces"],
+  "scripts": {
+    "build": "tsup",
+    "watch": "tsup --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "tsup": "^8.3.5",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

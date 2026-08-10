@@ -1,0 +1,224 @@
+{
+  "assets": {
+    "texture.stripes": "/assets/textures/stripes.png",
+    "texture.noise": "/assets/textures/noise.png",
+    "silhouette.player": "/assets/silhouettes/player.png",
+    "texture.card_bg": "/assets/textures/card_bg.png",
+    "decor.wave": "/assets/decors/wave.png",
+    "logo.birmingham_phoenix": "/assets/logos/birmingham_phoenix.png",
+    "logo.southern_brave": "/assets/logos/southern_brave.png"
+  },
+  "surfaces": {
+    "card_player": {
+      "layers": [
+        {
+          "type": "image",
+          "ref": "asset.texture.card_bg",
+          "fit": "cover"
+        }
+      ]
+    },
+    "card_stat": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.core_sec_500",
+          "opacity": 8
+        }
+      ],
+      "borders": [
+        {
+          "width": 1,
+          "color": "color.core_neu_00",
+          "opacity": 10,
+          "radius": "radius.lg"
+        }
+      ],
+      "radius": "radius.lg"
+    },
+    "sheet_base": {
+      "layers": [
+        {
+          "type": "gradient",
+          "ref": "gradient.nue_vert_1"
+        }
+      ],
+      "radius": "radius.xl",
+      "shadow": "shadow.lg"
+    },
+    "stat_strip": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.background_sec_container_2"
+        }
+      ],
+      "radius": "radius.xl"
+    },
+    "badge_captain": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.background_main_card"
+        }
+      ],
+      "radius": "radius.rounded"
+    },
+    "badge_overseas": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.background_sec_container_2"
+        }
+      ],
+      "radius": "radius.rounded"
+    },
+    "news_card": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.background_main_surface"
+        }
+      ],
+      "radius": "radius.md"
+    },
+    "videos_section": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.background_main_surface"
+        }
+      ]
+    },
+    "button_outline_style_2": {
+      "borders": [
+        {
+          "width": 1,
+          "color": "color.button_outline_style_2_border_default",
+          "radius": "radius.md"
+        }
+      ],
+      "radius": "radius.md"
+    },
+    "video_card": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.background_sec_container"
+        }
+      ],
+      "radius": "radius.lg"
+    },
+    "video_caption": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.background_main_surface"
+        }
+      ],
+      "radius": "radius.md"
+    },
+    "duration_badge": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.background_sec_container"
+        }
+      ],
+      "radius": "radius.xs"
+    },
+    "fixture_card": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.background_main_surface"
+        }
+      ]
+    },
+    "tag_gender": {
+      "layers": [
+        {
+          "type": "gradient",
+          "ref": "gradient.prim_sec_horiz_2"
+        }
+      ],
+      "radius": "radius.xs"
+    },
+    "button_filled_style_2": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.button_filled_style_2_surface_default"
+        }
+      ],
+      "radius": "radius.sm"
+    },
+    "fixture_shell": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.background_main_card"
+        }
+      ],
+      "radius": "radius.md"
+    },
+    "date_strip": {
+      "layers": [
+        {
+          "type": "gradient",
+          "ref": "gradient.sec_vert_4"
+        }
+      ],
+      "radius": "radius.md"
+    },
+    "newsletter_section": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.background_sec_card"
+        }
+      ]
+    },
+    "newsletter_input": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.background_sec_container_2"
+        }
+      ],
+      "borders": [
+        {
+          "width": 0.5,
+          "color": "color.border_sec_default",
+          "radius": "radius.lg"
+        }
+      ],
+      "radius": "radius.lg"
+    },
+    "button_filled_style_1": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.button_filled_style_1_surface_default"
+        }
+      ],
+      "radius": "radius.md"
+    },
+    "checkbox_checked": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.button_filled_style_1_surface_default"
+        }
+      ],
+      "borders": [
+        {
+          "width": 1.429,
+          "color": "color.button_filled_style_1_text_default",
+          "radius": "radius.xs"
+        }
+      ],
+      "radius": "radius.xs"
+    }
+  }
+}

@@ -1,0 +1,15 @@
+node_modules/
+dist/
+coverage/
+*.log
+.DS_Store
+.turbo/
+out/
+
+# Next.js build output and dev cache — 35MB of webpack packs, all regenerable
+.next/
+*.tsbuildinfo
+
+# Playwright/vitest scratch
+test-results/
+playwright-report/

@@ -1,0 +1,12 @@
+{
+  "player": {
+    "name": "Ben\nMcKinney",
+    "role": "Batter",
+    "cutout": "/players/molineux.png",
+    "stats": {
+      "matches": "10",
+      "runs": "300",
+      "strikeRate": "116.67"
+    }
+  }
+}

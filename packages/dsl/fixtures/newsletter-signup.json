@@ -1,0 +1,259 @@
+{
+  "schemaVersion": "1.0.0",
+  "nodes": [
+    {
+      "id": "section",
+      "parent": null,
+      "idx": 0,
+      "type": "Stack",
+      "src": "1:5093",
+      "props": {
+        "direction": "row",
+        "align": "center",
+        "justify": "between",
+        "space": {
+          "py": "space.10",
+          "px": "space.15"
+        },
+        "surface": "surface.newsletter_section",
+        "size": {
+          "w": "full"
+        }
+      }
+    },
+    {
+      "id": "copy",
+      "parent": "section",
+      "idx": 0,
+      "type": "Stack",
+      "src": "1:5094",
+      "props": {
+        "direction": "column",
+        "gap": "space.4",
+        "size": {
+          "w": {
+            "raw": 514,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "heading",
+      "parent": "copy",
+      "idx": 0,
+      "type": "Text",
+      "src": "1:5095",
+      "props": {
+        "content": "{newsletter.heading}",
+        "style": "type.dp_4_regular",
+        "tone": "color.text_invert_high",
+        "as": "h2"
+      }
+    },
+    {
+      "id": "blurb",
+      "parent": "copy",
+      "idx": 1,
+      "type": "Text",
+      "src": "1:5096",
+      "props": {
+        "content": "{newsletter.blurb}",
+        "style": "type.body_md_regular",
+        "tone": "color.text_sec_medium"
+      }
+    },
+    {
+      "id": "rule",
+      "parent": "section",
+      "idx": 1,
+      "type": "Divider",
+      "src": "1:5097",
+      "props": {
+        "orientation": "vertical",
+        "tone": "color.border_main_disable",
+        "opacity": "opacity.30"
+      }
+    },
+    {
+      "id": "form",
+      "parent": "section",
+      "idx": 2,
+      "type": "Stack",
+      "src": "1:5098",
+      "props": {
+        "direction": "column",
+        "gap": "space.3_5",
+        "size": {
+          "w": "auto"
+        }
+      }
+    },
+    {
+      "id": "field",
+      "parent": "form",
+      "idx": 0,
+      "type": "Overlay",
+      "src": "1:5099",
+      "props": {
+        "surface": "surface.newsletter_input",
+        "size": {
+          "w": {
+            "raw": 509,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 52,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "placeholder",
+      "parent": "field",
+      "idx": 0,
+      "type": "Text",
+      "src": "1:5114",
+      "props": {
+        "content": "{newsletter.placeholder}",
+        "style": "type.body_sm_regular",
+        "tone": "color.text_sec_disable",
+        "place": {
+          "anchor": "mid-start",
+          "offset": {
+            "inline": {
+              "raw": 17.64,
+              "_unbound": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "submit",
+      "parent": "field",
+      "idx": 1,
+      "type": "Stack",
+      "src": "1:5101",
+      "props": {
+        "direction": "row",
+        "align": "center",
+        "justify": "center",
+        "gap": "space.1",
+        "space": {
+          "py": "space.1_5",
+          "px": "space.3"
+        },
+        "surface": "surface.button_filled_style_1",
+        "place": {
+          "anchor": "mid-end",
+          "offset": {
+            "inline": {
+              "raw": 10,
+              "_unbound": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "submit_label",
+      "parent": "submit",
+      "idx": 0,
+      "type": "Text",
+      "src": "I1:5101;13031:7705;13031:7501",
+      "props": {
+        "content": "{newsletter.cta}",
+        "style": "type.button_sm",
+        "tone": "color.button_filled_style_1_text_default"
+      }
+    },
+    {
+      "id": "submit_icon",
+      "parent": "submit",
+      "idx": 1,
+      "type": "Icon",
+      "src": "I1:5101;13031:7705;13031:7621",
+      "props": {
+        "name": "arrow_up_right",
+        "size": {
+          "raw": 18,
+          "_unbound": true
+        },
+        "tone": "color.button_filled_style_1_text_default"
+      }
+    },
+    {
+      "id": "consent",
+      "parent": "form",
+      "idx": 1,
+      "type": "Stack",
+      "src": "1:5115",
+      "props": {
+        "direction": "row",
+        "align": "start",
+        "gap": "space.3",
+        "size": {
+          "w": {
+            "raw": 515,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "consent_box",
+      "parent": "consent",
+      "idx": 0,
+      "type": "Stack",
+      "src": "1:5116",
+      "props": {
+        "direction": "row",
+        "align": "center",
+        "justify": "center",
+        "surface": "surface.checkbox_checked",
+        "size": {
+          "w": {
+            "raw": 20,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 20,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "consent_check",
+      "parent": "consent_box",
+      "idx": 0,
+      "type": "Icon",
+      "src": "1:5119",
+      "props": {
+        "name": "check",
+        "size": {
+          "raw": 10,
+          "_unbound": true
+        },
+        "tone": "color.button_filled_style_1_text_default"
+      }
+    },
+    {
+      "id": "consent_text",
+      "parent": "consent",
+      "idx": 1,
+      "type": "Text",
+      "src": "1:5123",
+      "props": {
+        "content": "{newsletter.consent}",
+        "style": "type.body_sm_regular",
+        "tone": "color.text_sec_medium",
+        "size": {
+          "w": "full"
+        }
+      }
+    }
+  ]
+}

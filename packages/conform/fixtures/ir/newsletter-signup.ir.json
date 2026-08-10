@@ -1,0 +1,1394 @@
+{
+ "fileKey": null,
+ "fileName": "Untitled",
+ "pageName": "Page 1",
+ "rootNodeId": "1:5093",
+ "extractedAt": "2026-08-09T12:13:15.966Z",
+ "irVersion": "1.1.0",
+ "breakpointHint": 1366,
+ "root": {
+  "id": "1:5093",
+  "name": "news later",
+  "type": "FRAME",
+  "layout": {
+   "mode": "horizontal",
+   "gap": {
+    "value": 28,
+    "unbound": true
+   },
+   "padding": {
+    "top": {
+     "value": 40,
+     "tokenRef": "10",
+     "unbound": false
+    },
+    "right": {
+     "value": 98,
+     "tokenRef": "15",
+     "unbound": false
+    },
+    "bottom": {
+     "value": 40,
+     "tokenRef": "10",
+     "unbound": false
+    },
+    "left": {
+     "value": 98,
+     "tokenRef": "15",
+     "unbound": false
+    }
+   },
+   "align": "CENTER",
+   "justify": "SPACE_BETWEEN",
+   "wrap": false,
+   "sizing": {
+    "w": "fixed",
+    "h": "hug"
+   },
+   "positioning": "auto"
+  },
+  "geometry": {
+   "bbox": {
+    "x": 0,
+    "y": 768,
+    "w": 1366,
+    "h": 190
+   },
+   "relBbox": {
+    "x": 0,
+    "y": 0,
+    "w": 1366,
+    "h": 190
+   },
+   "aspect": 7.1895,
+   "aspectBucket": "ultrawide"
+  },
+  "fill": {
+   "tokenRef": "background/sec/card",
+   "unbound": false
+  },
+  "stroke": null,
+  "radius": {
+   "value": 0,
+   "tokenRef": "none",
+   "unbound": false
+  },
+  "effects": [],
+  "opacity": 1,
+  "clipsContent": true,
+  "structuralSignature": "s2:b0e3f1a260812dab",
+  "canonicalSignature": "c1:24b4bd57632a6f97",
+  "repeatedSiblings": 1,
+  "depth": 0,
+  "childCount": 3,
+  "children": [
+   {
+    "id": "1:5094",
+    "name": "Frame 1984079074",
+    "type": "FRAME",
+    "layout": {
+     "mode": "vertical",
+     "gap": {
+      "value": 16,
+      "tokenRef": "4",
+      "unbound": false
+     },
+     "padding": {
+      "top": {
+       "value": 0,
+       "unbound": false
+      },
+      "right": {
+       "value": 0,
+       "unbound": false
+      },
+      "bottom": {
+       "value": 0,
+       "unbound": false
+      },
+      "left": {
+       "value": 0,
+       "unbound": false
+      }
+     },
+     "align": "MIN",
+     "justify": "MIN",
+     "wrap": false,
+     "sizing": {
+      "w": "fixed",
+      "h": "hug"
+     },
+     "positioning": "auto"
+    },
+    "geometry": {
+     "bbox": {
+      "x": 98,
+      "y": 813.5,
+      "w": 514,
+      "h": 99
+     },
+     "relBbox": {
+      "x": 98,
+      "y": 45.5,
+      "w": 514,
+      "h": 99
+     },
+     "aspect": 5.1919,
+     "aspectBucket": "ultrawide"
+    },
+    "fill": null,
+    "stroke": null,
+    "radius": {
+     "value": 0,
+     "unbound": false
+    },
+    "effects": [],
+    "opacity": 1,
+    "clipsContent": false,
+    "structuralSignature": "s2:cafd59bb1b06b389",
+    "canonicalSignature": "c1:2dcbafbf816f523e",
+    "repeatedSiblings": 1,
+    "depth": 1,
+    "childCount": 2,
+    "children": [
+     {
+      "id": "1:5095",
+      "name": "FIRST TO KNOW. FIRST THROUGH THE GATE.",
+      "type": "TEXT",
+      "layout": {
+       "mode": "none",
+       "gap": null,
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": null,
+       "justify": null,
+       "wrap": false,
+       "sizing": {
+        "w": "fill",
+        "h": "hug"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 98,
+        "y": 813.5,
+        "w": 514,
+        "h": 53
+       },
+       "relBbox": {
+        "x": 0,
+        "y": 0,
+        "w": 514,
+        "h": 53
+       },
+       "aspect": 9.6981,
+       "aspectBucket": "ultrawide"
+      },
+      "fill": {
+       "tokenRef": "text/invert/high",
+       "unbound": false
+      },
+      "stroke": null,
+      "radius": null,
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "text": {
+       "characters": "FIRST TO KNOW. \nFIRST THROUGH THE GATE.",
+       "styleRef": "dp_4/regular",
+       "styleId": "S:e02ae9496ed33a57fc8a130b0cfdee2d07ee612d,18101:265",
+       "unbound": false,
+       "fontSize": 32,
+       "fontFamily": "Bakbak One",
+       "fontWeight": 400,
+       "lineHeight": 34,
+       "autoResize": "HEIGHT",
+       "lines": 2
+      },
+      "structuralSignature": "s2:1c57ca8701872a3a",
+      "canonicalSignature": "c1:4201341993b0a54f",
+      "repeatedSiblings": 2,
+      "depth": 2,
+      "childCount": 0,
+      "children": []
+     },
+     {
+      "id": "1:5096",
+      "name": "Sign up for Southern Brave updates — land everything from early ticket access and exclusive content to special offers.",
+      "type": "TEXT",
+      "layout": {
+       "mode": "none",
+       "gap": null,
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": null,
+       "justify": null,
+       "wrap": false,
+       "sizing": {
+        "w": "fill",
+        "h": "hug"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 98,
+        "y": 882.5,
+        "w": 514,
+        "h": 30
+       },
+       "relBbox": {
+        "x": 0,
+        "y": 69,
+        "w": 514,
+        "h": 30
+       },
+       "aspect": 17.1333,
+       "aspectBucket": "ultrawide"
+      },
+      "fill": {
+       "tokenRef": "text/sec/medium",
+       "unbound": false
+      },
+      "stroke": null,
+      "radius": null,
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "text": {
+       "characters": "Sign up for Southern Brave updates — land everything from early ticket access and exclusive content to special offers.",
+       "styleRef": "body_md/regular",
+       "styleId": "S:c93e99f7a75ad78d425345f163dfa054e6925127,18101:274",
+       "unbound": false,
+       "fontSize": 14,
+       "fontFamily": "Montserrat",
+       "fontWeight": 400,
+       "lineHeight": 20,
+       "autoResize": "HEIGHT",
+       "lines": 2
+      },
+      "structuralSignature": "s2:1c57ca8701872a3a",
+      "canonicalSignature": "c1:4201341993b0a54f",
+      "repeatedSiblings": 2,
+      "depth": 2,
+      "childCount": 0,
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "1:5097",
+    "name": "Line 411",
+    "type": "VECTOR",
+    "layout": {
+     "mode": "none",
+     "gap": null,
+     "padding": {
+      "top": {
+       "value": 0,
+       "unbound": false
+      },
+      "right": {
+       "value": 0,
+       "unbound": false
+      },
+      "bottom": {
+       "value": 0,
+       "unbound": false
+      },
+      "left": {
+       "value": 0,
+       "unbound": false
+      }
+     },
+     "align": null,
+     "justify": null,
+     "wrap": false,
+     "sizing": {
+      "w": "fixed",
+      "h": "fill"
+     },
+     "positioning": "auto"
+    },
+    "geometry": {
+     "bbox": {
+      "x": 682.4999951917484,
+      "y": 808,
+      "w": 0.00000480825156046194,
+      "h": 110
+     },
+     "relBbox": {
+      "x": 682.5,
+      "y": 40,
+      "w": 110,
+      "h": 0
+     },
+     "aspect": 0,
+     "aspectBucket": "square"
+    },
+    "fill": null,
+    "stroke": {
+     "tokenRef": "border/main/disable",
+     "weight": 1,
+     "unbound": false
+    },
+    "radius": null,
+    "effects": [],
+    "opacity": 0.30000001192092896,
+    "clipsContent": false,
+    "structuralSignature": "s2:c111566e1c14785f",
+    "canonicalSignature": "c1:06130900060d32ba",
+    "repeatedSiblings": 1,
+    "depth": 1,
+    "childCount": 0,
+    "children": []
+   },
+   {
+    "id": "1:5098",
+    "name": "Frame 1984079078",
+    "type": "FRAME",
+    "layout": {
+     "mode": "vertical",
+     "gap": {
+      "value": 14,
+      "tokenRef": "3_5",
+      "unbound": false
+     },
+     "padding": {
+      "top": {
+       "value": 0,
+       "unbound": false
+      },
+      "right": {
+       "value": 0,
+       "unbound": false
+      },
+      "bottom": {
+       "value": 0,
+       "unbound": false
+      },
+      "left": {
+       "value": 0,
+       "unbound": false
+      }
+     },
+     "align": "MIN",
+     "justify": "MIN",
+     "wrap": false,
+     "sizing": {
+      "w": "hug",
+      "h": "hug"
+     },
+     "positioning": "auto"
+    },
+    "geometry": {
+     "bbox": {
+      "x": 753,
+      "y": 808,
+      "w": 515,
+      "h": 110
+     },
+     "relBbox": {
+      "x": 753,
+      "y": 40,
+      "w": 515,
+      "h": 110
+     },
+     "aspect": 4.6818,
+     "aspectBucket": "ultrawide"
+    },
+    "fill": null,
+    "stroke": null,
+    "radius": {
+     "value": 0,
+     "unbound": false
+    },
+    "effects": [],
+    "opacity": 1,
+    "clipsContent": false,
+    "structuralSignature": "s2:3055b18038e44bf3",
+    "canonicalSignature": "c1:73b982a06cbbd4ea",
+    "repeatedSiblings": 1,
+    "depth": 1,
+    "childCount": 2,
+    "children": [
+     {
+      "id": "1:5099",
+      "name": "Group 427319824",
+      "type": "GROUP",
+      "layout": {
+       "mode": "none",
+       "gap": null,
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": null,
+       "justify": null,
+       "wrap": false,
+       "sizing": {
+        "w": "fixed",
+        "h": "fixed"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 753,
+        "y": 808,
+        "w": 509,
+        "h": 52
+       },
+       "relBbox": {
+        "x": 0,
+        "y": 0,
+        "w": 509,
+        "h": 52
+       },
+       "aspect": 9.7885,
+       "aspectBucket": "ultrawide"
+      },
+      "fill": null,
+      "stroke": null,
+      "radius": null,
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "structuralSignature": "s2:331b177aa1856d9e",
+      "canonicalSignature": "c1:5ce2b5f459bbf371",
+      "repeatedSiblings": 1,
+      "depth": 2,
+      "childCount": 3,
+      "children": [
+       {
+        "id": "1:5100",
+        "name": "Rectangle 3464259",
+        "type": "VECTOR",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "fixed",
+          "h": "fixed"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 753,
+          "y": 808,
+          "w": 509,
+          "h": 52
+         },
+         "relBbox": {
+          "x": 0,
+          "y": 0,
+          "w": 509,
+          "h": 52
+         },
+         "aspect": 9.7885,
+         "aspectBucket": "ultrawide"
+        },
+        "fill": {
+         "tokenRef": "background/sec/container_2",
+         "unbound": false
+        },
+        "stroke": {
+         "tokenRef": "border/sec/default",
+         "weight": 0.5,
+         "unbound": false
+        },
+        "radius": {
+         "value": 12,
+         "tokenRef": "lg",
+         "unbound": false
+        },
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "structuralSignature": "s2:62a4b001015234d6",
+        "canonicalSignature": "c1:24ed0d237b3ec68b",
+        "repeatedSiblings": 1,
+        "depth": 3,
+        "childCount": 0,
+        "children": []
+       },
+       {
+        "id": "1:5101",
+        "name": "atom_button",
+        "type": "INSTANCE",
+        "componentKey": "2d6ff870a47863eca66c95537466919e3c5e1e23",
+        "layout": {
+         "mode": "vertical",
+         "gap": {
+          "value": 0,
+          "unbound": false
+         },
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": "CENTER",
+         "justify": "CENTER",
+         "wrap": false,
+         "sizing": {
+          "w": "hug",
+          "h": "hug"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 1162.44091796875,
+          "y": 818,
+          "w": 90,
+          "h": 32
+         },
+         "relBbox": {
+          "x": 409.44091796875,
+          "y": 10,
+          "w": 90,
+          "h": 32
+         },
+         "aspect": 2.8125,
+         "aspectBucket": "wide"
+        },
+        "fill": null,
+        "stroke": null,
+        "radius": {
+         "value": 8,
+         "tokenRef": "md",
+         "unbound": false
+        },
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "structuralSignature": "s2:17121f56be0c1454",
+        "canonicalSignature": "c1:4c82698237ddd237",
+        "repeatedSiblings": 1,
+        "depth": 3,
+        "childCount": 1,
+        "children": [
+         {
+          "id": "I1:5101;13031:7705",
+          "name": "atom_button_master",
+          "type": "INSTANCE",
+          "componentKey": "177f35a6fa32affdb2f9b567ebff0f52edb37a35",
+          "layout": {
+           "mode": "horizontal",
+           "gap": {
+            "value": 4,
+            "tokenRef": "spacing/1",
+            "unbound": false
+           },
+           "padding": {
+            "top": {
+             "value": 10,
+             "tokenRef": "spacing/2_5",
+             "unbound": false
+            },
+            "right": {
+             "value": 12,
+             "tokenRef": "3",
+             "unbound": false
+            },
+            "bottom": {
+             "value": 10,
+             "tokenRef": "spacing/2_5",
+             "unbound": false
+            },
+            "left": {
+             "value": 12,
+             "tokenRef": "3",
+             "unbound": false
+            }
+           },
+           "align": "CENTER",
+           "justify": "CENTER",
+           "wrap": false,
+           "sizing": {
+            "w": "hug",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 1162.44091796875,
+            "y": 818,
+            "w": 90,
+            "h": 32
+           },
+           "relBbox": {
+            "x": 0,
+            "y": 0,
+            "w": 90,
+            "h": 32
+           },
+           "aspect": 2.8125,
+           "aspectBucket": "wide"
+          },
+          "fill": {
+           "tokenRef": "button/filled/style_1/surface/default",
+           "unbound": false
+          },
+          "stroke": null,
+          "radius": {
+           "value": 8,
+           "tokenRef": "md",
+           "unbound": false
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:1bf2c4b08414ef8b",
+          "canonicalSignature": "c1:fe812f17fe943eb1",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 2,
+          "children": [
+           {
+            "id": "I1:5101;13031:7705;13031:7501",
+            "name": "atom_text",
+            "type": "TEXT",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "hug",
+              "h": "hug"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 1174.44091796875,
+              "y": 824,
+              "w": 44,
+              "h": 20
+             },
+             "relBbox": {
+              "x": 12,
+              "y": 6,
+              "w": 44,
+              "h": 20
+             },
+             "aspect": 2.2,
+             "aspectBucket": "wide"
+            },
+            "fill": {
+             "tokenRef": "button/filled/style_1/text/default",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": null,
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "text": {
+             "characters": "SIGN UP",
+             "styleRef": "button/sm",
+             "styleId": "S:f50e8600d0aeeda899ed3bf4fafbedd22f161fa6,18303:2",
+             "unbound": false,
+             "fontSize": 10,
+             "fontFamily": "Montserrat",
+             "fontWeight": 700,
+             "lineHeight": 20,
+             "autoResize": "WIDTH_AND_HEIGHT",
+             "lines": 1
+            },
+            "structuralSignature": "s2:3dc6d74c9ab7bde9",
+            "canonicalSignature": "c1:98dd98822112fb40",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:5101;13031:7705;13031:7621",
+            "name": "atom_icon_arrow_up_right",
+            "type": "INSTANCE",
+            "componentKey": "d7a6bfdd4208d30b2b71fb19431ffb9bd09b81de",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": "MIN",
+             "justify": "MIN",
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 1222.44091796875,
+              "y": 825,
+              "w": 17.999998092651367,
+              "h": 17.999998092651367
+             },
+             "relBbox": {
+              "x": 60,
+              "y": 7.000000953674316,
+              "w": 17.999998092651367,
+              "h": 17.999998092651367
+             },
+             "aspect": 1,
+             "aspectBucket": "square"
+            },
+            "fill": null,
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:f66b3f5682f80e61",
+            "canonicalSignature": "c1:bbb51f2e6400c83c",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 1,
+            "children": [
+             {
+              "id": "I1:5101;13031:7705;13031:7621;8899:77655",
+              "name": "Vector",
+              "type": "VECTOR",
+              "layout": {
+               "mode": "none",
+               "gap": null,
+               "padding": {
+                "top": {
+                 "value": 0,
+                 "unbound": false
+                },
+                "right": {
+                 "value": 0,
+                 "unbound": false
+                },
+                "bottom": {
+                 "value": 0,
+                 "unbound": false
+                },
+                "left": {
+                 "value": 0,
+                 "unbound": false
+                }
+               },
+               "align": null,
+               "justify": null,
+               "wrap": false,
+               "sizing": {
+                "w": "fixed",
+                "h": "fixed"
+               },
+               "positioning": "auto"
+              },
+              "geometry": {
+               "bbox": {
+                "x": 1226.3780517578125,
+                "y": 828.9375,
+                "w": 10.125311851501465,
+                "h": 10.125311851501465
+               },
+               "relBbox": {
+                "x": 3.9371869564056396,
+                "y": 3.937499523162842,
+                "w": 10.125311851501465,
+                "h": 10.125311851501465
+               },
+               "aspect": 1,
+               "aspectBucket": "square"
+              },
+              "fill": {
+               "tokenRef": "button/filled/style_1/text/default",
+               "unbound": false
+              },
+              "stroke": null,
+              "radius": {
+               "value": 0,
+               "unbound": false
+              },
+              "effects": [],
+              "opacity": 1,
+              "clipsContent": false,
+              "structuralSignature": "s2:680f32eb449d31f4",
+              "canonicalSignature": "c1:d460f489cf5c334d",
+              "repeatedSiblings": 1,
+              "depth": 6,
+              "childCount": 0,
+              "children": []
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "id": "1:5114",
+        "name": "Your Email Address",
+        "type": "TEXT",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "fixed",
+          "h": "fixed"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 770.6416015625,
+          "y": 830,
+          "w": 145.0613250732422,
+          "h": 8
+         },
+         "relBbox": {
+          "x": 17.6416072845459,
+          "y": 22,
+          "w": 145.0613250732422,
+          "h": 8
+         },
+         "aspect": 18.1327,
+         "aspectBucket": "ultrawide"
+        },
+        "fill": {
+         "tokenRef": "text/sec/disable",
+         "unbound": false
+        },
+        "stroke": null,
+        "radius": null,
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "text": {
+         "characters": "Your Email Address",
+         "styleRef": "body_sm/regular",
+         "styleId": "S:58f7d8b18b697d95d60b0e65f8918af7cedf6f64,18116:1",
+         "unbound": false,
+         "fontSize": 12,
+         "fontFamily": "Montserrat",
+         "fontWeight": 400,
+         "lineHeight": 18,
+         "autoResize": "HEIGHT",
+         "lines": 1
+        },
+        "structuralSignature": "s2:55a2f40d9193a189",
+        "canonicalSignature": "c1:27b9baff4c5dc578",
+        "repeatedSiblings": 1,
+        "depth": 3,
+        "childCount": 0,
+        "children": []
+       }
+      ]
+     },
+     {
+      "id": "1:5115",
+      "name": "Frame 1321314550",
+      "type": "FRAME",
+      "layout": {
+       "mode": "horizontal",
+       "gap": {
+        "value": 12,
+        "tokenRef": "3",
+        "unbound": false
+       },
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": "MIN",
+       "justify": "CENTER",
+       "wrap": false,
+       "sizing": {
+        "w": "fixed",
+        "h": "hug"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 753,
+        "y": 874,
+        "w": 515,
+        "h": 44
+       },
+       "relBbox": {
+        "x": 0,
+        "y": 66,
+        "w": 515,
+        "h": 44
+       },
+       "aspect": 11.7045,
+       "aspectBucket": "ultrawide"
+      },
+      "fill": null,
+      "stroke": null,
+      "radius": {
+       "value": 0,
+       "unbound": false
+      },
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "structuralSignature": "s2:6d942bf9892ce0d8",
+      "canonicalSignature": "c1:3822c1b7e5fe20a3",
+      "repeatedSiblings": 1,
+      "depth": 2,
+      "childCount": 2,
+      "children": [
+       {
+        "id": "1:5116",
+        "name": "Group 1321314801",
+        "type": "GROUP",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "fixed",
+          "h": "fixed"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 753,
+          "y": 874,
+          "w": 20,
+          "h": 20
+         },
+         "relBbox": {
+          "x": 0,
+          "y": 0,
+          "w": 20,
+          "h": 20
+         },
+         "aspect": 1,
+         "aspectBucket": "square"
+        },
+        "fill": null,
+        "stroke": null,
+        "radius": null,
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "structuralSignature": "s2:50047994223fc848",
+        "canonicalSignature": "c1:1ddb0faf6c7b2598",
+        "repeatedSiblings": 1,
+        "depth": 3,
+        "childCount": 2,
+        "children": [
+         {
+          "id": "1:5118",
+          "name": "Rectangle 3464284",
+          "type": "VECTOR",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": null,
+           "justify": null,
+           "wrap": false,
+           "sizing": {
+            "w": "fixed",
+            "h": "fixed"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 753,
+            "y": 874,
+            "w": 20,
+            "h": 20
+           },
+           "relBbox": {
+            "x": 0,
+            "y": 0,
+            "w": 20,
+            "h": 20
+           },
+           "aspect": 1,
+           "aspectBucket": "square"
+          },
+          "fill": {
+           "tokenRef": "button/filled/style_1/surface/default",
+           "unbound": false
+          },
+          "stroke": {
+           "tokenRef": "button/filled/style_1/text/default",
+           "weight": 1.429,
+           "unbound": false
+          },
+          "radius": {
+           "value": 2.857,
+           "unbound": true
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:680f32eb449d31f4",
+          "canonicalSignature": "c1:d460f489cf5c334d",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 0,
+          "children": []
+         },
+         {
+          "id": "1:5119",
+          "name": "Vector",
+          "type": "VECTOR",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": null,
+           "justify": null,
+           "wrap": false,
+           "sizing": {
+            "w": "fixed",
+            "h": "fixed"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 758.714111328125,
+            "y": 882.571533203125,
+            "w": 7.142857074737549,
+            "h": 4.285714149475098
+           },
+           "relBbox": {
+            "x": 5.714111328125,
+            "y": 8.57152271270752,
+            "w": 7.142857074737549,
+            "h": 4.285714149475098
+           },
+           "aspect": 1.6667,
+           "aspectBucket": "landscape"
+          },
+          "fill": {
+           "tokenRef": "button/filled/style_1/surface/default",
+           "unbound": false
+          },
+          "stroke": {
+           "tokenRef": "button/filled/style_1/text/default",
+           "weight": 1.429,
+           "unbound": false
+          },
+          "radius": {
+           "value": 0,
+           "unbound": false
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:fd793b993d39c0d8",
+          "canonicalSignature": "c1:d0c1578780197f5d",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 0,
+          "children": []
+         }
+        ]
+       },
+       {
+        "id": "1:5123",
+        "name": "I'd like to hear from Southern Brave about ticket news, exclusive content, competitions and special offers. By clicking Submit, you confirm you have read and understood our Privacy Policy.",
+        "type": "TEXT",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "fill",
+          "h": "hug"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 785,
+          "y": 874,
+          "w": 483,
+          "h": 44
+         },
+         "relBbox": {
+          "x": 32,
+          "y": 0,
+          "w": 483,
+          "h": 44
+         },
+         "aspect": 10.9773,
+         "aspectBucket": "ultrawide"
+        },
+        "fill": {
+         "tokenRef": "text/sec/medium",
+         "unbound": false
+        },
+        "stroke": null,
+        "radius": null,
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "text": {
+         "characters": "I'd like to hear from Southern Brave about ticket news, exclusive content, competitions and special offers. By clicking Submit, you confirm you have read and understood our Privacy Policy.",
+         "styleRef": "body_sm/regular",
+         "styleId": "S:58f7d8b18b697d95d60b0e65f8918af7cedf6f64,18116:1",
+         "unbound": false,
+         "fontSize": 12,
+         "fontFamily": "Montserrat",
+         "fontWeight": 400,
+         "lineHeight": 18,
+         "autoResize": "HEIGHT",
+         "lines": 2
+        },
+        "structuralSignature": "s2:1c57ca8701872a3a",
+        "canonicalSignature": "c1:4201341993b0a54f",
+        "repeatedSiblings": 1,
+        "depth": 3,
+        "childCount": 0,
+        "children": []
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}

@@ -1,0 +1,1034 @@
+{
+ "fileKey": null,
+ "fileName": "Untitled",
+ "pageName": "Page 1",
+ "rootNodeId": "1:4920",
+ "extractedAt": "2026-08-07T03:39:11.723Z",
+ "irVersion": "1.1.0",
+ "breakpointHint": 1366,
+ "root": {
+  "id": "1:4920",
+  "name": "Leading Column",
+  "type": "FRAME",
+  "layout": {
+   "mode": "vertical",
+   "gap": {
+    "value": 0,
+    "tokenRef": "0",
+    "unbound": false
+   },
+   "padding": {
+    "top": {
+     "value": 0,
+     "tokenRef": "0",
+     "unbound": false
+    },
+    "right": {
+     "value": 0,
+     "tokenRef": "0",
+     "unbound": false
+    },
+    "bottom": {
+     "value": 0,
+     "tokenRef": "0",
+     "unbound": false
+    },
+    "left": {
+     "value": 0,
+     "tokenRef": "0",
+     "unbound": false
+    }
+   },
+   "align": "MIN",
+   "justify": "MIN",
+   "wrap": false,
+   "sizing": {
+    "w": "fill",
+    "h": "fill"
+   },
+   "positioning": "auto"
+  },
+  "geometry": {
+   "bbox": {
+    "x": 98,
+    "y": 3165.64208984375,
+    "w": 379.3333435058594,
+    "h": 380
+   },
+   "relBbox": {
+    "x": 0,
+    "y": 0,
+    "w": 379.3333435058594,
+    "h": 380
+   },
+   "aspect": 0.9982,
+   "aspectBucket": "square"
+  },
+  "fill": {
+   "tokenRef": "background/main/surface",
+   "unbound": false
+  },
+  "stroke": null,
+  "radius": {
+   "value": 8,
+   "tokenRef": "md",
+   "unbound": false
+  },
+  "effects": [],
+  "opacity": 1,
+  "clipsContent": true,
+  "structuralSignature": "s2:be4ac041ac861fc4",
+  "canonicalSignature": "c1:fe0670ed73b55583",
+  "repeatedSiblings": 1,
+  "depth": 4,
+  "childCount": 2,
+  "children": [
+   {
+    "id": "1:4921",
+    "name": "Thumbnail",
+    "type": "FRAME",
+    "layout": {
+     "mode": "none",
+     "gap": null,
+     "padding": {
+      "top": {
+       "value": 0,
+       "unbound": false
+      },
+      "right": {
+       "value": 0,
+       "unbound": false
+      },
+      "bottom": {
+       "value": 0,
+       "unbound": false
+      },
+      "left": {
+       "value": 0,
+       "unbound": false
+      }
+     },
+     "align": "MIN",
+     "justify": "MIN",
+     "wrap": false,
+     "sizing": {
+      "w": "fill",
+      "h": "fixed"
+     },
+     "positioning": "auto"
+    },
+    "geometry": {
+     "bbox": {
+      "x": 98,
+      "y": 3165.64208984375,
+      "w": 379.3333435058594,
+      "h": 213.375
+     },
+     "relBbox": {
+      "x": 0,
+      "y": 0,
+      "w": 379.3333435058594,
+      "h": 213.375
+     },
+     "aspect": 1.7778,
+     "aspectBucket": "landscape"
+    },
+    "fill": null,
+    "stroke": null,
+    "radius": {
+     "value": 0,
+     "unbound": false
+    },
+    "effects": [],
+    "opacity": 1,
+    "clipsContent": true,
+    "structuralSignature": "s2:beefcd25ae5b1e9c",
+    "canonicalSignature": "c1:efd9e52bf9abb0c9",
+    "repeatedSiblings": 1,
+    "depth": 5,
+    "childCount": 1,
+    "children": [
+     {
+      "id": "1:4922",
+      "name": "image",
+      "type": "IMAGE",
+      "layout": {
+       "mode": "none",
+       "gap": null,
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": null,
+       "justify": null,
+       "wrap": false,
+       "sizing": {
+        "w": "fixed",
+        "h": "fixed"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 77,
+        "y": 3164.14208984375,
+        "w": 455,
+        "h": 369
+       },
+       "relBbox": {
+        "x": -21,
+        "y": -1.5,
+        "w": 455,
+        "h": 369
+       },
+       "aspect": 1.2331,
+       "aspectBucket": "landscape"
+      },
+      "fill": {
+       "raw": "IMAGE:CROP",
+       "unbound": true
+      },
+      "stroke": null,
+      "radius": {
+       "value": 0,
+       "unbound": false
+      },
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "image": {
+       "fit": "CROP",
+       "hasImageFill": true
+      },
+      "structuralSignature": "s2:d0fe31410545c943",
+      "canonicalSignature": "c1:95880ddfe160e48e",
+      "repeatedSiblings": 1,
+      "depth": 6,
+      "childCount": 0,
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "1:4923",
+    "name": "Content",
+    "type": "FRAME",
+    "layout": {
+     "mode": "vertical",
+     "gap": {
+      "value": 0,
+      "tokenRef": "0",
+      "unbound": false
+     },
+     "padding": {
+      "top": {
+       "value": 16,
+       "tokenRef": "4",
+       "unbound": false
+      },
+      "right": {
+       "value": 8,
+       "tokenRef": "2",
+       "unbound": false
+      },
+      "bottom": {
+       "value": 16,
+       "tokenRef": "4",
+       "unbound": false
+      },
+      "left": {
+       "value": 8,
+       "tokenRef": "2",
+       "unbound": false
+      }
+     },
+     "align": "MIN",
+     "justify": "CENTER",
+     "wrap": false,
+     "sizing": {
+      "w": "fill",
+      "h": "fill"
+     },
+     "positioning": "auto"
+    },
+    "geometry": {
+     "bbox": {
+      "x": 98,
+      "y": 3379.01708984375,
+      "w": 379.3333435058594,
+      "h": 166.625
+     },
+     "relBbox": {
+      "x": 0,
+      "y": 213.375,
+      "w": 379.3333435058594,
+      "h": 166.625
+     },
+     "aspect": 2.2766,
+     "aspectBucket": "wide"
+    },
+    "fill": null,
+    "stroke": null,
+    "radius": {
+     "value": 0,
+     "unbound": false
+    },
+    "effects": [],
+    "opacity": 1,
+    "clipsContent": true,
+    "structuralSignature": "s2:d5145cbe72fc4582",
+    "canonicalSignature": "c1:2d2e3f3c2e0cf2ab",
+    "repeatedSiblings": 1,
+    "depth": 5,
+    "childCount": 1,
+    "children": [
+     {
+      "id": "1:4924",
+      "name": "Frame 427320096",
+      "type": "INSTANCE",
+      "componentKey": "44d76147066ccfb66a785065cd18c6cf2a389e75",
+      "layout": {
+       "mode": "vertical",
+       "gap": {
+        "value": 0,
+        "unbound": false
+       },
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "tokenRef": "0",
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "tokenRef": "0",
+         "unbound": false
+        }
+       },
+       "align": "MIN",
+       "justify": "SPACE_BETWEEN",
+       "wrap": false,
+       "sizing": {
+        "w": "fill",
+        "h": "fill"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 106,
+        "y": 3395.01708984375,
+        "w": 363.3333435058594,
+        "h": 134.625
+       },
+       "relBbox": {
+        "x": 8,
+        "y": 16,
+        "w": 363.3333435058594,
+        "h": 134.625
+       },
+       "aspect": 2.6989,
+       "aspectBucket": "wide"
+      },
+      "fill": null,
+      "stroke": null,
+      "radius": {
+       "value": 0,
+       "unbound": false
+      },
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "structuralSignature": "s2:57637e4d7715bb2f",
+      "canonicalSignature": "c1:716e1e6456f77871",
+      "repeatedSiblings": 1,
+      "depth": 6,
+      "childCount": 2,
+      "children": [
+       {
+        "id": "I1:4924;13448:62716",
+        "name": "Frame 427320090",
+        "type": "FRAME",
+        "layout": {
+         "mode": "vertical",
+         "gap": {
+          "value": 16,
+          "tokenRef": "4",
+          "unbound": false
+         },
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": "MIN",
+         "justify": "MIN",
+         "wrap": false,
+         "sizing": {
+          "w": "fill",
+          "h": "hug"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 106,
+          "y": 3395.01708984375,
+          "w": 363.3333435058594,
+          "h": 90
+         },
+         "relBbox": {
+          "x": 0,
+          "y": 0,
+          "w": 363.3333435058594,
+          "h": 90
+         },
+         "aspect": 4.037,
+         "aspectBucket": "ultrawide"
+        },
+        "fill": null,
+        "stroke": null,
+        "radius": {
+         "value": 0,
+         "unbound": false
+        },
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "structuralSignature": "s2:862dc91ce771b54f",
+        "canonicalSignature": "c1:b190ef8cfe68b164",
+        "repeatedSiblings": 1,
+        "depth": 7,
+        "childCount": 2,
+        "children": [
+         {
+          "id": "I1:4924;13448:62717",
+          "name": "Over 400 players will be available in The Hundred Auction on 11 and 12 March.",
+          "type": "TEXT",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": null,
+           "justify": null,
+           "wrap": false,
+           "sizing": {
+            "w": "fill",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 106,
+            "y": 3395.01708984375,
+            "w": 363.3333435058594,
+            "h": 30
+           },
+           "relBbox": {
+            "x": 0,
+            "y": 0,
+            "w": 363.3333435058594,
+            "h": 30
+           },
+           "aspect": 12.1111,
+           "aspectBucket": "ultrawide"
+          },
+          "fill": {
+           "tokenRef": "text/main/high",
+           "unbound": false
+          },
+          "stroke": null,
+          "radius": null,
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "text": {
+           "characters": "Chris Jordan saw it through late on. Calm as a cucumber.",
+           "styleRef": "body_md/bold",
+           "styleId": "S:76adde1543c2e869fbc757d7fc8d94440be08499,18023:715",
+           "unbound": false,
+           "fontSize": 14,
+           "fontFamily": "Montserrat",
+           "fontWeight": 700,
+           "lineHeight": 20,
+           "autoResize": "HEIGHT",
+           "lines": 2
+          },
+          "structuralSignature": "s2:1c57ca8701872a3a",
+          "canonicalSignature": "c1:4201341993b0a54f",
+          "repeatedSiblings": 2,
+          "depth": 8,
+          "childCount": 0,
+          "children": []
+         },
+         {
+          "id": "I1:4924;13448:62718",
+          "name": "The longlist for The Hundred Auction have been revealed, with the likes of Joe Root, Davina Perrin, Nadine de Klerk and Shaheen Shah Afridi set to go under the hammer at Piccadilly Lights on 11 and 12 March.",
+          "type": "TEXT",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": null,
+           "justify": null,
+           "wrap": false,
+           "sizing": {
+            "w": "fill",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 106,
+            "y": 3441.01708984375,
+            "w": 363.3333435058594,
+            "h": 44
+           },
+           "relBbox": {
+            "x": 0,
+            "y": 46,
+            "w": 363.3333435058594,
+            "h": 44
+           },
+           "aspect": 8.2576,
+           "aspectBucket": "ultrawide"
+          },
+          "fill": {
+           "tokenRef": "text/main/medium",
+           "unbound": false
+          },
+          "stroke": null,
+          "radius": null,
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "text": {
+           "characters": "James Vince stroked 60 from 38 and Chris Jordan produced a late cameo with the bat as Southern Brave finally got their campaign up and running with victory under the lights at the Ageas Bowl. Liam Livingstone produced his first significant contribution of the Hundred with an unbeaten half-century and Adam Milne's 3 for 15 had seemingly set up Birmingham Phoenix for a narrow victory - only for Tom Helm to blink first against Jordan in the final set of five.\nAdvertisement",
+           "styleRef": "body_sm/medium",
+           "styleId": "S:fc5ba77ef2de9dcd79e8ecb5f9a60dae8e2e466f,18038:1029",
+           "unbound": false,
+           "fontSize": 12,
+           "fontFamily": "Montserrat",
+           "fontWeight": 500,
+           "lineHeight": 18,
+           "autoResize": "HEIGHT",
+           "lines": 2
+          },
+          "structuralSignature": "s2:1c57ca8701872a3a",
+          "canonicalSignature": "c1:4201341993b0a54f",
+          "repeatedSiblings": 2,
+          "depth": 8,
+          "childCount": 0,
+          "children": []
+         }
+        ]
+       },
+       {
+        "id": "I1:4924;13448:62719",
+        "name": "Label",
+        "type": "FRAME",
+        "layout": {
+         "mode": "vertical",
+         "gap": {
+          "value": 0,
+          "tokenRef": "0",
+          "unbound": false
+         },
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": "MIN",
+         "justify": "MAX",
+         "wrap": false,
+         "sizing": {
+          "w": "hug",
+          "h": "hug"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 106,
+          "y": 3521.64208984375,
+          "w": 69,
+          "h": 8
+         },
+         "relBbox": {
+          "x": 0,
+          "y": 126.625,
+          "w": 69,
+          "h": 8
+         },
+         "aspect": 8.625,
+         "aspectBucket": "ultrawide"
+        },
+        "fill": null,
+        "stroke": null,
+        "radius": {
+         "value": 0,
+         "unbound": false
+        },
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "structuralSignature": "s2:9541ed9d3edc80db",
+        "canonicalSignature": "c1:b8d3793aca8a5deb",
+        "repeatedSiblings": 1,
+        "depth": 7,
+        "childCount": 1,
+        "children": [
+         {
+          "id": "I1:4924;13448:62720",
+          "name": "Date",
+          "type": "FRAME",
+          "layout": {
+           "mode": "horizontal",
+           "gap": {
+            "value": 3.742,
+            "unbound": true
+           },
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": "CENTER",
+           "justify": "MIN",
+           "wrap": false,
+           "sizing": {
+            "w": "hug",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 106,
+            "y": 3521.64208984375,
+            "w": 69,
+            "h": 8
+           },
+           "relBbox": {
+            "x": 0,
+            "y": 0,
+            "w": 69,
+            "h": 8
+           },
+           "aspect": 8.625,
+           "aspectBucket": "ultrawide"
+          },
+          "fill": null,
+          "stroke": null,
+          "radius": {
+           "value": 0,
+           "unbound": false
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:100795c39590296e",
+          "canonicalSignature": "c1:ff282e87ddfc1c19",
+          "repeatedSiblings": 1,
+          "depth": 8,
+          "childCount": 1,
+          "children": [
+           {
+            "id": "I1:4924;13448:62721",
+            "name": "Ellipse 2998",
+            "type": "VECTOR",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 106,
+              "y": 3521.64208984375,
+              "w": 28.0626220703125,
+              "h": 28.0626220703125
+             },
+             "relBbox": {
+              "x": 0,
+              "y": 0,
+              "w": 28.0626220703125,
+              "h": 28.0626220703125
+             },
+             "aspect": 1,
+             "aspectBucket": "square"
+            },
+            "fill": {
+             "raw": "#d9d9d9",
+             "unbound": true
+            },
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:680f32eb449d31f4",
+            "canonicalSignature": "c1:d460f489cf5c334d",
+            "repeatedSiblings": 1,
+            "depth": 9,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:4924;13448:62722",
+            "name": "Mar 23, 2025",
+            "type": "TEXT",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "hug",
+              "h": "hug"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 106,
+              "y": 3521.64208984375,
+              "w": 69,
+              "h": 8
+             },
+             "relBbox": {
+              "x": 0,
+              "y": 0,
+              "w": 69,
+              "h": 8
+             },
+             "aspect": 8.625,
+             "aspectBucket": "ultrawide"
+            },
+            "fill": {
+             "tokenRef": "text/main/low",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": null,
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "text": {
+             "characters": "Mar 23, 2025",
+             "styleRef": "body_sm/regular",
+             "styleId": "S:58f7d8b18b697d95d60b0e65f8918af7cedf6f64,18038:1034",
+             "unbound": false,
+             "fontSize": 12,
+             "fontFamily": "Montserrat",
+             "fontWeight": 400,
+             "lineHeight": 18,
+             "autoResize": "WIDTH_AND_HEIGHT",
+             "lines": 1
+            },
+            "structuralSignature": "s2:3dc6d74c9ab7bde9",
+            "canonicalSignature": "c1:98dd98822112fb40",
+            "repeatedSiblings": 1,
+            "depth": 9,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:4924;13448:62723",
+            "name": "Line 47",
+            "type": "VECTOR",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 170.54397583007812,
+              "y": 3521.64208984375,
+              "w": 3.6799687563870975e-7,
+              "h": 8.418787002563477
+             },
+             "relBbox": {
+              "x": 64.5439682006836,
+              "y": 0.00008695419819559902,
+              "w": 8.418787002563477,
+              "h": 0
+             },
+             "aspect": 0,
+             "aspectBucket": "square"
+            },
+            "fill": null,
+            "stroke": {
+             "tokenRef": "Neutral/400",
+             "weight": 0.468,
+             "unbound": false
+            },
+            "radius": null,
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:680f32eb449d31f4",
+            "canonicalSignature": "c1:d460f489cf5c334d",
+            "repeatedSiblings": 1,
+            "depth": 9,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:4924;13448:62724",
+            "name": "3 minute read",
+            "type": "TEXT",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 170.54397583007812,
+              "y": 3522.57763671875,
+              "w": 61,
+              "h": 7
+             },
+             "relBbox": {
+              "x": 64.5439682006836,
+              "y": 0.9355077147483826,
+              "w": 61,
+              "h": 7
+             },
+             "aspect": 8.7143,
+             "aspectBucket": "ultrawide"
+            },
+            "fill": {
+             "tokenRef": "Neutral/500",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": null,
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "text": {
+             "characters": "3 minute read",
+             "unbound": true,
+             "fontSize": 9.35,
+             "fontFamily": "Public Sans",
+             "fontWeight": 500,
+             "lineHeight": 16.84,
+             "autoResize": "WIDTH_AND_HEIGHT",
+             "lines": 1
+            },
+            "structuralSignature": "s2:55a2f40d9193a189",
+            "canonicalSignature": "c1:27b9baff4c5dc578",
+            "repeatedSiblings": 1,
+            "depth": 9,
+            "childCount": 0,
+            "children": []
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}

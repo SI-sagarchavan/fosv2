@@ -1,0 +1,45 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": [
+      "ES2022",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "jsx": "preserve",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "allowJs": false,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    },
+    "rootDir": ".",
+    "outDir": "dist",
+    "noEmit": true,
+    "incremental": true,
+    // `next dev` writes `incremental: true` into this file on every run. Without
+    // an explicit build-info path, tsup's dts pass dies with TS5074 and
+    // `pnpm build` goes red for reasons that have nothing to do with the code.
+    "tsBuildInfoFile": "./.tsbuildinfo"
+  },
+  "include": [
+    "app/**/*",
+    "next-env.d.ts",
+    "src/**/*",
+    "src/types-shim.d.ts",
+    "tests/**/*",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".next"
+  ]
+}

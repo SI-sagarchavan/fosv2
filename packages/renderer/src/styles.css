@@ -1,0 +1,277 @@
+/**
+ * @fanos/renderer structural styles.
+ *
+ * Design values (colors, space, type, surfaces) come from @fanos/tokens emit.
+ * This sheet only encodes SDUI→DOM wiring that is not expressible as a token:
+ * Overlay layering, responsive custom-prop promotion, scrim pseudo, writing-mode.
+ */
+
+.fos-node {
+  box-sizing: border-box;
+}
+
+.fos-root {
+  position: relative;
+  box-sizing: border-box;
+}
+
+/* --- responsive property promotion ------------------------------------ */
+/* Breakpoint floors mirror @fanos/tokens DEFAULT_BREAKPOINTS (md:768, lg:1280). */
+
+/**
+ * Stop the promotion vars inheriting.
+ *
+ * The media blocks below apply `padding-*`, `gap`, `width` … to EVERY .fos-node
+ * from a custom property. Custom properties inherit, so without this reset a
+ * Stack with `space.pb` silently re-applies that same padding to every
+ * descendant node — a footer's 32px bottom padding lands on its name, its stat
+ * columns and every value inside them.
+ *
+ * Resetting to `initial` makes each var the guaranteed-invalid value, so the
+ * `var()` chain falls through to `revert-layer` for any node that did not set
+ * one itself. An element's own inline style still wins over this rule, so nodes
+ * that DO set a value are unaffected.
+ *
+ * Only bites at >=768px, which is why it stayed hidden while the harness pinned
+ * the viewport to the card width and never left the mobile branch.
+ */
+.fos-node {
+  --p-base: initial;   --p-md: initial;   --p-lg: initial;
+  --px-base: initial;  --px-md: initial;  --px-lg: initial;
+  --py-base: initial;  --py-md: initial;  --py-lg: initial;
+  --pt-base: initial;  --pt-md: initial;  --pt-lg: initial;
+  --pb-base: initial;  --pb-md: initial;  --pb-lg: initial;
+  --pl-base: initial;  --pl-md: initial;  --pl-lg: initial;
+  --pr-base: initial;  --pr-md: initial;  --pr-lg: initial;
+  --gap-base: initial; --gap-md: initial; --gap-lg: initial;
+  --w-base: initial;   --w-md: initial;   --w-lg: initial;
+  --h-base: initial;   --h-md: initial;   --h-lg: initial;
+  --flex-direction-base: initial;  --flex-direction-md: initial;  --flex-direction-lg: initial;
+  --align-items-base: initial;     --align-items-md: initial;     --align-items-lg: initial;
+  --justify-content-base: initial; --justify-content-md: initial; --justify-content-lg: initial;
+}
+
+@media (min-width: 768px) {
+  .fos-node {
+    gap: var(--gap-md, var(--gap-base, revert-layer));
+    padding: var(--p-md, var(--p-base, revert-layer));
+    padding-inline: var(--px-md, var(--px-base, revert-layer));
+    padding-block: var(--py-md, var(--py-base, revert-layer));
+    padding-block-start: var(--pt-md, var(--pt-base, revert-layer));
+    padding-block-end: var(--pb-md, var(--pb-base, revert-layer));
+    padding-inline-start: var(--pl-md, var(--pl-base, revert-layer));
+    padding-inline-end: var(--pr-md, var(--pr-base, revert-layer));
+    width: var(--w-md, var(--w-base, revert-layer));
+    height: var(--h-md, var(--h-base, revert-layer));
+    flex-direction: var(--flex-direction-md, var(--flex-direction-base, revert-layer));
+    align-items: var(--align-items-md, var(--align-items-base, revert-layer));
+    justify-content: var(--justify-content-md, var(--justify-content-base, revert-layer));
+  }
+}
+
+@media (min-width: 1280px) {
+  .fos-node {
+    gap: var(--gap-lg, var(--gap-md, var(--gap-base, revert-layer)));
+    padding: var(--p-lg, var(--p-md, var(--p-base, revert-layer)));
+    padding-inline: var(--px-lg, var(--px-md, var(--px-base, revert-layer)));
+    padding-block: var(--py-lg, var(--py-md, var(--py-base, revert-layer)));
+    padding-block-start: var(--pt-lg, var(--pt-md, var(--pt-base, revert-layer)));
+    padding-block-end: var(--pb-lg, var(--pb-md, var(--pb-base, revert-layer)));
+    padding-inline-start: var(--pl-lg, var(--pl-md, var(--pl-base, revert-layer)));
+    padding-inline-end: var(--pr-lg, var(--pr-md, var(--pr-base, revert-layer)));
+    width: var(--w-lg, var(--w-md, var(--w-base, revert-layer)));
+    height: var(--h-lg, var(--h-md, var(--h-base, revert-layer)));
+    flex-direction: var(
+      --flex-direction-lg,
+      var(--flex-direction-md, var(--flex-direction-base, revert-layer))
+    );
+    align-items: var(
+      --align-items-lg,
+      var(--align-items-md, var(--align-items-base, revert-layer))
+    );
+    justify-content: var(
+      --justify-content-lg,
+      var(--justify-content-md, var(--justify-content-base, revert-layer))
+    );
+  }
+}
+
+/* --- Overlay / surface structure -------------------------------------- */
+
+.fos-overlay {
+  position: relative;
+  overflow: visible;
+}
+
+.fos-overlay.fos-overlay-clip {
+  overflow: hidden;
+}
+
+/**
+ * Absolute fill box. Token surface paint lives on the CHILD so tokens can keep
+ * `position: relative` for inset ::before borders without collapsing this box.
+ */
+.fos-surface-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.fos-surface-layer > [class*="fos-surface-"] {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+/* Anchored children above the surface; stacking is DOM order among peers. */
+.fos-overlay > .fos-node {
+  z-index: 1;
+}
+
+/* --- Image + scrim ---------------------------------------------------- */
+
+.fos-image {
+  display: block;
+}
+
+/* Only non-anchored images establish a containing block for the scrim. */
+.fos-image:not([data-fos-anchored]) {
+  position: relative;
+  overflow: hidden;
+}
+
+.fos-image[data-fos-anchored] {
+  /* position comes from place.anchor (absolute); allow cutout bleed */
+  overflow: visible;
+}
+
+.fos-image img {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+.fos-image[data-scrim]::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image: var(--fos-image-scrim);
+}
+
+/* Anchored images need a positioned wrapper for the scrim pseudo. */
+.fos-image[data-fos-anchored][data-scrim] {
+  /* create containing block without fighting absolute placement from place */
+}
+.fos-image[data-fos-anchored][data-scrim]::after {
+  /* still works: absolute positioned element is containing block for ::after */
+}
+
+/* --- Divider ---------------------------------------------------------- */
+
+.fos-divider-horizontal {
+  height: 1px;
+  width: 100%;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.fos-divider-vertical {
+  width: 1px;
+  align-self: stretch;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+/* --- Text orientation -------------------------------------------------
+ * These sit on an INNER span, never on the anchored element: `inset-inline-*`
+ * resolves against an element's own writing mode, so putting `vertical-rl` on
+ * the positioned box swaps its axes and `mid-start` lands top-centre.
+ * `inline-block` is required for writing-mode and transform to take effect.
+ */
+
+.fos-text-vertical-up,
+.fos-text-vertical-down {
+  display: inline-block;
+  writing-mode: vertical-rl;
+}
+
+/* vertical-rl reads top-to-bottom; the half-turn makes it read bottom-to-top. */
+.fos-text-vertical-up {
+  transform: rotate(180deg);
+}
+
+/* --- Text truncation -------------------------------------------------
+ * Line clamp, not character truncation: the design clips by line box, and the
+ * line count is what the IR reports (`text.lines`).
+ */
+
+.fos-text-clamp {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* --- Icon placeholder ------------------------------------------------- */
+
+.fos-icon-unknown {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0.5;
+}
+
+/* Preserve newlines in names like SOPHIE\nMOLINEUX */
+.fos-text {
+  /* Authored newlines are meaningful — the design breaks "Ben / McKinney". */
+  white-space: pre-line;
+  /**
+   * `as: h1..h6` and `as: p` bring UA margins (36px for h3 in Chromium). On an
+   * absolutely-positioned Overlay child that silently shifts the node a whole
+   * line off its authored offset and pushes later lines under whatever sits
+   * below it. Semantics must not move pixels.
+   */
+  margin: 0;
+
+  /**
+   * Leading trim — the single biggest source of vertical drift between Figma
+   * and CSS, and the reason a `space.*` gap read straight out of the IR did not
+   * reproduce the design.
+   *
+   * Figma reports a TEXT node's height as roughly
+   *   (lines - 1) * lineHeight + capHeight
+   * — measured on 1:5095: 2 lines of dp_4 (32/34) is 53px, not the 68px CSS
+   * gives. CSS wraps every line in a full `line-height` box, so half the
+   * leading hangs above the first cap and below the last baseline. On a 2-line
+   * heading that is ~13px of phantom space, and it lands *between* the heading
+   * and whatever the design put a 16px gap in front of.
+   *
+   * `trim-both cap alphabetic` makes the box hug cap-height to baseline, which
+   * is exactly Figma's box. Inter-line spacing is untouched — only the outer
+   * edges are trimmed — so a gap token now means the same thing in both tools.
+   */
+  text-box: trim-both cap alphabetic;
+}
+
+/**
+ * …but never on clamped text.
+ *
+ * Line clamping implies `overflow: hidden`, so a cap-height top edge SHEARS
+ * every ascender and i-dot on the first line, and an alphabetic bottom edge
+ * shears the descenders on the last. Unclamped text overflows its box
+ * harmlessly; clamped text does not.
+ *
+ * Trim buys nothing here anyway: a truncating Figma node carries an explicit
+ * height (`I1:5131;10090:3705` is a fixed 43px), so the box comes from
+ * `size.h`, not from the leading.
+ *
+ * Must stay AFTER `.fos-text` — equal specificity, so source order decides.
+ */
+.fos-text-clamp,
+.fos-text-has-vertical {
+  text-box: normal;
+}

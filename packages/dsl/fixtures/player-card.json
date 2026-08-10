@@ -1,0 +1,410 @@
+{
+  "schemaVersion": "1.0.0",
+  "nodes": [
+    {
+      "id": "card",
+      "parent": null,
+      "idx": 0,
+      "type": "Overlay",
+      "src": "1:5043",
+      "props": {
+        "clip": false,
+        "size": {
+          "ratio": "281/412"
+        },
+        "_meta": {
+          "deviations": [
+            {
+              "check": "C1",
+              "max": 16,
+              "reason": "The rest of the same background art — full-bleed gradient plate, inner rectangles and decorative vectors — all replaced by texture.card_bg. Bounded at 16: anything beyond that is a real node going missing, not this substitution."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "card_bg",
+      "parent": "card",
+      "idx": 0,
+      "type": "Box",
+      "src": "I1:5043;10111:12379",
+      "props": {
+        "surface": "surface.card_player",
+        "size": {
+          "w": {
+            "raw": 281,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 353,
+            "_unbound": true
+          }
+        },
+        "place": {
+          "anchor": "top-center",
+          "offset": {
+            "block": {
+              "raw": 61,
+              "_unbound": true
+            }
+          }
+        },
+        "_meta": {
+          "deviations": [
+            {
+              "check": "C1",
+              "max": 30,
+              "reason": "Figma draws the card background as a stack of vectors plus two image fills. It is not reconstructable from the IR, so it is one exported PNG (texture.card_bg) behind surface.card_player. Bounded at 30 so a NEW omission under this node still fails."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "cutout",
+      "parent": "card",
+      "idx": 1,
+      "type": "Image",
+      "src": "I1:5043;10111:12370",
+      "props": {
+        "src": "{player.cutout}",
+        "alt": "{player.name}",
+        "fit": "contain",
+        "size": {
+          "w": {
+            "raw": 249,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 376,
+            "_unbound": true
+          }
+        },
+        "place": {
+          "anchor": "top-center",
+          "offset": {
+            "block": {
+              "raw": -17,
+              "_unbound": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "role",
+      "parent": "card",
+      "idx": 2,
+      "type": "Text",
+      "src": "I1:5043;10111:12383",
+      "props": {
+        "content": "{player.role}",
+        "style": "type.body_sm_bold",
+        "tone": "color.background_main_surface",
+        "orientation": "vertical-up",
+        "place": {
+          "anchor": "mid-start",
+          "offset": {
+            "inline": {
+              "raw": 19,
+              "_unbound": true
+            }
+          }
+        },
+        "textCase": "upper"
+      }
+    },
+    {
+      "id": "badges",
+      "parent": "card",
+      "idx": 3,
+      "type": "Stack",
+      "src": "I1:5043;13560:112032",
+      "props": {
+        "direction": "column",
+        "gap": "space.3",
+        "place": {
+          "anchor": "top-end",
+          "offset": {
+            "block": {
+              "raw": 109,
+              "_unbound": true
+            },
+            "inline": {
+              "raw": 10,
+              "_unbound": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "badge_captain",
+      "parent": "badges",
+      "idx": 0,
+      "type": "Stack",
+      "src": "I1:5043;13560:112033",
+      "props": {
+        "direction": "row",
+        "align": "center",
+        "justify": "center",
+        "size": {
+          "w": "full",
+          "h": {
+            "raw": 24,
+            "_unbound": true
+          }
+        },
+        "surface": "surface.badge_captain"
+      }
+    },
+    {
+      "id": "badge_captain_label",
+      "parent": "badge_captain",
+      "idx": 0,
+      "type": "Text",
+      "src": "I1:5043;13560:112033;13384:37681",
+      "props": {
+        "content": "C",
+        "style": "type.body_sm_bold",
+        "tone": "color.text_main_sec"
+      }
+    },
+    {
+      "id": "badge_overseas",
+      "parent": "badges",
+      "idx": 1,
+      "type": "Stack",
+      "src": "I1:5043;13560:112034",
+      "props": {
+        "direction": "row",
+        "align": "center",
+        "justify": "center",
+        "size": {
+          "w": {
+            "raw": 24,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 24,
+            "_unbound": true
+          }
+        },
+        "surface": "surface.badge_overseas"
+      }
+    },
+    {
+      "id": "badge_overseas_icon",
+      "parent": "badge_overseas",
+      "idx": 0,
+      "type": "Icon",
+      "src": "I1:5043;13560:112034;13384:37679",
+      "props": {
+        "name": "plane",
+        "size": {
+          "raw": 10,
+          "_unbound": true
+        },
+        "tone": "color.text_prim_high"
+      }
+    },
+    {
+      "id": "name",
+      "parent": "card",
+      "idx": 4,
+      "type": "Text",
+      "src": "I1:5043;10111:12382",
+      "props": {
+        "content": "{player.name}",
+        "style": "type.dp_3_regular",
+        "tone": "color.text_prim_high",
+        "align": "center",
+        "as": "h3",
+        "size": {
+          "w": {
+            "raw": 239,
+            "_unbound": true
+          }
+        },
+        "place": {
+          "anchor": "top-center",
+          "offset": {
+            "block": {
+              "raw": 251,
+              "_unbound": true
+            }
+          }
+        },
+        "textCase": "upper"
+      }
+    },
+    {
+      "id": "stats",
+      "parent": "card",
+      "idx": 5,
+      "type": "Stack",
+      "src": "I1:5043;13706:39000",
+      "props": {
+        "direction": "row",
+        "justify": "between",
+        "align": "center",
+        "gap": {
+          "raw": 13,
+          "_unbound": true
+        },
+        "surface": "surface.stat_strip",
+        "space": {
+          "px": "space.5",
+          "py": "space.2_5"
+        },
+        "size": {
+          "w": {
+            "raw": 249,
+            "_unbound": true
+          },
+          "h": "space.13"
+        },
+        "place": {
+          "anchor": "bottom-center",
+          "offset": {
+            "block": "space.4"
+          }
+        }
+      }
+    },
+    {
+      "id": "stat_matches",
+      "parent": "stats",
+      "idx": 0,
+      "type": "Stack",
+      "src": "I1:5043;13706:39001",
+      "props": {
+        "direction": "column",
+        "align": "center",
+        "justify": "center",
+        "gap": "space.2_5"
+      }
+    },
+    {
+      "id": "stat_matches_label",
+      "parent": "stat_matches",
+      "idx": 0,
+      "type": "Text",
+      "src": "I1:5043;13706:39002",
+      "props": {
+        "content": "MATCHES",
+        "style": "type.body_xs_regular",
+        "tone": "color.text_sec_medium"
+      }
+    },
+    {
+      "id": "stat_matches_value",
+      "parent": "stat_matches",
+      "idx": 1,
+      "type": "Text",
+      "src": "I1:5043;13706:39003",
+      "props": {
+        "content": "{player.stats.matches}",
+        "style": "type.h3_bold",
+        "tone": "color.text_prim_high"
+      }
+    },
+    {
+      "id": "stat_divider_1",
+      "parent": "stats",
+      "idx": 1,
+      "type": "Divider",
+      "src": "I1:5043;13706:39004",
+      "props": {
+        "orientation": "vertical",
+        "tone": "color.border_sec_default"
+      }
+    },
+    {
+      "id": "stat_runs",
+      "parent": "stats",
+      "idx": 2,
+      "type": "Stack",
+      "src": "I1:5043;13706:39005",
+      "props": {
+        "direction": "column",
+        "align": "center",
+        "justify": "center",
+        "gap": "space.2_5"
+      }
+    },
+    {
+      "id": "stat_runs_label",
+      "parent": "stat_runs",
+      "idx": 0,
+      "type": "Text",
+      "src": "I1:5043;13706:39006",
+      "props": {
+        "content": "RUNS",
+        "style": "type.body_xs_regular",
+        "tone": "color.text_sec_medium"
+      }
+    },
+    {
+      "id": "stat_runs_value",
+      "parent": "stat_runs",
+      "idx": 1,
+      "type": "Text",
+      "src": "I1:5043;13706:39007",
+      "props": {
+        "content": "{player.stats.runs}",
+        "style": "type.h3_bold",
+        "tone": "color.text_prim_high"
+      }
+    },
+    {
+      "id": "stat_divider_2",
+      "parent": "stats",
+      "idx": 3,
+      "type": "Divider",
+      "src": "I1:5043;13706:39008",
+      "props": {
+        "orientation": "vertical",
+        "tone": "color.border_sec_default"
+      }
+    },
+    {
+      "id": "stat_strike_rate",
+      "parent": "stats",
+      "idx": 4,
+      "type": "Stack",
+      "src": "I1:5043;13706:39009",
+      "props": {
+        "direction": "column",
+        "align": "center",
+        "justify": "center",
+        "gap": "space.2_5"
+      }
+    },
+    {
+      "id": "stat_strike_rate_label",
+      "parent": "stat_strike_rate",
+      "idx": 0,
+      "type": "Text",
+      "src": "I1:5043;13706:39010",
+      "props": {
+        "content": "STRIKE RATE",
+        "style": "type.body_xs_regular",
+        "tone": "color.text_sec_medium"
+      }
+    },
+    {
+      "id": "stat_strike_rate_value",
+      "parent": "stat_strike_rate",
+      "idx": 1,
+      "type": "Text",
+      "src": "I1:5043;13706:39011",
+      "props": {
+        "content": "{player.stats.strikeRate}",
+        "style": "type.h3_bold",
+        "tone": "color.text_prim_high"
+      }
+    }
+  ]
+}

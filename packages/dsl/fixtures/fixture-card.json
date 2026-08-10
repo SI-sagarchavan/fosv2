@@ -1,0 +1,600 @@
+{
+  "schemaVersion": "1.0.0",
+  "nodes": [
+    {
+      "id": "shell",
+      "parent": null,
+      "idx": 0,
+      "type": "Stack",
+      "src": "1:5060",
+      "props": {
+        "direction": "row",
+        "align": "stretch",
+        "surface": "surface.fixture_shell",
+        "size": {
+          "w": "auto",
+          "h": {
+            "raw": 227,
+            "_unbound": true
+          }
+        },
+        "clip": true
+      }
+    },
+    {
+      "id": "date_strip",
+      "parent": "shell",
+      "idx": 0,
+      "type": "Stack",
+      "src": "I1:5060;18621:42549",
+      "props": {
+        "direction": "column",
+        "align": "center",
+        "justify": "center",
+        "surface": "surface.date_strip",
+        "size": {
+          "w": {
+            "raw": 30,
+            "_unbound": true
+          },
+          "h": "full"
+        }
+      }
+    },
+    {
+      "id": "date_text",
+      "parent": "date_strip",
+      "idx": 0,
+      "type": "Text",
+      "src": "I1:5060;18621:42550",
+      "props": {
+        "content": "{fixtures.date}",
+        "style": "type.h3_bold",
+        "tone": "color.text_sec_high",
+        "orientation": "vertical-up"
+      }
+    },
+    {
+      "id": "fixtures_frame",
+      "parent": "shell",
+      "idx": 1,
+      "type": "Stack",
+      "src": "I1:5060;18621:42551",
+      "props": {
+        "direction": "row",
+        "align": "center",
+        "size": {
+          "w": "auto",
+          "h": {
+            "raw": 227,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "fixtures",
+      "parent": "fixtures_frame",
+      "idx": 0,
+      "type": "Stack",
+      "src": "I1:5060;18621:42552",
+      "props": {
+        "direction": "row",
+        "align": "center",
+        "size": {
+          "w": "auto",
+          "h": "auto"
+        },
+        "gap": "space.1",
+        "clip": true
+      }
+    },
+    {
+      "id": "matches",
+      "parent": "fixtures",
+      "idx": 0,
+      "type": "Repeater",
+      "src": "synthetic:I1:5060;18621:42552:0",
+      "props": {
+        "over": "fixtures.matches",
+        "as": "match"
+      }
+    },
+    {
+      "id": "card",
+      "parent": "matches",
+      "idx": 0,
+      "type": "Stack",
+      "src": "I1:5060;18621:42553",
+      "props": {
+        "direction": "column",
+        "gap": "space.2_5",
+        "justify": "center",
+        "space": {
+          "py": "space.5",
+          "px": "space.4"
+        },
+        "surface": "surface.fixture_card",
+        "size": {
+          "w": {
+            "raw": 280,
+            "_unbound": true
+          },
+          "h": "auto"
+        },
+        "clip": true
+      }
+    },
+    {
+      "id": "head",
+      "parent": "card",
+      "idx": 0,
+      "type": "Stack",
+      "src": "I1:5060;18621:42554",
+      "props": {
+        "direction": "row",
+        "align": "center",
+        "justify": "between",
+        "size": {
+          "w": "full"
+        }
+      }
+    },
+    {
+      "id": "head_label",
+      "parent": "head",
+      "idx": 0,
+      "type": "Text",
+      "src": "I1:5060;18621:42555",
+      "props": {
+        "content": "{match.state}",
+        "style": "type.body_xs_bold",
+        "tone": "color.text_main_high"
+      }
+    },
+    {
+      "id": "head_meta",
+      "parent": "head",
+      "idx": 1,
+      "type": "Stack",
+      "src": "I1:5060;18746:28517",
+      "props": {
+        "direction": "row",
+        "align": "center",
+        "gap": "space.1_5"
+      }
+    },
+    {
+      "id": "gender",
+      "parent": "head_meta",
+      "idx": 0,
+      "type": "Stack",
+      "src": "I1:5060;18746:28518",
+      "props": {
+        "direction": "row",
+        "align": "center",
+        "justify": "center",
+        "space": {
+          "p": "space.1"
+        },
+        "surface": "surface.tag_gender"
+      }
+    },
+    {
+      "id": "gender_text",
+      "parent": "gender",
+      "idx": 0,
+      "type": "Text",
+      "src": "I1:5060;18746:28519",
+      "props": {
+        "content": "{match.gender}",
+        "style": "type.body_xs_bold",
+        "tone": "color.text_sec_high"
+      }
+    },
+    {
+      "id": "kickoff",
+      "parent": "head_meta",
+      "idx": 1,
+      "type": "Text",
+      "src": "I1:5060;18746:28521",
+      "props": {
+        "content": "{match.time}",
+        "style": "type.body_xs_bold",
+        "tone": "color.text_sec_disable"
+      }
+    },
+    {
+      "id": "rule_top",
+      "parent": "card",
+      "idx": 1,
+      "type": "Divider",
+      "src": "I1:5060;18621:42557",
+      "props": {
+        "orientation": "horizontal",
+        "tone": "color.border_main_disable"
+      }
+    },
+    {
+      "id": "body",
+      "parent": "card",
+      "idx": 2,
+      "type": "Stack",
+      "src": "I1:5060;18621:42558",
+      "props": {
+        "direction": "row",
+        "align": "center",
+        "justify": "between",
+        "size": {
+          "w": "full"
+        }
+      }
+    },
+    {
+      "id": "teams",
+      "parent": "body",
+      "idx": 0,
+      "type": "Stack",
+      "src": "I1:5060;18621:42559",
+      "props": {
+        "direction": "column",
+        "align": "center",
+        "gap": "space.1"
+      }
+    },
+    {
+      "id": "logo_home",
+      "parent": "teams",
+      "idx": 0,
+      "type": "Image",
+      "src": "I1:5060;18621:42562",
+      "props": {
+        "src": "{match.home.logo}",
+        "alt": "",
+        "fit": "contain",
+        "size": {
+          "w": {
+            "raw": 52,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 52,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "logo_away",
+      "parent": "teams",
+      "idx": 1,
+      "type": "Image",
+      "src": "I1:5060;18621:42569",
+      "props": {
+        "src": "{match.away.logo}",
+        "alt": "",
+        "fit": "contain",
+        "size": {
+          "w": {
+            "raw": 52,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 52,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "right",
+      "parent": "body",
+      "idx": 1,
+      "type": "Stack",
+      "src": "I1:5060;18621:42575",
+      "props": {
+        "direction": "column",
+        "align": "center",
+        "justify": "center",
+        "gap": "space.2_5"
+      }
+    },
+    {
+      "id": "countdown",
+      "parent": "right",
+      "idx": 0,
+      "type": "Stack",
+      "src": "I1:5060;18621:42577",
+      "props": {
+        "direction": "row",
+        "align": "start",
+        "justify": "center"
+      }
+    },
+    {
+      "id": "cd_days",
+      "parent": "countdown",
+      "idx": 0,
+      "type": "Stack",
+      "src": "I1:5060;18621:42578",
+      "props": {
+        "direction": "column",
+        "align": "center",
+        "justify": "center",
+        "gap": "space.0_5",
+        "size": {
+          "w": {
+            "raw": 34,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "cd_days_v",
+      "parent": "cd_days",
+      "idx": 0,
+      "type": "Text",
+      "src": "I1:5060;18621:42579",
+      "props": {
+        "content": "{match.countdown.days}",
+        "style": "type.body_md_bold",
+        "tone": "color.text_main_prim"
+      }
+    },
+    {
+      "id": "cd_days_l",
+      "parent": "cd_days",
+      "idx": 1,
+      "type": "Text",
+      "src": "I1:5060;18621:42580",
+      "props": {
+        "content": "DAYS",
+        "style": "type.body_xs_regular",
+        "tone": "color.text_main_high"
+      }
+    },
+    {
+      "id": "cd_sep_0",
+      "parent": "countdown",
+      "idx": 1,
+      "type": "Text",
+      "src": "I1:5060;18621:42581",
+      "props": {
+        "content": ":",
+        "style": "type.body_md_bold",
+        "tone": "color.text_main_high"
+      }
+    },
+    {
+      "id": "cd_hrs",
+      "parent": "countdown",
+      "idx": 2,
+      "type": "Stack",
+      "src": "I1:5060;18621:42584",
+      "props": {
+        "direction": "column",
+        "align": "center",
+        "justify": "center",
+        "gap": "space.0_5",
+        "size": {
+          "w": {
+            "raw": 34,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "cd_hrs_v",
+      "parent": "cd_hrs",
+      "idx": 0,
+      "type": "Text",
+      "src": "I1:5060;18621:42585",
+      "props": {
+        "content": "{match.countdown.hrs}",
+        "style": "type.body_md_bold",
+        "tone": "color.text_main_prim"
+      }
+    },
+    {
+      "id": "cd_hrs_l",
+      "parent": "cd_hrs",
+      "idx": 1,
+      "type": "Text",
+      "src": "I1:5060;18621:42586",
+      "props": {
+        "content": "HRS",
+        "style": "type.body_xs_regular",
+        "tone": "color.text_main_high"
+      }
+    },
+    {
+      "id": "cd_sep_1",
+      "parent": "countdown",
+      "idx": 3,
+      "type": "Text",
+      "src": "I1:5060;18621:42587",
+      "props": {
+        "content": ":",
+        "style": "type.body_md_bold",
+        "tone": "color.text_main_high"
+      }
+    },
+    {
+      "id": "cd_mins",
+      "parent": "countdown",
+      "idx": 4,
+      "type": "Stack",
+      "src": "I1:5060;18621:42590",
+      "props": {
+        "direction": "column",
+        "align": "center",
+        "justify": "center",
+        "gap": "space.0_5",
+        "size": {
+          "w": {
+            "raw": 34,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "cd_mins_v",
+      "parent": "cd_mins",
+      "idx": 0,
+      "type": "Text",
+      "src": "I1:5060;18621:42591",
+      "props": {
+        "content": "{match.countdown.mins}",
+        "style": "type.body_md_bold",
+        "tone": "color.text_main_prim"
+      }
+    },
+    {
+      "id": "cd_mins_l",
+      "parent": "cd_mins",
+      "idx": 1,
+      "type": "Text",
+      "src": "I1:5060;18621:42592",
+      "props": {
+        "content": "MINS",
+        "style": "type.body_xs_regular",
+        "tone": "color.text_main_high"
+      }
+    },
+    {
+      "id": "cd_sep_2",
+      "parent": "countdown",
+      "idx": 5,
+      "type": "Text",
+      "src": "I1:5060;18621:42593",
+      "props": {
+        "content": ":",
+        "style": "type.body_md_bold",
+        "tone": "color.text_main_high"
+      }
+    },
+    {
+      "id": "cd_secs",
+      "parent": "countdown",
+      "idx": 6,
+      "type": "Stack",
+      "src": "I1:5060;18621:42596",
+      "props": {
+        "direction": "column",
+        "align": "center",
+        "justify": "center",
+        "gap": "space.0_5",
+        "size": {
+          "w": {
+            "raw": 34,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "cd_secs_v",
+      "parent": "cd_secs",
+      "idx": 0,
+      "type": "Text",
+      "src": "I1:5060;18621:42597",
+      "props": {
+        "content": "{match.countdown.secs}",
+        "style": "type.body_md_bold",
+        "tone": "color.text_main_prim"
+      }
+    },
+    {
+      "id": "cd_secs_l",
+      "parent": "cd_secs",
+      "idx": 1,
+      "type": "Text",
+      "src": "I1:5060;18621:42598",
+      "props": {
+        "content": "SEC",
+        "style": "type.body_xs_regular",
+        "tone": "color.text_main_high"
+      }
+    },
+    {
+      "id": "cta",
+      "parent": "right",
+      "idx": 1,
+      "type": "Stack",
+      "src": "I1:5060;18621:42599",
+      "props": {
+        "direction": "row",
+        "align": "center",
+        "justify": "center",
+        "gap": "space.1",
+        "space": {
+          "py": {
+            "raw": 7,
+            "_unbound": true
+          },
+          "px": "space.1_5"
+        },
+        "surface": "surface.button_filled_style_2"
+      }
+    },
+    {
+      "id": "cta_icon",
+      "parent": "cta",
+      "idx": 0,
+      "type": "Icon",
+      "src": "I1:5060;18621:42601",
+      "props": {
+        "name": "ticket",
+        "size": {
+          "raw": 16,
+          "_unbound": true
+        },
+        "tone": "color.button_filled_style_2_text_default"
+      }
+    },
+    {
+      "id": "cta_label",
+      "parent": "cta",
+      "idx": 1,
+      "type": "Text",
+      "src": "I1:5060;18621:42603",
+      "props": {
+        "content": "{match.cta}",
+        "style": "type.body_xs_bold",
+        "tone": "color.button_filled_style_2_text_default"
+      }
+    },
+    {
+      "id": "rule_bottom",
+      "parent": "card",
+      "idx": 3,
+      "type": "Divider",
+      "src": "I1:5060;18621:42604",
+      "props": {
+        "orientation": "horizontal",
+        "tone": "color.border_main_disable"
+      }
+    },
+    {
+      "id": "venue",
+      "parent": "card",
+      "idx": 4,
+      "type": "Text",
+      "src": "I1:5060;18621:42605",
+      "props": {
+        "content": "{match.venue}",
+        "style": "type.body_sm_medium",
+        "tone": "color.text_main_medium",
+        "size": {
+          "h": {
+            "raw": 30,
+            "_unbound": true
+          }
+        }
+      }
+    }
+  ]
+}

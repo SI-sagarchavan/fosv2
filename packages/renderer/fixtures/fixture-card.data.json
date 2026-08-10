@@ -1,0 +1,45 @@
+{
+  "fixtures": {
+    "date": "21 JULY",
+    "matches": [
+      {
+        "state": "UPCOMING",
+        "gender": "WOMEN",
+        "time": "19:30",
+        "cta": "GET TICKETS",
+        "venue": "Utilita Bowl, Southampton",
+        "home": {
+          "logo": "asset.logo.birmingham_phoenix"
+        },
+        "away": {
+          "logo": "asset.logo.southern_brave"
+        },
+        "countdown": {
+          "days": "02",
+          "hrs": "24",
+          "mins": "12",
+          "secs": "33"
+        }
+      },
+      {
+        "state": "UPCOMING",
+        "gender": "MEN",
+        "time": "22:30",
+        "cta": "GET TICKETS",
+        "venue": "Utilita Bowl, Southampton",
+        "home": {
+          "logo": "asset.logo.birmingham_phoenix"
+        },
+        "away": {
+          "logo": "asset.logo.southern_brave"
+        },
+        "countdown": {
+          "days": "02",
+          "hrs": "24",
+          "mins": "12",
+          "secs": "33"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,181 @@
+{
+  "schemaVersion": "1.0.0",
+  "nodes": [
+    {
+      "id": "news_card",
+      "parent": null,
+      "idx": 0,
+      "type": "Stack",
+      "src": "1:4920",
+      "props": {
+        "direction": "column",
+        "gap": "space.0",
+        "surface": "surface.news_card",
+        "size": {
+          "w": "full",
+          "h": {
+            "raw": 380,
+            "_unbound": true
+          }
+        },
+        "_meta": {
+          "deviations": [
+            {
+              "check": "C3",
+              "max": 1,
+              "reason": "IR says sizing.h=fill, but this is the exported ROOT — what it fills is a sibling column outside frame 1:4920, which a single-frame export cannot see. 380 is the height the reference export shows. Replace with the real container once the parent section is extracted."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "thumbnail",
+      "parent": "news_card",
+      "idx": 0,
+      "type": "Overlay",
+      "src": "1:4921",
+      "props": {
+        "clip": true,
+        "size": {
+          "w": "full",
+          "ratio": "16/9"
+        }
+      }
+    },
+    {
+      "id": "thumb_image",
+      "parent": "thumbnail",
+      "idx": 0,
+      "type": "Image",
+      "src": "1:4922",
+      "props": {
+        "src": "{article.image}",
+        "alt": "{article.headline}",
+        "fit": "cover",
+        "place": {
+          "anchor": "fill"
+        }
+      }
+    },
+    {
+      "id": "content",
+      "parent": "news_card",
+      "idx": 1,
+      "type": "Stack",
+      "src": "1:4923",
+      "props": {
+        "direction": "column",
+        "justify": "center",
+        "space": {
+          "py": "space.4",
+          "px": "space.2"
+        },
+        "size": {
+          "w": "full",
+          "h": "full"
+        }
+      }
+    },
+    {
+      "id": "article",
+      "parent": "content",
+      "idx": 0,
+      "type": "Stack",
+      "src": "1:4924",
+      "props": {
+        "direction": "column",
+        "justify": "between",
+        "size": {
+          "w": "full"
+        }
+      }
+    },
+    {
+      "id": "text_group",
+      "parent": "article",
+      "idx": 0,
+      "type": "Stack",
+      "src": "I1:4924;13448:62716",
+      "props": {
+        "direction": "column",
+        "gap": "space.4",
+        "size": {
+          "w": "full"
+        }
+      }
+    },
+    {
+      "id": "headline",
+      "parent": "text_group",
+      "idx": 0,
+      "type": "Text",
+      "src": "I1:4924;13448:62717",
+      "props": {
+        "content": "{article.headline}",
+        "style": "type.body_md_bold",
+        "tone": "color.text_main_high",
+        "truncate": 2
+      }
+    },
+    {
+      "id": "summary",
+      "parent": "text_group",
+      "idx": 1,
+      "type": "Text",
+      "src": "I1:4924;13448:62718",
+      "props": {
+        "content": "{article.summary}",
+        "style": "type.body_sm_medium",
+        "tone": "color.text_main_medium",
+        "truncate": 2
+      }
+    },
+    {
+      "id": "label",
+      "parent": "article",
+      "idx": 1,
+      "type": "Stack",
+      "src": "I1:4924;13448:62719",
+      "props": {
+        "direction": "column",
+        "justify": "end"
+      }
+    },
+    {
+      "id": "date_row",
+      "parent": "label",
+      "idx": 0,
+      "type": "Stack",
+      "src": "I1:4924;13448:62720",
+      "props": {
+        "direction": "row",
+        "align": "center",
+        "gap": {
+          "raw": 3.742,
+          "_unbound": true
+        },
+        "_meta": {
+          "deviations": [
+            {
+              "check": "C1",
+              "reason": "A 28x28 grey ellipse, an 8px line and a `3 minute read` text (unbound style) sit inside a 69x8 frame and overflow it; none appear in the reference render. Almost certainly file debris. This IR slice is from the 2026-08-07 page export — needs a fresh export of 1:4920 to confirm before building them."
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "date",
+      "parent": "date_row",
+      "idx": 0,
+      "type": "Text",
+      "src": "I1:4924;13448:62722",
+      "props": {
+        "content": "{article.date}",
+        "style": "type.body_sm_regular",
+        "tone": "color.text_main_low"
+      }
+    }
+  ]
+}

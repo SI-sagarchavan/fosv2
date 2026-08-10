@@ -1,0 +1,4298 @@
+{
+ "fileKey": null,
+ "fileName": "Untitled",
+ "pageName": "Page 1",
+ "rootNodeId": "1:5124",
+ "extractedAt": "2026-08-09T06:57:16.428Z",
+ "irVersion": "1.1.0",
+ "breakpointHint": 1366,
+ "root": {
+  "id": "1:5124",
+  "name": "Videos",
+  "type": "FRAME",
+  "layout": {
+   "mode": "none",
+   "gap": null,
+   "padding": {
+    "top": {
+     "value": 0,
+     "unbound": false
+    },
+    "right": {
+     "value": 0,
+     "unbound": false
+    },
+    "bottom": {
+     "value": 0,
+     "unbound": false
+    },
+    "left": {
+     "value": 0,
+     "unbound": false
+    }
+   },
+   "align": "MIN",
+   "justify": "MIN",
+   "wrap": false,
+   "sizing": {
+    "w": "fixed",
+    "h": "fixed"
+   },
+   "positioning": "auto"
+  },
+  "geometry": {
+   "bbox": {
+    "x": 0,
+    "y": 2041,
+    "w": 1366,
+    "h": 512
+   },
+   "relBbox": {
+    "x": 0,
+    "y": 0,
+    "w": 1366,
+    "h": 512
+   },
+   "aspect": 2.668,
+   "aspectBucket": "wide"
+  },
+  "fill": {
+   "tokenRef": "background/main/surface",
+   "unbound": false
+  },
+  "stroke": null,
+  "radius": {
+   "value": 0,
+   "unbound": false
+  },
+  "effects": [],
+  "opacity": 1,
+  "clipsContent": false,
+  "structuralSignature": "s2:2969339e2f673059",
+  "canonicalSignature": "c1:834f1c690395edcf",
+  "repeatedSiblings": 1,
+  "depth": 0,
+  "childCount": 2,
+  "children": [
+   {
+    "id": "1:5125",
+    "name": "Vector 100",
+    "type": "VECTOR",
+    "layout": {
+     "mode": "none",
+     "gap": null,
+     "padding": {
+      "top": {
+       "value": 0,
+       "unbound": false
+      },
+      "right": {
+       "value": 0,
+       "unbound": false
+      },
+      "bottom": {
+       "value": 0,
+       "unbound": false
+      },
+      "left": {
+       "value": 0,
+       "unbound": false
+      }
+     },
+     "align": null,
+     "justify": null,
+     "wrap": false,
+     "sizing": {
+      "w": "fixed",
+      "h": "fixed"
+     },
+     "positioning": "auto"
+    },
+    "geometry": {
+     "bbox": {
+      "x": 0,
+      "y": 1923,
+      "w": 1366,
+      "h": 630
+     },
+     "relBbox": {
+      "x": 0,
+      "y": -118,
+      "w": 1366,
+      "h": 630
+     },
+     "aspect": 2.1683,
+     "aspectBucket": "wide"
+    },
+    "fill": {
+     "tokenRef": "background/main/container",
+     "unbound": false
+    },
+    "stroke": null,
+    "radius": {
+     "value": 0,
+     "unbound": false
+    },
+    "effects": [
+     {
+      "type": "DROP_SHADOW",
+      "unbound": true
+     }
+    ],
+    "opacity": 1,
+    "clipsContent": false,
+    "structuralSignature": "s2:b6534903ab826225",
+    "canonicalSignature": "c1:3aa7970dc860a510",
+    "repeatedSiblings": 1,
+    "depth": 1,
+    "childCount": 0,
+    "children": []
+   },
+   {
+    "id": "1:5126",
+    "name": "Frame 1984078943",
+    "type": "FRAME",
+    "layout": {
+     "mode": "vertical",
+     "gap": {
+      "value": 32,
+      "tokenRef": "8",
+      "unbound": false
+     },
+     "padding": {
+      "top": {
+       "value": 0,
+       "unbound": false
+      },
+      "right": {
+       "value": 0,
+       "unbound": false
+      },
+      "bottom": {
+       "value": 0,
+       "unbound": false
+      },
+      "left": {
+       "value": 0,
+       "unbound": false
+      }
+     },
+     "align": "MIN",
+     "justify": "MIN",
+     "wrap": false,
+     "sizing": {
+      "w": "fixed",
+      "h": "hug"
+     },
+     "positioning": "auto"
+    },
+    "geometry": {
+     "bbox": {
+      "x": 96,
+      "y": 2054,
+      "w": 1172,
+      "h": 439
+     },
+     "relBbox": {
+      "x": 96,
+      "y": 13,
+      "w": 1172,
+      "h": 439
+     },
+     "aspect": 2.6697,
+     "aspectBucket": "wide"
+    },
+    "fill": null,
+    "stroke": null,
+    "radius": {
+     "value": 0,
+     "unbound": false
+    },
+    "effects": [],
+    "opacity": 1,
+    "clipsContent": false,
+    "structuralSignature": "s2:c7bff709fd429071",
+    "canonicalSignature": "c1:3a4c33e148f22026",
+    "repeatedSiblings": 1,
+    "depth": 1,
+    "childCount": 2,
+    "children": [
+     {
+      "id": "1:5127",
+      "name": "Frame 1984078815",
+      "type": "FRAME",
+      "layout": {
+       "mode": "horizontal",
+       "gap": {
+        "value": 32,
+        "unbound": true
+       },
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": "CENTER",
+       "justify": "SPACE_BETWEEN",
+       "wrap": false,
+       "sizing": {
+        "w": "fill",
+        "h": "fixed"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 96,
+        "y": 2054,
+        "w": 1172,
+        "h": 32
+       },
+       "relBbox": {
+        "x": 0,
+        "y": 0,
+        "w": 1172,
+        "h": 32
+       },
+       "aspect": 36.625,
+       "aspectBucket": "ultrawide"
+      },
+      "fill": null,
+      "stroke": null,
+      "radius": {
+       "value": 0,
+       "unbound": false
+      },
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "structuralSignature": "s2:2ff1b4aad66b06e2",
+      "canonicalSignature": "c1:cb8f488f3e1c02be",
+      "repeatedSiblings": 1,
+      "depth": 2,
+      "childCount": 2,
+      "children": [
+       {
+        "id": "1:5128",
+        "name": "BRAVE CORNER",
+        "type": "TEXT",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "hug",
+          "h": "hug"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 96,
+          "y": 2060.5,
+          "w": 232,
+          "h": 19
+         },
+         "relBbox": {
+          "x": 0,
+          "y": 6.5,
+          "w": 232,
+          "h": 19
+         },
+         "aspect": 12.2105,
+         "aspectBucket": "ultrawide"
+        },
+        "fill": {
+         "tokenRef": "text/main/sec",
+         "unbound": false
+        },
+        "stroke": null,
+        "radius": null,
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "text": {
+         "characters": "BRAVE CORNER",
+         "styleRef": "dp_4/regular",
+         "styleId": "S:e02ae9496ed33a57fc8a130b0cfdee2d07ee612d,18101:265",
+         "unbound": false,
+         "fontSize": 32,
+         "fontFamily": "Bakbak One",
+         "fontWeight": 400,
+         "lineHeight": 34,
+         "autoResize": "WIDTH_AND_HEIGHT",
+         "lines": 1
+        },
+        "structuralSignature": "s2:3dc6d74c9ab7bde9",
+        "canonicalSignature": "c1:98dd98822112fb40",
+        "repeatedSiblings": 1,
+        "depth": 3,
+        "childCount": 0,
+        "children": []
+       },
+       {
+        "id": "1:5129",
+        "name": "atom_button",
+        "type": "INSTANCE",
+        "componentKey": "95ab82f73d24e1f33729c4db9b21bd4242434a24",
+        "layout": {
+         "mode": "vertical",
+         "gap": {
+          "value": 0,
+          "unbound": false
+         },
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": "CENTER",
+         "justify": "CENTER",
+         "wrap": false,
+         "sizing": {
+          "w": "hug",
+          "h": "hug"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 1150,
+          "y": 2054,
+          "w": 118,
+          "h": 32
+         },
+         "relBbox": {
+          "x": 1054,
+          "y": 0,
+          "w": 118,
+          "h": 32
+         },
+         "aspect": 3.6875,
+         "aspectBucket": "ultrawide"
+        },
+        "fill": null,
+        "stroke": null,
+        "radius": {
+         "value": 8,
+         "tokenRef": "md",
+         "unbound": false
+        },
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": true,
+        "structuralSignature": "s2:c0192c26dac9a32c",
+        "canonicalSignature": "c1:3838ce88932ed949",
+        "repeatedSiblings": 1,
+        "depth": 3,
+        "childCount": 1,
+        "children": [
+         {
+          "id": "I1:5129;14027:2719",
+          "name": "atom_button_master",
+          "type": "INSTANCE",
+          "componentKey": "177f35a6fa32affdb2f9b567ebff0f52edb37a35",
+          "layout": {
+           "mode": "horizontal",
+           "gap": {
+            "value": 4,
+            "tokenRef": "spacing/1",
+            "unbound": false
+           },
+           "padding": {
+            "top": {
+             "value": 6,
+             "tokenRef": "1_5",
+             "unbound": false
+            },
+            "right": {
+             "value": 16,
+             "tokenRef": "4",
+             "unbound": false
+            },
+            "bottom": {
+             "value": 6,
+             "tokenRef": "1_5",
+             "unbound": false
+            },
+            "left": {
+             "value": 16,
+             "tokenRef": "4",
+             "unbound": false
+            }
+           },
+           "align": "CENTER",
+           "justify": "CENTER",
+           "wrap": false,
+           "sizing": {
+            "w": "fill",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 1150,
+            "y": 2054,
+            "w": 118,
+            "h": 32
+           },
+           "relBbox": {
+            "x": 0,
+            "y": 0,
+            "w": 118,
+            "h": 32
+           },
+           "aspect": 3.6875,
+           "aspectBucket": "ultrawide"
+          },
+          "fill": null,
+          "stroke": {
+           "tokenRef": "button/outline/style_2/border/default",
+           "weight": 1,
+           "unbound": false
+          },
+          "radius": {
+           "value": 8,
+           "tokenRef": "md",
+           "unbound": false
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:9696967af4ccfcae",
+          "canonicalSignature": "c1:e466fb2927fc3dfa",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 2,
+          "children": [
+           {
+            "id": "I1:5129;14027:2719;13031:7501",
+            "name": "atom_text",
+            "type": "TEXT",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "hug"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 1166,
+              "y": 2060,
+              "w": 64,
+              "h": 20
+             },
+             "relBbox": {
+              "x": 16,
+              "y": 6,
+              "w": 64,
+              "h": 20
+             },
+             "aspect": 3.2,
+             "aspectBucket": "ultrawide"
+            },
+            "fill": {
+             "tokenRef": "button/outline/style_2/text/default",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": null,
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "text": {
+             "characters": "VIEW MORE",
+             "styleRef": "button/sm",
+             "styleId": "S:f50e8600d0aeeda899ed3bf4fafbedd22f161fa6,18303:2",
+             "unbound": false,
+             "fontSize": 10,
+             "fontFamily": "Montserrat",
+             "fontWeight": 700,
+             "lineHeight": 20,
+             "autoResize": "HEIGHT",
+             "lines": 1
+            },
+            "structuralSignature": "s2:0955e78ac20529fa",
+            "canonicalSignature": "c1:8039215467448ab7",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:5129;14027:2719;13031:7621",
+            "name": "atom_icon_arrow_up_right",
+            "type": "INSTANCE",
+            "componentKey": "d7a6bfdd4208d30b2b71fb19431ffb9bd09b81de",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": "MIN",
+             "justify": "MIN",
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 1234,
+              "y": 2061,
+              "w": 17.999998092651367,
+              "h": 17.999998092651367
+             },
+             "relBbox": {
+              "x": 84,
+              "y": 7.000000953674316,
+              "w": 17.999998092651367,
+              "h": 17.999998092651367
+             },
+             "aspect": 1,
+             "aspectBucket": "square"
+            },
+            "fill": null,
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:f66b3f5682f80e61",
+            "canonicalSignature": "c1:bbb51f2e6400c83c",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 1,
+            "children": [
+             {
+              "id": "I1:5129;14027:2719;13031:7621;8899:77655",
+              "name": "Vector",
+              "type": "VECTOR",
+              "layout": {
+               "mode": "none",
+               "gap": null,
+               "padding": {
+                "top": {
+                 "value": 0,
+                 "unbound": false
+                },
+                "right": {
+                 "value": 0,
+                 "unbound": false
+                },
+                "bottom": {
+                 "value": 0,
+                 "unbound": false
+                },
+                "left": {
+                 "value": 0,
+                 "unbound": false
+                }
+               },
+               "align": null,
+               "justify": null,
+               "wrap": false,
+               "sizing": {
+                "w": "fixed",
+                "h": "fixed"
+               },
+               "positioning": "auto"
+              },
+              "geometry": {
+               "bbox": {
+                "x": 1237.9371337890625,
+                "y": 2064.9375,
+                "w": 10.125311851501465,
+                "h": 10.125311851501465
+               },
+               "relBbox": {
+                "x": 3.9371869564056396,
+                "y": 3.937499523162842,
+                "w": 10.125311851501465,
+                "h": 10.125311851501465
+               },
+               "aspect": 1,
+               "aspectBucket": "square"
+              },
+              "fill": {
+               "tokenRef": "button/outline/style_2/text/default",
+               "unbound": false
+              },
+              "stroke": null,
+              "radius": {
+               "value": 0,
+               "unbound": false
+              },
+              "effects": [],
+              "opacity": 1,
+              "clipsContent": false,
+              "structuralSignature": "s2:680f32eb449d31f4",
+              "canonicalSignature": "c1:d460f489cf5c334d",
+              "repeatedSiblings": 1,
+              "depth": 6,
+              "childCount": 0,
+              "children": []
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     },
+     {
+      "id": "1:5130",
+      "name": "Frame 1984078910",
+      "type": "FRAME",
+      "layout": {
+       "mode": "horizontal",
+       "gap": {
+        "value": 16,
+        "unbound": true
+       },
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": "CENTER",
+       "justify": "MIN",
+       "wrap": false,
+       "sizing": {
+        "w": "hug",
+        "h": "hug"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 96,
+        "y": 2118,
+        "w": 1172,
+        "h": 375
+       },
+       "relBbox": {
+        "x": 0,
+        "y": 64,
+        "w": 1172,
+        "h": 375
+       },
+       "aspect": 3.1253,
+       "aspectBucket": "ultrawide"
+      },
+      "fill": null,
+      "stroke": null,
+      "radius": {
+       "value": 0,
+       "unbound": false
+      },
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "structuralSignature": "s2:9c739131bef6030c",
+      "canonicalSignature": "c1:2761fc73ce31a485",
+      "repeatedSiblings": 1,
+      "depth": 2,
+      "childCount": 4,
+      "children": [
+       {
+        "id": "1:5131",
+        "name": "D_organism_video_card_sm",
+        "type": "INSTANCE",
+        "componentKey": "968a8019aaf9e570ecfbe9dcf37ac37ddb62186a",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": "MIN",
+         "justify": "MIN",
+         "wrap": false,
+         "sizing": {
+          "w": "fixed",
+          "h": "fixed"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 96,
+          "y": 2118,
+          "w": 281,
+          "h": 375
+         },
+         "relBbox": {
+          "x": 0,
+          "y": 0,
+          "w": 281,
+          "h": 375
+         },
+         "aspect": 0.7493,
+         "aspectBucket": "portrait"
+        },
+        "fill": {
+         "tokenRef": "background/sec/container",
+         "unbound": false
+        },
+        "stroke": null,
+        "radius": {
+         "value": 12,
+         "tokenRef": "lg",
+         "unbound": false
+        },
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": true,
+        "structuralSignature": "s2:7c9971a931cc4005",
+        "canonicalSignature": "c1:74714cc4a6d70729",
+        "repeatedSiblings": 4,
+        "depth": 3,
+        "childCount": 4,
+        "children": [
+         {
+          "id": "I1:5131;10090:3696",
+          "name": "Rectangle 3464205",
+          "type": "IMAGE",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": null,
+           "justify": null,
+           "wrap": false,
+           "sizing": {
+            "w": "fixed",
+            "h": "fixed"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": -73,
+            "y": 2100,
+            "w": 699,
+            "h": 393
+           },
+           "relBbox": {
+            "x": -169,
+            "y": -18,
+            "w": 699,
+            "h": 393
+           },
+           "aspect": 1.7786,
+           "aspectBucket": "landscape"
+          },
+          "fill": {
+           "raw": "IMAGE:FIT",
+           "unbound": true
+          },
+          "stroke": null,
+          "radius": {
+           "value": 0,
+           "unbound": false
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "image": {
+           "fit": "FIT",
+           "hasImageFill": true
+          },
+          "structuralSignature": "s2:d0fe31410545c943",
+          "canonicalSignature": "c1:95880ddfe160e48e",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 0,
+          "children": []
+         },
+         {
+          "id": "I1:5131;13089:25705",
+          "name": "video icon",
+          "type": "INSTANCE",
+          "componentKey": "f09b950b34247c219b58f48f43d1deca7a22361d",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": "MIN",
+           "justify": "MIN",
+           "wrap": false,
+           "sizing": {
+            "w": "fixed",
+            "h": "fixed"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 207,
+            "y": 2275,
+            "w": 59.99997329711914,
+            "h": 60
+           },
+           "relBbox": {
+            "x": 111,
+            "y": 157,
+            "w": 59.99997329711914,
+            "h": 60
+           },
+           "aspect": 1,
+           "aspectBucket": "square"
+          },
+          "fill": null,
+          "stroke": null,
+          "radius": {
+           "value": 0,
+           "unbound": false
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:90e6ae76aad594f3",
+          "canonicalSignature": "c1:586d92cca284b33e",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 4,
+          "children": [
+           {
+            "id": "I1:5131;13089:25705;13031:13577",
+            "name": "Ellipse 282",
+            "type": "VECTOR",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 207.00009155273438,
+              "y": 2274.999956228874,
+              "w": 59.999976918830725,
+              "h": 59.999976918830725
+             },
+             "relBbox": {
+              "x": 0.00008642429020255804,
+              "y": 12.67936897277832,
+              "w": 48.989776611328125,
+              "h": 48.989776611328125
+             },
+             "aspect": 1,
+             "aspectBucket": "square"
+            },
+            "fill": {
+             "tokenRef": "border/main/prim",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:680f32eb449d31f4",
+            "canonicalSignature": "c1:d460f489cf5c334d",
+            "repeatedSiblings": 3,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:5131;13089:25705;13031:13578",
+            "name": "Ellipse 284",
+            "type": "VECTOR",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 207.00009155273438,
+              "y": 2274.9998227116703,
+              "w": 59.999976918830725,
+              "h": 59.999976918830725
+             },
+             "relBbox": {
+              "x": 0.00008642429020255804,
+              "y": 47.3204231262207,
+              "w": 48.989776611328125,
+              "h": 48.989776611328125
+             },
+             "aspect": 1,
+             "aspectBucket": "square"
+            },
+            "fill": {
+             "tokenRef": "border/main/prim",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:680f32eb449d31f4",
+            "canonicalSignature": "c1:d460f489cf5c334d",
+            "repeatedSiblings": 3,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:5131;13089:25705;13031:13579",
+            "name": "Ellipse 283",
+            "type": "VECTOR",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 217.3671875,
+              "y": 2285.36669921875,
+              "w": 39.2666130065918,
+              "h": 39.26661682128906
+             },
+             "relBbox": {
+              "x": 10.3671875,
+              "y": 10.36669921875,
+              "w": 39.2666130065918,
+              "h": 39.26661682128906
+             },
+             "aspect": 1,
+             "aspectBucket": "square"
+            },
+            "fill": {
+             "tokenRef": "background/prim/card",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:680f32eb449d31f4",
+            "canonicalSignature": "c1:d460f489cf5c334d",
+            "repeatedSiblings": 3,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:5131;13089:25705;13031:13580",
+            "name": "Polygon 4",
+            "type": "VECTOR",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 231.95203240538834,
+              "y": 2297.7075189918105,
+              "w": 12.340936344611663,
+              "h": 14.584744992869673
+             },
+             "relBbox": {
+              "x": 37.29296875,
+              "y": 22.70751953125,
+              "w": 14.584744453430176,
+              "h": 12.340935707092285
+             },
+             "aspect": 0.8462,
+             "aspectBucket": "portrait"
+            },
+            "fill": {
+             "tokenRef": "text/prim/high",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:d647d2d779b49521",
+            "canonicalSignature": "c1:4a4c1c310e9624d8",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           }
+          ]
+         },
+         {
+          "id": "I1:5131;10090:3704",
+          "name": "Frame 1984078818",
+          "type": "FRAME",
+          "layout": {
+           "mode": "vertical",
+           "gap": {
+            "value": 12.678,
+            "unbound": true
+           },
+           "padding": {
+            "top": {
+             "value": 20,
+             "unbound": true
+            },
+            "right": {
+             "value": 12.678,
+             "unbound": true
+            },
+            "bottom": {
+             "value": 20,
+             "unbound": true
+            },
+            "left": {
+             "value": 12.678,
+             "unbound": true
+            }
+           },
+           "align": "MIN",
+           "justify": "MIN",
+           "wrap": false,
+           "sizing": {
+            "w": "fixed",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 106,
+            "y": 2485.322265625,
+            "w": 262,
+            "h": 103.67764282226562
+           },
+           "relBbox": {
+            "x": 10,
+            "y": 367.322265625,
+            "w": 262,
+            "h": 103.67764282226562
+           },
+           "aspect": 2.5271,
+           "aspectBucket": "wide"
+          },
+          "fill": {
+           "tokenRef": "background/main/surface",
+           "unbound": false
+          },
+          "stroke": null,
+          "radius": {
+           "value": 10,
+           "unbound": true
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:9fbc1701521c744d",
+          "canonicalSignature": "c1:679ba3d2b6a96393",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 2,
+          "children": [
+           {
+            "id": "I1:5131;10090:3705",
+            "name": "Hilton Cartwright struck an important 42 off 20",
+            "type": "TEXT",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fill",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 118.67764282226562,
+              "y": 2505.322265625,
+              "w": 236.64471435546875,
+              "h": 43
+             },
+             "relBbox": {
+              "x": 12.677644729614258,
+              "y": 20,
+              "w": 236.64471435546875,
+              "h": 43
+             },
+             "aspect": 5.5034,
+             "aspectBucket": "ultrawide"
+            },
+            "fill": {
+             "tokenRef": "text/main/high",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": null,
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "text": {
+             "characters": "Cartwright made 42 off 20 to push Brave ahead.",
+             "unbound": true,
+             "fontSize": 14,
+             "fontFamily": "Montserrat",
+             "fontWeight": 700,
+             "lineHeight": 22,
+             "autoResize": "TRUNCATE",
+             "lines": 2
+            },
+            "structuralSignature": "s2:8ec229045fcd910b",
+            "canonicalSignature": "c1:45662e465fccd98e",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:5131;10090:3706",
+            "name": "14 jun 2024",
+            "type": "TEXT",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "hug",
+              "h": "hug"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 118.67764282226562,
+              "y": 2561,
+              "w": 69,
+              "h": 8
+             },
+             "relBbox": {
+              "x": 12.677644729614258,
+              "y": 75.67764282226562,
+              "w": 69,
+              "h": 8
+             },
+             "aspect": 8.625,
+             "aspectBucket": "ultrawide"
+            },
+            "fill": {
+             "tokenRef": "text/main/low",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": null,
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "text": {
+             "characters": "14 jun 2024",
+             "styleRef": "letter_spacing/none",
+             "unbound": false,
+             "fontSize": 12,
+             "fontFamily": "Montserrat",
+             "fontWeight": 500,
+             "lineHeight": 15.73,
+             "autoResize": "WIDTH_AND_HEIGHT",
+             "lines": 1
+            },
+            "structuralSignature": "s2:3dc6d74c9ab7bde9",
+            "canonicalSignature": "c1:98dd98822112fb40",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           }
+          ]
+         },
+         {
+          "id": "I1:5131;13154:83537",
+          "name": "Frame 2009",
+          "type": "FRAME",
+          "layout": {
+           "mode": "horizontal",
+           "gap": {
+            "value": 0,
+            "tokenRef": "0",
+            "unbound": false
+           },
+           "padding": {
+            "top": {
+             "value": 6,
+             "tokenRef": "1_5",
+             "unbound": false
+            },
+            "right": {
+             "value": 6,
+             "tokenRef": "1_5",
+             "unbound": false
+            },
+            "bottom": {
+             "value": 6,
+             "tokenRef": "1_5",
+             "unbound": false
+            },
+            "left": {
+             "value": 6,
+             "tokenRef": "1_5",
+             "unbound": false
+            }
+           },
+           "align": "CENTER",
+           "justify": "MIN",
+           "wrap": false,
+           "sizing": {
+            "w": "hug",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 317.033203125,
+            "y": 2134.10888671875,
+            "w": 44,
+            "h": 20
+           },
+           "relBbox": {
+            "x": 221.033203125,
+            "y": 16.10888671875,
+            "w": 44,
+            "h": 20
+           },
+           "aspect": 2.2,
+           "aspectBucket": "wide"
+          },
+          "fill": {
+           "tokenRef": "background/sec/container",
+           "unbound": false
+          },
+          "stroke": null,
+          "radius": {
+           "value": 2,
+           "tokenRef": "xs",
+           "unbound": false
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:100795c39590296e",
+          "canonicalSignature": "c1:ff282e87ddfc1c19",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 1,
+          "children": [
+           {
+            "id": "I1:5131;13154:83538",
+            "name": "09:11",
+            "type": "TEXT",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "hug",
+              "h": "hug"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 323.033203125,
+              "y": 2140.10888671875,
+              "w": 32,
+              "h": 8
+             },
+             "relBbox": {
+              "x": 6,
+              "y": 6,
+              "w": 32,
+              "h": 8
+             },
+             "aspect": 4,
+             "aspectBucket": "ultrawide"
+            },
+            "fill": {
+             "tokenRef": "text/invert/high",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": null,
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "text": {
+             "characters": "09:11",
+             "styleRef": "badge/md",
+             "styleId": "S:cf2f08512b3b3e746cc1c7eacb37db1f6a1431f4,18236:468",
+             "unbound": false,
+             "fontSize": 12,
+             "fontFamily": "Montserrat",
+             "fontWeight": 500,
+             "lineHeight": 16,
+             "autoResize": "WIDTH_AND_HEIGHT",
+             "lines": 1
+            },
+            "structuralSignature": "s2:3dc6d74c9ab7bde9",
+            "canonicalSignature": "c1:98dd98822112fb40",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "id": "1:5132",
+        "name": "Frame 1984078839",
+        "type": "INSTANCE",
+        "componentKey": "968a8019aaf9e570ecfbe9dcf37ac37ddb62186a",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": "MIN",
+         "justify": "MIN",
+         "wrap": false,
+         "sizing": {
+          "w": "fixed",
+          "h": "fixed"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 393,
+          "y": 2118,
+          "w": 281,
+          "h": 375
+         },
+         "relBbox": {
+          "x": 297,
+          "y": 0,
+          "w": 281,
+          "h": 375
+         },
+         "aspect": 0.7493,
+         "aspectBucket": "portrait"
+        },
+        "fill": {
+         "tokenRef": "background/sec/container",
+         "unbound": false
+        },
+        "stroke": null,
+        "radius": {
+         "value": 12,
+         "tokenRef": "lg",
+         "unbound": false
+        },
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": true,
+        "structuralSignature": "s2:7c9971a931cc4005",
+        "canonicalSignature": "c1:74714cc4a6d70729",
+        "repeatedSiblings": 4,
+        "depth": 3,
+        "childCount": 4,
+        "children": [
+         {
+          "id": "I1:5132;10090:3696",
+          "name": "Rectangle 3464205",
+          "type": "IMAGE",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": null,
+           "justify": null,
+           "wrap": false,
+           "sizing": {
+            "w": "fixed",
+            "h": "fixed"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 224,
+            "y": 2100,
+            "w": 699,
+            "h": 393
+           },
+           "relBbox": {
+            "x": -169,
+            "y": -18,
+            "w": 699,
+            "h": 393
+           },
+           "aspect": 1.7786,
+           "aspectBucket": "landscape"
+          },
+          "fill": {
+           "raw": "IMAGE:CROP",
+           "unbound": true
+          },
+          "stroke": null,
+          "radius": {
+           "value": 0,
+           "unbound": false
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "image": {
+           "fit": "CROP",
+           "hasImageFill": true
+          },
+          "structuralSignature": "s2:d0fe31410545c943",
+          "canonicalSignature": "c1:95880ddfe160e48e",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 0,
+          "children": []
+         },
+         {
+          "id": "I1:5132;13089:25705",
+          "name": "video icon",
+          "type": "INSTANCE",
+          "componentKey": "f09b950b34247c219b58f48f43d1deca7a22361d",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": "MIN",
+           "justify": "MIN",
+           "wrap": false,
+           "sizing": {
+            "w": "fixed",
+            "h": "fixed"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 504,
+            "y": 2275,
+            "w": 59.99997329711914,
+            "h": 60
+           },
+           "relBbox": {
+            "x": 111,
+            "y": 157,
+            "w": 59.99997329711914,
+            "h": 60
+           },
+           "aspect": 1,
+           "aspectBucket": "square"
+          },
+          "fill": null,
+          "stroke": null,
+          "radius": {
+           "value": 0,
+           "unbound": false
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:90e6ae76aad594f3",
+          "canonicalSignature": "c1:586d92cca284b33e",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 4,
+          "children": [
+           {
+            "id": "I1:5132;13089:25705;13031:13577",
+            "name": "Ellipse 282",
+            "type": "VECTOR",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 504.0000915527344,
+              "y": 2274.999956228874,
+              "w": 59.999976918830725,
+              "h": 59.999976918830725
+             },
+             "relBbox": {
+              "x": 0.00008642429020255804,
+              "y": 12.67936897277832,
+              "w": 48.989776611328125,
+              "h": 48.989776611328125
+             },
+             "aspect": 1,
+             "aspectBucket": "square"
+            },
+            "fill": {
+             "tokenRef": "border/main/prim",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:680f32eb449d31f4",
+            "canonicalSignature": "c1:d460f489cf5c334d",
+            "repeatedSiblings": 3,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:5132;13089:25705;13031:13578",
+            "name": "Ellipse 284",
+            "type": "VECTOR",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 504.0000915527344,
+              "y": 2274.9998227116703,
+              "w": 59.999976918830725,
+              "h": 59.999976918830725
+             },
+             "relBbox": {
+              "x": 0.00008642429020255804,
+              "y": 47.3204231262207,
+              "w": 48.989776611328125,
+              "h": 48.989776611328125
+             },
+             "aspect": 1,
+             "aspectBucket": "square"
+            },
+            "fill": {
+             "tokenRef": "border/main/prim",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:680f32eb449d31f4",
+            "canonicalSignature": "c1:d460f489cf5c334d",
+            "repeatedSiblings": 3,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:5132;13089:25705;13031:13579",
+            "name": "Ellipse 283",
+            "type": "VECTOR",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 514.3671875,
+              "y": 2285.36669921875,
+              "w": 39.2666130065918,
+              "h": 39.26661682128906
+             },
+             "relBbox": {
+              "x": 10.3671875,
+              "y": 10.36669921875,
+              "w": 39.2666130065918,
+              "h": 39.26661682128906
+             },
+             "aspect": 1,
+             "aspectBucket": "square"
+            },
+            "fill": {
+             "tokenRef": "background/prim/card",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:680f32eb449d31f4",
+            "canonicalSignature": "c1:d460f489cf5c334d",
+            "repeatedSiblings": 3,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:5132;13089:25705;13031:13580",
+            "name": "Polygon 4",
+            "type": "VECTOR",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 528.9520324053883,
+              "y": 2297.7075189918105,
+              "w": 12.340936344611691,
+              "h": 14.584744992869673
+             },
+             "relBbox": {
+              "x": 37.29296875,
+              "y": 22.70751953125,
+              "w": 14.584744453430176,
+              "h": 12.340935707092285
+             },
+             "aspect": 0.8462,
+             "aspectBucket": "portrait"
+            },
+            "fill": {
+             "tokenRef": "text/prim/high",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:d647d2d779b49521",
+            "canonicalSignature": "c1:4a4c1c310e9624d8",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           }
+          ]
+         },
+         {
+          "id": "I1:5132;10090:3704",
+          "name": "Frame 1984078818",
+          "type": "FRAME",
+          "layout": {
+           "mode": "vertical",
+           "gap": {
+            "value": 12.678,
+            "unbound": true
+           },
+           "padding": {
+            "top": {
+             "value": 20,
+             "unbound": true
+            },
+            "right": {
+             "value": 12.678,
+             "unbound": true
+            },
+            "bottom": {
+             "value": 20,
+             "unbound": true
+            },
+            "left": {
+             "value": 12.678,
+             "unbound": true
+            }
+           },
+           "align": "MIN",
+           "justify": "MIN",
+           "wrap": false,
+           "sizing": {
+            "w": "fixed",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 403,
+            "y": 2485.322265625,
+            "w": 262,
+            "h": 103.67764282226562
+           },
+           "relBbox": {
+            "x": 10,
+            "y": 367.322265625,
+            "w": 262,
+            "h": 103.67764282226562
+           },
+           "aspect": 2.5271,
+           "aspectBucket": "wide"
+          },
+          "fill": {
+           "tokenRef": "background/main/surface",
+           "unbound": false
+          },
+          "stroke": null,
+          "radius": {
+           "value": 10,
+           "unbound": true
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:9fbc1701521c744d",
+          "canonicalSignature": "c1:679ba3d2b6a96393",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 2,
+          "children": [
+           {
+            "id": "I1:5132;10090:3705",
+            "name": "Hilton Cartwright struck an important 42 off 20",
+            "type": "TEXT",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fill",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 415.6776428222656,
+              "y": 2505.322265625,
+              "w": 236.64471435546875,
+              "h": 43
+             },
+             "relBbox": {
+              "x": 12.677644729614258,
+              "y": 20,
+              "w": 236.64471435546875,
+              "h": 43
+             },
+             "aspect": 5.5034,
+             "aspectBucket": "ultrawide"
+            },
+            "fill": {
+             "tokenRef": "text/main/high",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": null,
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "text": {
+             "characters": "Overton struck twice in the powerplay, putting Brave on top early. ",
+             "unbound": true,
+             "fontSize": 14,
+             "fontFamily": "Montserrat",
+             "fontWeight": 700,
+             "lineHeight": 22,
+             "autoResize": "TRUNCATE",
+             "lines": 2
+            },
+            "structuralSignature": "s2:8ec229045fcd910b",
+            "canonicalSignature": "c1:45662e465fccd98e",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:5132;10090:3706",
+            "name": "14 jun 2024",
+            "type": "TEXT",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "hug",
+              "h": "hug"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 415.6776428222656,
+              "y": 2561,
+              "w": 68,
+              "h": 8
+             },
+             "relBbox": {
+              "x": 12.677644729614258,
+              "y": 75.67764282226562,
+              "w": 68,
+              "h": 8
+             },
+             "aspect": 8.5,
+             "aspectBucket": "ultrawide"
+            },
+            "fill": {
+             "tokenRef": "text/main/low",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": null,
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "text": {
+             "characters": "12 jun 2024",
+             "styleRef": "letter_spacing/none",
+             "unbound": false,
+             "fontSize": 12,
+             "fontFamily": "Montserrat",
+             "fontWeight": 500,
+             "lineHeight": 15.73,
+             "autoResize": "WIDTH_AND_HEIGHT",
+             "lines": 1
+            },
+            "structuralSignature": "s2:3dc6d74c9ab7bde9",
+            "canonicalSignature": "c1:98dd98822112fb40",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           }
+          ]
+         },
+         {
+          "id": "I1:5132;13154:83537",
+          "name": "Frame 2009",
+          "type": "FRAME",
+          "layout": {
+           "mode": "horizontal",
+           "gap": {
+            "value": 0,
+            "tokenRef": "0",
+            "unbound": false
+           },
+           "padding": {
+            "top": {
+             "value": 6,
+             "tokenRef": "1_5",
+             "unbound": false
+            },
+            "right": {
+             "value": 6,
+             "tokenRef": "1_5",
+             "unbound": false
+            },
+            "bottom": {
+             "value": 6,
+             "tokenRef": "1_5",
+             "unbound": false
+            },
+            "left": {
+             "value": 6,
+             "tokenRef": "1_5",
+             "unbound": false
+            }
+           },
+           "align": "CENTER",
+           "justify": "MIN",
+           "wrap": false,
+           "sizing": {
+            "w": "hug",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 614.033203125,
+            "y": 2134.10888671875,
+            "w": 44,
+            "h": 20
+           },
+           "relBbox": {
+            "x": 221.033203125,
+            "y": 16.10888671875,
+            "w": 44,
+            "h": 20
+           },
+           "aspect": 2.2,
+           "aspectBucket": "wide"
+          },
+          "fill": {
+           "tokenRef": "background/sec/container",
+           "unbound": false
+          },
+          "stroke": null,
+          "radius": {
+           "value": 2,
+           "tokenRef": "xs",
+           "unbound": false
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:100795c39590296e",
+          "canonicalSignature": "c1:ff282e87ddfc1c19",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 1,
+          "children": [
+           {
+            "id": "I1:5132;13154:83538",
+            "name": "09:11",
+            "type": "TEXT",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "hug",
+              "h": "hug"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 620.033203125,
+              "y": 2140.10888671875,
+              "w": 32,
+              "h": 8
+             },
+             "relBbox": {
+              "x": 6,
+              "y": 6,
+              "w": 32,
+              "h": 8
+             },
+             "aspect": 4,
+             "aspectBucket": "ultrawide"
+            },
+            "fill": {
+             "tokenRef": "text/invert/high",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": null,
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "text": {
+             "characters": "09:11",
+             "styleRef": "badge/md",
+             "styleId": "S:cf2f08512b3b3e746cc1c7eacb37db1f6a1431f4,18236:468",
+             "unbound": false,
+             "fontSize": 12,
+             "fontFamily": "Montserrat",
+             "fontWeight": 500,
+             "lineHeight": 16,
+             "autoResize": "WIDTH_AND_HEIGHT",
+             "lines": 1
+            },
+            "structuralSignature": "s2:3dc6d74c9ab7bde9",
+            "canonicalSignature": "c1:98dd98822112fb40",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "id": "1:5133",
+        "name": "Frame 1984078840",
+        "type": "INSTANCE",
+        "componentKey": "968a8019aaf9e570ecfbe9dcf37ac37ddb62186a",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": "MIN",
+         "justify": "MIN",
+         "wrap": false,
+         "sizing": {
+          "w": "fixed",
+          "h": "fixed"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 690,
+          "y": 2118,
+          "w": 281,
+          "h": 375
+         },
+         "relBbox": {
+          "x": 594,
+          "y": 0,
+          "w": 281,
+          "h": 375
+         },
+         "aspect": 0.7493,
+         "aspectBucket": "portrait"
+        },
+        "fill": {
+         "tokenRef": "background/sec/container",
+         "unbound": false
+        },
+        "stroke": null,
+        "radius": {
+         "value": 12,
+         "tokenRef": "lg",
+         "unbound": false
+        },
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": true,
+        "structuralSignature": "s2:7c9971a931cc4005",
+        "canonicalSignature": "c1:74714cc4a6d70729",
+        "repeatedSiblings": 4,
+        "depth": 3,
+        "childCount": 4,
+        "children": [
+         {
+          "id": "I1:5133;10090:3696",
+          "name": "Rectangle 3464205",
+          "type": "IMAGE",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": null,
+           "justify": null,
+           "wrap": false,
+           "sizing": {
+            "w": "fixed",
+            "h": "fixed"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 521,
+            "y": 2100,
+            "w": 699,
+            "h": 393
+           },
+           "relBbox": {
+            "x": -169,
+            "y": -18,
+            "w": 699,
+            "h": 393
+           },
+           "aspect": 1.7786,
+           "aspectBucket": "landscape"
+          },
+          "fill": {
+           "raw": "IMAGE:CROP",
+           "unbound": true
+          },
+          "stroke": null,
+          "radius": {
+           "value": 0,
+           "unbound": false
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "image": {
+           "fit": "CROP",
+           "hasImageFill": true
+          },
+          "structuralSignature": "s2:d0fe31410545c943",
+          "canonicalSignature": "c1:95880ddfe160e48e",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 0,
+          "children": []
+         },
+         {
+          "id": "I1:5133;13089:25705",
+          "name": "video icon",
+          "type": "INSTANCE",
+          "componentKey": "f09b950b34247c219b58f48f43d1deca7a22361d",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": "MIN",
+           "justify": "MIN",
+           "wrap": false,
+           "sizing": {
+            "w": "fixed",
+            "h": "fixed"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 801,
+            "y": 2275,
+            "w": 59.99997329711914,
+            "h": 60
+           },
+           "relBbox": {
+            "x": 111,
+            "y": 157,
+            "w": 59.99997329711914,
+            "h": 60
+           },
+           "aspect": 1,
+           "aspectBucket": "square"
+          },
+          "fill": null,
+          "stroke": null,
+          "radius": {
+           "value": 0,
+           "unbound": false
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:90e6ae76aad594f3",
+          "canonicalSignature": "c1:586d92cca284b33e",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 4,
+          "children": [
+           {
+            "id": "I1:5133;13089:25705;13031:13577",
+            "name": "Ellipse 282",
+            "type": "VECTOR",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 801.0000610351562,
+              "y": 2274.999956228874,
+              "w": 59.999976918830725,
+              "h": 59.999976918830725
+             },
+             "relBbox": {
+              "x": 0.00008642429020255804,
+              "y": 12.67936897277832,
+              "w": 48.989776611328125,
+              "h": 48.989776611328125
+             },
+             "aspect": 1,
+             "aspectBucket": "square"
+            },
+            "fill": {
+             "tokenRef": "border/main/prim",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:680f32eb449d31f4",
+            "canonicalSignature": "c1:d460f489cf5c334d",
+            "repeatedSiblings": 3,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:5133;13089:25705;13031:13578",
+            "name": "Ellipse 284",
+            "type": "VECTOR",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 801.0000610351562,
+              "y": 2274.9998227116703,
+              "w": 59.999976918830725,
+              "h": 59.999976918830725
+             },
+             "relBbox": {
+              "x": 0.00008642429020255804,
+              "y": 47.3204231262207,
+              "w": 48.989776611328125,
+              "h": 48.989776611328125
+             },
+             "aspect": 1,
+             "aspectBucket": "square"
+            },
+            "fill": {
+             "tokenRef": "border/main/prim",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:680f32eb449d31f4",
+            "canonicalSignature": "c1:d460f489cf5c334d",
+            "repeatedSiblings": 3,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:5133;13089:25705;13031:13579",
+            "name": "Ellipse 283",
+            "type": "VECTOR",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 811.3671875,
+              "y": 2285.36669921875,
+              "w": 39.2666130065918,
+              "h": 39.26661682128906
+             },
+             "relBbox": {
+              "x": 10.3671875,
+              "y": 10.36669921875,
+              "w": 39.2666130065918,
+              "h": 39.26661682128906
+             },
+             "aspect": 1,
+             "aspectBucket": "square"
+            },
+            "fill": {
+             "tokenRef": "background/prim/card",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:680f32eb449d31f4",
+            "canonicalSignature": "c1:d460f489cf5c334d",
+            "repeatedSiblings": 3,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:5133;13089:25705;13031:13580",
+            "name": "Polygon 4",
+            "type": "VECTOR",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 825.9520324053883,
+              "y": 2297.7075189918105,
+              "w": 12.340936344611691,
+              "h": 14.584744992869673
+             },
+             "relBbox": {
+              "x": 37.29296875,
+              "y": 22.70751953125,
+              "w": 14.584744453430176,
+              "h": 12.340935707092285
+             },
+             "aspect": 0.8462,
+             "aspectBucket": "portrait"
+            },
+            "fill": {
+             "tokenRef": "text/prim/high",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:d647d2d779b49521",
+            "canonicalSignature": "c1:4a4c1c310e9624d8",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           }
+          ]
+         },
+         {
+          "id": "I1:5133;10090:3704",
+          "name": "Frame 1984078818",
+          "type": "FRAME",
+          "layout": {
+           "mode": "vertical",
+           "gap": {
+            "value": 12.678,
+            "unbound": true
+           },
+           "padding": {
+            "top": {
+             "value": 20,
+             "unbound": true
+            },
+            "right": {
+             "value": 12.678,
+             "unbound": true
+            },
+            "bottom": {
+             "value": 20,
+             "unbound": true
+            },
+            "left": {
+             "value": 12.678,
+             "unbound": true
+            }
+           },
+           "align": "MIN",
+           "justify": "MIN",
+           "wrap": false,
+           "sizing": {
+            "w": "fixed",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 700,
+            "y": 2485.322265625,
+            "w": 262,
+            "h": 103.67764282226562
+           },
+           "relBbox": {
+            "x": 10,
+            "y": 367.322265625,
+            "w": 262,
+            "h": 103.67764282226562
+           },
+           "aspect": 2.5271,
+           "aspectBucket": "wide"
+          },
+          "fill": {
+           "tokenRef": "color/neu/50",
+           "unbound": false
+          },
+          "stroke": null,
+          "radius": {
+           "value": 10,
+           "unbound": true
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:9fbc1701521c744d",
+          "canonicalSignature": "c1:679ba3d2b6a96393",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 2,
+          "children": [
+           {
+            "id": "I1:5133;10090:3705",
+            "name": "Hilton Cartwright struck an important 42 off 20",
+            "type": "TEXT",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fill",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 712.6776733398438,
+              "y": 2505.322265625,
+              "w": 236.64471435546875,
+              "h": 43
+             },
+             "relBbox": {
+              "x": 12.677644729614258,
+              "y": 20,
+              "w": 236.64471435546875,
+              "h": 43
+             },
+             "aspect": 5.5034,
+             "aspectBucket": "ultrawide"
+            },
+            "fill": {
+             "tokenRef": "color/neu/950",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": null,
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "text": {
+             "characters": "Michael Bracewell took two wickets in his first five balls",
+             "unbound": true,
+             "fontSize": 14,
+             "fontFamily": "Montserrat",
+             "fontWeight": 700,
+             "lineHeight": 22,
+             "autoResize": "TRUNCATE",
+             "lines": 2
+            },
+            "structuralSignature": "s2:8ec229045fcd910b",
+            "canonicalSignature": "c1:45662e465fccd98e",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:5133;10090:3706",
+            "name": "14 jun 2024",
+            "type": "TEXT",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "hug",
+              "h": "hug"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 712.6776733398438,
+              "y": 2561,
+              "w": 69,
+              "h": 8
+             },
+             "relBbox": {
+              "x": 12.677644729614258,
+              "y": 75.67764282226562,
+              "w": 69,
+              "h": 8
+             },
+             "aspect": 8.625,
+             "aspectBucket": "ultrawide"
+            },
+            "fill": {
+             "tokenRef": "color/neu/800",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": null,
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "text": {
+             "characters": "14 jun 2024",
+             "styleRef": "letter_spacing/none",
+             "unbound": false,
+             "fontSize": 12,
+             "fontFamily": "Montserrat",
+             "fontWeight": 500,
+             "lineHeight": 15.73,
+             "autoResize": "WIDTH_AND_HEIGHT",
+             "lines": 1
+            },
+            "structuralSignature": "s2:3dc6d74c9ab7bde9",
+            "canonicalSignature": "c1:98dd98822112fb40",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           }
+          ]
+         },
+         {
+          "id": "I1:5133;13154:83537",
+          "name": "Frame 2009",
+          "type": "FRAME",
+          "layout": {
+           "mode": "horizontal",
+           "gap": {
+            "value": 0,
+            "tokenRef": "0",
+            "unbound": false
+           },
+           "padding": {
+            "top": {
+             "value": 6,
+             "tokenRef": "1_5",
+             "unbound": false
+            },
+            "right": {
+             "value": 6,
+             "tokenRef": "1_5",
+             "unbound": false
+            },
+            "bottom": {
+             "value": 6,
+             "tokenRef": "1_5",
+             "unbound": false
+            },
+            "left": {
+             "value": 6,
+             "tokenRef": "1_5",
+             "unbound": false
+            }
+           },
+           "align": "CENTER",
+           "justify": "MIN",
+           "wrap": false,
+           "sizing": {
+            "w": "hug",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 911.033203125,
+            "y": 2134.10888671875,
+            "w": 44,
+            "h": 20
+           },
+           "relBbox": {
+            "x": 221.033203125,
+            "y": 16.10888671875,
+            "w": 44,
+            "h": 20
+           },
+           "aspect": 2.2,
+           "aspectBucket": "wide"
+          },
+          "fill": {
+           "tokenRef": "background/sec/container",
+           "unbound": false
+          },
+          "stroke": null,
+          "radius": {
+           "value": 2,
+           "tokenRef": "xs",
+           "unbound": false
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:100795c39590296e",
+          "canonicalSignature": "c1:ff282e87ddfc1c19",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 1,
+          "children": [
+           {
+            "id": "I1:5133;13154:83538",
+            "name": "09:11",
+            "type": "TEXT",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "hug",
+              "h": "hug"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 917.033203125,
+              "y": 2140.10888671875,
+              "w": 32,
+              "h": 8
+             },
+             "relBbox": {
+              "x": 6,
+              "y": 6,
+              "w": 32,
+              "h": 8
+             },
+             "aspect": 4,
+             "aspectBucket": "ultrawide"
+            },
+            "fill": {
+             "tokenRef": "text/invert/high",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": null,
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "text": {
+             "characters": "09:11",
+             "styleRef": "badge/md",
+             "styleId": "S:cf2f08512b3b3e746cc1c7eacb37db1f6a1431f4,18236:468",
+             "unbound": false,
+             "fontSize": 12,
+             "fontFamily": "Montserrat",
+             "fontWeight": 500,
+             "lineHeight": 16,
+             "autoResize": "WIDTH_AND_HEIGHT",
+             "lines": 1
+            },
+            "structuralSignature": "s2:3dc6d74c9ab7bde9",
+            "canonicalSignature": "c1:98dd98822112fb40",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           }
+          ]
+         }
+        ]
+       },
+       {
+        "id": "1:5134",
+        "name": "Frame 1984078841",
+        "type": "INSTANCE",
+        "componentKey": "968a8019aaf9e570ecfbe9dcf37ac37ddb62186a",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": "MIN",
+         "justify": "MIN",
+         "wrap": false,
+         "sizing": {
+          "w": "fixed",
+          "h": "fixed"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 987,
+          "y": 2118,
+          "w": 281,
+          "h": 375
+         },
+         "relBbox": {
+          "x": 891,
+          "y": 0,
+          "w": 281,
+          "h": 375
+         },
+         "aspect": 0.7493,
+         "aspectBucket": "portrait"
+        },
+        "fill": {
+         "tokenRef": "text/main/high",
+         "unbound": false
+        },
+        "stroke": null,
+        "radius": {
+         "value": 12,
+         "tokenRef": "lg",
+         "unbound": false
+        },
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": true,
+        "structuralSignature": "s2:7c9971a931cc4005",
+        "canonicalSignature": "c1:74714cc4a6d70729",
+        "repeatedSiblings": 4,
+        "depth": 3,
+        "childCount": 4,
+        "children": [
+         {
+          "id": "I1:5134;10090:3696",
+          "name": "Rectangle 3464205",
+          "type": "IMAGE",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": null,
+           "justify": null,
+           "wrap": false,
+           "sizing": {
+            "w": "fixed",
+            "h": "fixed"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 818,
+            "y": 2100,
+            "w": 699,
+            "h": 393
+           },
+           "relBbox": {
+            "x": -169,
+            "y": -18,
+            "w": 699,
+            "h": 393
+           },
+           "aspect": 1.7786,
+           "aspectBucket": "landscape"
+          },
+          "fill": {
+           "raw": "IMAGE:CROP",
+           "unbound": true
+          },
+          "stroke": null,
+          "radius": {
+           "value": 0,
+           "unbound": false
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "image": {
+           "fit": "CROP",
+           "hasImageFill": true
+          },
+          "structuralSignature": "s2:d0fe31410545c943",
+          "canonicalSignature": "c1:95880ddfe160e48e",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 0,
+          "children": []
+         },
+         {
+          "id": "I1:5134;13089:25705",
+          "name": "video icon",
+          "type": "INSTANCE",
+          "componentKey": "f09b950b34247c219b58f48f43d1deca7a22361d",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": "MIN",
+           "justify": "MIN",
+           "wrap": false,
+           "sizing": {
+            "w": "fixed",
+            "h": "fixed"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 1098,
+            "y": 2275,
+            "w": 59.99997329711914,
+            "h": 60
+           },
+           "relBbox": {
+            "x": 111,
+            "y": 157,
+            "w": 59.99997329711914,
+            "h": 60
+           },
+           "aspect": 1,
+           "aspectBucket": "square"
+          },
+          "fill": null,
+          "stroke": null,
+          "radius": {
+           "value": 0,
+           "unbound": false
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:90e6ae76aad594f3",
+          "canonicalSignature": "c1:586d92cca284b33e",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 4,
+          "children": [
+           {
+            "id": "I1:5134;13089:25705;13031:13577",
+            "name": "Ellipse 282",
+            "type": "VECTOR",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 1098.0001220703125,
+              "y": 2274.999956228874,
+              "w": 59.999976918830725,
+              "h": 59.999976918830725
+             },
+             "relBbox": {
+              "x": 0.00008642429020255804,
+              "y": 12.67936897277832,
+              "w": 48.989776611328125,
+              "h": 48.989776611328125
+             },
+             "aspect": 1,
+             "aspectBucket": "square"
+            },
+            "fill": {
+             "tokenRef": "border/main/prim",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:680f32eb449d31f4",
+            "canonicalSignature": "c1:d460f489cf5c334d",
+            "repeatedSiblings": 3,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:5134;13089:25705;13031:13578",
+            "name": "Ellipse 284",
+            "type": "VECTOR",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 1098.0001220703125,
+              "y": 2274.9998227116703,
+              "w": 59.999976918830725,
+              "h": 59.999976918830725
+             },
+             "relBbox": {
+              "x": 0.00008642429020255804,
+              "y": 47.3204231262207,
+              "w": 48.989776611328125,
+              "h": 48.989776611328125
+             },
+             "aspect": 1,
+             "aspectBucket": "square"
+            },
+            "fill": {
+             "tokenRef": "border/main/prim",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:680f32eb449d31f4",
+            "canonicalSignature": "c1:d460f489cf5c334d",
+            "repeatedSiblings": 3,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:5134;13089:25705;13031:13579",
+            "name": "Ellipse 283",
+            "type": "VECTOR",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 1108.3671875,
+              "y": 2285.36669921875,
+              "w": 39.2666130065918,
+              "h": 39.26661682128906
+             },
+             "relBbox": {
+              "x": 10.3671875,
+              "y": 10.36669921875,
+              "w": 39.2666130065918,
+              "h": 39.26661682128906
+             },
+             "aspect": 1,
+             "aspectBucket": "square"
+            },
+            "fill": {
+             "tokenRef": "background/prim/card",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:680f32eb449d31f4",
+            "canonicalSignature": "c1:d460f489cf5c334d",
+            "repeatedSiblings": 3,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:5134;13089:25705;13031:13580",
+            "name": "Polygon 4",
+            "type": "VECTOR",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 1122.9520324053883,
+              "y": 2297.7075189918105,
+              "w": 12.340936344611691,
+              "h": 14.584744992869673
+             },
+             "relBbox": {
+              "x": 37.29296875,
+              "y": 22.70751953125,
+              "w": 14.584744453430176,
+              "h": 12.340935707092285
+             },
+             "aspect": 0.8462,
+             "aspectBucket": "portrait"
+            },
+            "fill": {
+             "tokenRef": "text/prim/high",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": {
+             "value": 0,
+             "unbound": false
+            },
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:d647d2d779b49521",
+            "canonicalSignature": "c1:4a4c1c310e9624d8",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           }
+          ]
+         },
+         {
+          "id": "I1:5134;10090:3704",
+          "name": "Frame 1984078818",
+          "type": "FRAME",
+          "layout": {
+           "mode": "vertical",
+           "gap": {
+            "value": 12.678,
+            "unbound": true
+           },
+           "padding": {
+            "top": {
+             "value": 20,
+             "unbound": true
+            },
+            "right": {
+             "value": 12.678,
+             "unbound": true
+            },
+            "bottom": {
+             "value": 20,
+             "unbound": true
+            },
+            "left": {
+             "value": 12.678,
+             "unbound": true
+            }
+           },
+           "align": "MIN",
+           "justify": "MIN",
+           "wrap": false,
+           "sizing": {
+            "w": "fixed",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 997,
+            "y": 2485.322265625,
+            "w": 262,
+            "h": 103.67764282226562
+           },
+           "relBbox": {
+            "x": 10,
+            "y": 367.322265625,
+            "w": 262,
+            "h": 103.67764282226562
+           },
+           "aspect": 2.5271,
+           "aspectBucket": "wide"
+          },
+          "fill": {
+           "tokenRef": "background/main/surface",
+           "unbound": false
+          },
+          "stroke": null,
+          "radius": {
+           "value": 10,
+           "unbound": true
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:9fbc1701521c744d",
+          "canonicalSignature": "c1:679ba3d2b6a96393",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 2,
+          "children": [
+           {
+            "id": "I1:5134;10090:3705",
+            "name": "Hilton Cartwright struck an important 42 off 20",
+            "type": "TEXT",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fill",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 1009.6776733398438,
+              "y": 2505.322265625,
+              "w": 236.64471435546875,
+              "h": 43
+             },
+             "relBbox": {
+              "x": 12.677644729614258,
+              "y": 20,
+              "w": 236.64471435546875,
+              "h": 43
+             },
+             "aspect": 5.5034,
+             "aspectBucket": "ultrawide"
+            },
+            "fill": {
+             "tokenRef": "text/main/high",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": null,
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "text": {
+             "characters": "Reece Topley and Craig Overton were the unlikely heroes with the bat",
+             "unbound": true,
+             "fontSize": 14,
+             "fontFamily": "Montserrat",
+             "fontWeight": 700,
+             "lineHeight": 22,
+             "autoResize": "TRUNCATE",
+             "lines": 2
+            },
+            "structuralSignature": "s2:8ec229045fcd910b",
+            "canonicalSignature": "c1:45662e465fccd98e",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           },
+           {
+            "id": "I1:5134;10090:3706",
+            "name": "14 jun 2024",
+            "type": "TEXT",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "hug",
+              "h": "hug"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 1009.6776733398438,
+              "y": 2561,
+              "w": 69,
+              "h": 8
+             },
+             "relBbox": {
+              "x": 12.677644729614258,
+              "y": 75.67764282226562,
+              "w": 69,
+              "h": 8
+             },
+             "aspect": 8.625,
+             "aspectBucket": "ultrawide"
+            },
+            "fill": {
+             "tokenRef": "text/main/low",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": null,
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "text": {
+             "characters": "10 jun 2024",
+             "styleRef": "letter_spacing/none",
+             "unbound": false,
+             "fontSize": 12,
+             "fontFamily": "Montserrat",
+             "fontWeight": 500,
+             "lineHeight": 15.73,
+             "autoResize": "WIDTH_AND_HEIGHT",
+             "lines": 1
+            },
+            "structuralSignature": "s2:3dc6d74c9ab7bde9",
+            "canonicalSignature": "c1:98dd98822112fb40",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           }
+          ]
+         },
+         {
+          "id": "I1:5134;13154:83537",
+          "name": "Frame 2009",
+          "type": "FRAME",
+          "layout": {
+           "mode": "horizontal",
+           "gap": {
+            "value": 0,
+            "tokenRef": "0",
+            "unbound": false
+           },
+           "padding": {
+            "top": {
+             "value": 6,
+             "tokenRef": "1_5",
+             "unbound": false
+            },
+            "right": {
+             "value": 6,
+             "tokenRef": "1_5",
+             "unbound": false
+            },
+            "bottom": {
+             "value": 6,
+             "tokenRef": "1_5",
+             "unbound": false
+            },
+            "left": {
+             "value": 6,
+             "tokenRef": "1_5",
+             "unbound": false
+            }
+           },
+           "align": "CENTER",
+           "justify": "MIN",
+           "wrap": false,
+           "sizing": {
+            "w": "hug",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 1208.033203125,
+            "y": 2134.10888671875,
+            "w": 44,
+            "h": 20
+           },
+           "relBbox": {
+            "x": 221.033203125,
+            "y": 16.10888671875,
+            "w": 44,
+            "h": 20
+           },
+           "aspect": 2.2,
+           "aspectBucket": "wide"
+          },
+          "fill": {
+           "tokenRef": "background/sec/container",
+           "unbound": false
+          },
+          "stroke": null,
+          "radius": {
+           "value": 2,
+           "tokenRef": "xs",
+           "unbound": false
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:100795c39590296e",
+          "canonicalSignature": "c1:ff282e87ddfc1c19",
+          "repeatedSiblings": 1,
+          "depth": 4,
+          "childCount": 1,
+          "children": [
+           {
+            "id": "I1:5134;13154:83538",
+            "name": "09:11",
+            "type": "TEXT",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "hug",
+              "h": "hug"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 1214.033203125,
+              "y": 2140.10888671875,
+              "w": 32,
+              "h": 8
+             },
+             "relBbox": {
+              "x": 6,
+              "y": 6,
+              "w": 32,
+              "h": 8
+             },
+             "aspect": 4,
+             "aspectBucket": "ultrawide"
+            },
+            "fill": {
+             "tokenRef": "text/invert/high",
+             "unbound": false
+            },
+            "stroke": null,
+            "radius": null,
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "text": {
+             "characters": "09:11",
+             "styleRef": "badge/md",
+             "styleId": "S:cf2f08512b3b3e746cc1c7eacb37db1f6a1431f4,18236:468",
+             "unbound": false,
+             "fontSize": 12,
+             "fontFamily": "Montserrat",
+             "fontWeight": 500,
+             "lineHeight": 16,
+             "autoResize": "WIDTH_AND_HEIGHT",
+             "lines": 1
+            },
+            "structuralSignature": "s2:3dc6d74c9ab7bde9",
+            "canonicalSignature": "c1:98dd98822112fb40",
+            "repeatedSiblings": 1,
+            "depth": 5,
+            "childCount": 0,
+            "children": []
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}

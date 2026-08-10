@@ -1,0 +1,5738 @@
+{
+ "fileKey": null,
+ "fileName": "Untitled",
+ "pageName": "Page 1",
+ "rootNodeId": "1:5043",
+ "extractedAt": "2026-08-07T03:39:11.723Z",
+ "irVersion": "1.1.0",
+ "breakpointHint": 1366,
+ "root": {
+  "id": "1:5043",
+  "name": "organism_web_cricket_playercard",
+  "type": "INSTANCE",
+  "componentKey": "f8c366150de451ac8973c939ac81ce590b5a9089",
+  "layout": {
+   "mode": "none",
+   "gap": null,
+   "padding": {
+    "top": {
+     "value": 0,
+     "unbound": false
+    },
+    "right": {
+     "value": 0,
+     "unbound": false
+    },
+    "bottom": {
+     "value": 0,
+     "unbound": false
+    },
+    "left": {
+     "value": 0,
+     "unbound": false
+    }
+   },
+   "align": "MIN",
+   "justify": "MIN",
+   "wrap": false,
+   "sizing": {
+    "w": "fixed",
+    "h": "fixed"
+   },
+   "positioning": "auto"
+  },
+  "geometry": {
+   "bbox": {
+    "x": 98,
+    "y": 1429,
+    "w": 281,
+    "h": 412
+   },
+   "relBbox": {
+    "x": 0,
+    "y": 0,
+    "w": 281,
+    "h": 412
+   },
+   "aspect": 0.682,
+   "aspectBucket": "portrait"
+  },
+  "fill": null,
+  "stroke": null,
+  "radius": {
+   "value": 0,
+   "unbound": false
+  },
+  "effects": [],
+  "opacity": 1,
+  "clipsContent": true,
+  "structuralSignature": "s2:24ab1074abd9d629",
+  "canonicalSignature": "c1:b053a7fc63b019a8",
+  "repeatedSiblings": 5,
+  "depth": 3,
+  "childCount": 7,
+  "children": [
+   {
+    "id": "I1:5043;10111:12378",
+    "name": "Mask group",
+    "type": "GROUP",
+    "layout": {
+     "mode": "none",
+     "gap": null,
+     "padding": {
+      "top": {
+       "value": 0,
+       "unbound": false
+      },
+      "right": {
+       "value": 0,
+       "unbound": false
+      },
+      "bottom": {
+       "value": 0,
+       "unbound": false
+      },
+      "left": {
+       "value": 0,
+       "unbound": false
+      }
+     },
+     "align": null,
+     "justify": null,
+     "wrap": false,
+     "sizing": {
+      "w": "fixed",
+      "h": "fixed"
+     },
+     "positioning": "auto"
+    },
+    "geometry": {
+     "bbox": {
+      "x": 98,
+      "y": 1420,
+      "w": 281,
+      "h": 421
+     },
+     "relBbox": {
+      "x": 0,
+      "y": -9,
+      "w": 281,
+      "h": 421
+     },
+     "aspect": 0.6675,
+     "aspectBucket": "portrait"
+    },
+    "fill": null,
+    "stroke": null,
+    "radius": null,
+    "effects": [],
+    "opacity": 1,
+    "clipsContent": false,
+    "structuralSignature": "s2:9d21998fcc872cc0",
+    "canonicalSignature": "c1:3058a8932d8c2ef5",
+    "repeatedSiblings": 1,
+    "depth": 4,
+    "childCount": 2,
+    "children": [
+     {
+      "id": "I1:5043;10111:12377",
+      "name": "Rectangle 34646484",
+      "type": "VECTOR",
+      "layout": {
+       "mode": "none",
+       "gap": null,
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": null,
+       "justify": null,
+       "wrap": false,
+       "sizing": {
+        "w": "fixed",
+        "h": "fixed"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 98,
+        "y": 1420,
+        "w": 281,
+        "h": 421
+       },
+       "relBbox": {
+        "x": 0,
+        "y": -9,
+        "w": 281,
+        "h": 421
+       },
+       "aspect": 0.6675,
+       "aspectBucket": "portrait"
+      },
+      "fill": {
+       "raw": "GRADIENT_LINEAR(#000000 0%, #000000 100%; m=[0.0032,2.0048,-1.0063,-2.0048,0.0072,1.4952])",
+       "unbound": true
+      },
+      "stroke": null,
+      "radius": {
+       "value": 30.879,
+       "unbound": true
+      },
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "structuralSignature": "s2:d647d2d779b49521",
+      "canonicalSignature": "c1:4a4c1c310e9624d8",
+      "repeatedSiblings": 1,
+      "depth": 5,
+      "childCount": 0,
+      "children": []
+     },
+     {
+      "id": "I1:5043;10111:12379",
+      "name": "Group 1321314966",
+      "type": "GROUP",
+      "layout": {
+       "mode": "none",
+       "gap": null,
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": null,
+       "justify": null,
+       "wrap": false,
+       "sizing": {
+        "w": "fixed",
+        "h": "fixed"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 98,
+        "y": 1490,
+        "w": 281,
+        "h": 353
+       },
+       "relBbox": {
+        "x": 0,
+        "y": 61,
+        "w": 281,
+        "h": 353
+       },
+       "aspect": 0.796,
+       "aspectBucket": "portrait"
+      },
+      "fill": null,
+      "stroke": null,
+      "radius": null,
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "structuralSignature": "s2:6f5c67ec94d4516b",
+      "canonicalSignature": "c1:3058a8932d8c2ef5",
+      "repeatedSiblings": 1,
+      "depth": 5,
+      "childCount": 2,
+      "children": [
+       {
+        "id": "I1:5043;10111:12375",
+        "name": "Rectangle 34646485",
+        "type": "VECTOR",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "fixed",
+          "h": "fixed"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 98,
+          "y": 1490,
+          "w": 281,
+          "h": 353
+         },
+         "relBbox": {
+          "x": 0,
+          "y": 61,
+          "w": 281,
+          "h": 353
+         },
+         "aspect": 0.796,
+         "aspectBucket": "portrait"
+        },
+        "fill": {
+         "raw": "#0c0c0c",
+         "unbound": true
+        },
+        "stroke": {
+         "tokenRef": "border/main/neu",
+         "weight": 2,
+         "unbound": false
+        },
+        "radius": {
+         "value": 20,
+         "unbound": true
+        },
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "structuralSignature": "s2:d647d2d779b49521",
+        "canonicalSignature": "c1:4a4c1c310e9624d8",
+        "repeatedSiblings": 1,
+        "depth": 6,
+        "childCount": 0,
+        "children": []
+       },
+       {
+        "id": "I1:5043;10111:12361",
+        "name": "Mask group",
+        "type": "GROUP",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "fixed",
+          "h": "fixed"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 100,
+          "y": 1492,
+          "w": 277,
+          "h": 349
+         },
+         "relBbox": {
+          "x": 2,
+          "y": 63,
+          "w": 277,
+          "h": 349
+         },
+         "aspect": 0.7937,
+         "aspectBucket": "portrait"
+        },
+        "fill": null,
+        "stroke": null,
+        "radius": null,
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "structuralSignature": "s2:55d2e48f07ccc89a",
+        "canonicalSignature": "c1:eb4cecac4d330ebe",
+        "repeatedSiblings": 1,
+        "depth": 6,
+        "childCount": 2,
+        "children": [
+         {
+          "id": "I1:5043;10111:12360",
+          "name": "Rectangle 34646485",
+          "type": "VECTOR",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": null,
+           "justify": null,
+           "wrap": false,
+           "sizing": {
+            "w": "fixed",
+            "h": "fixed"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 100,
+            "y": 1492,
+            "w": 277,
+            "h": 349
+           },
+           "relBbox": {
+            "x": 2,
+            "y": 63,
+            "w": 277,
+            "h": 349
+           },
+           "aspect": 0.7937,
+           "aspectBucket": "portrait"
+          },
+          "fill": {
+           "raw": "#1f2b7b",
+           "unbound": true
+          },
+          "stroke": {
+           "tokenRef": "color/neu/50",
+           "weight": 1,
+           "unbound": false
+          },
+          "radius": {
+           "value": 20,
+           "unbound": true
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:d647d2d779b49521",
+          "canonicalSignature": "c1:4a4c1c310e9624d8",
+          "repeatedSiblings": 1,
+          "depth": 7,
+          "childCount": 0,
+          "children": []
+         },
+         {
+          "id": "I1:5043;10111:12327",
+          "name": "Clip path group",
+          "type": "GROUP",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": null,
+           "justify": null,
+           "wrap": false,
+           "sizing": {
+            "w": "fixed",
+            "h": "fixed"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 98,
+            "y": 1490,
+            "w": 281.0045471191406,
+            "h": 420.318115234375
+           },
+           "relBbox": {
+            "x": 0,
+            "y": 61,
+            "w": 281.0045471191406,
+            "h": 420.318115234375
+           },
+           "aspect": 0.6686,
+           "aspectBucket": "portrait"
+          },
+          "fill": null,
+          "stroke": null,
+          "radius": null,
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "structuralSignature": "s2:86a6724b29c8caf8",
+          "canonicalSignature": "c1:45514819d54eda59",
+          "repeatedSiblings": 1,
+          "depth": 7,
+          "childCount": 1,
+          "children": [
+           {
+            "id": "I1:5043;10111:12330",
+            "name": "Group",
+            "type": "GROUP",
+            "layout": {
+             "mode": "none",
+             "gap": null,
+             "padding": {
+              "top": {
+               "value": 0,
+               "unbound": false
+              },
+              "right": {
+               "value": 0,
+               "unbound": false
+              },
+              "bottom": {
+               "value": 0,
+               "unbound": false
+              },
+              "left": {
+               "value": 0,
+               "unbound": false
+              }
+             },
+             "align": null,
+             "justify": null,
+             "wrap": false,
+             "sizing": {
+              "w": "fixed",
+              "h": "fixed"
+             },
+             "positioning": "auto"
+            },
+            "geometry": {
+             "bbox": {
+              "x": 98,
+              "y": 1490,
+              "w": 281.0045471191406,
+              "h": 420.318115234375
+             },
+             "relBbox": {
+              "x": 0,
+              "y": 61,
+              "w": 281.0045471191406,
+              "h": 420.318115234375
+             },
+             "aspect": 0.6686,
+             "aspectBucket": "portrait"
+            },
+            "fill": null,
+            "stroke": null,
+            "radius": null,
+            "effects": [],
+            "opacity": 1,
+            "clipsContent": false,
+            "structuralSignature": "s2:f2233c3d436236d2",
+            "canonicalSignature": "c1:45514819d54eda59",
+            "repeatedSiblings": 1,
+            "depth": 8,
+            "childCount": 1,
+            "children": [
+             {
+              "id": "I1:5043;10111:12331",
+              "name": "Group",
+              "type": "GROUP",
+              "layout": {
+               "mode": "none",
+               "gap": null,
+               "padding": {
+                "top": {
+                 "value": 0,
+                 "unbound": false
+                },
+                "right": {
+                 "value": 0,
+                 "unbound": false
+                },
+                "bottom": {
+                 "value": 0,
+                 "unbound": false
+                },
+                "left": {
+                 "value": 0,
+                 "unbound": false
+                }
+               },
+               "align": null,
+               "justify": null,
+               "wrap": false,
+               "sizing": {
+                "w": "fixed",
+                "h": "fixed"
+               },
+               "positioning": "auto"
+              },
+              "geometry": {
+               "bbox": {
+                "x": 98,
+                "y": 1490,
+                "w": 281.0045471191406,
+                "h": 420.318115234375
+               },
+               "relBbox": {
+                "x": 0,
+                "y": 61,
+                "w": 281.0045471191406,
+                "h": 420.318115234375
+               },
+               "aspect": 0.6686,
+               "aspectBucket": "portrait"
+              },
+              "fill": null,
+              "stroke": null,
+              "radius": null,
+              "effects": [],
+              "opacity": 1,
+              "clipsContent": false,
+              "structuralSignature": "s2:097f2096052aa680",
+              "canonicalSignature": "c1:a54cd1ed55ae71de",
+              "repeatedSiblings": 1,
+              "depth": 9,
+              "childCount": 27,
+              "children": [
+               {
+                "id": "I1:5043;10111:12332",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 362.51605224609375,
+                  "y": 1500.96826171875,
+                  "w": 14.44751262664795,
+                  "h": 16.439651489257812
+                 },
+                 "relBbox": {
+                  "x": 264.51605224609375,
+                  "y": 71.96823215484619,
+                  "w": 14.44751262664795,
+                  "h": 16.439651489257812
+                 },
+                 "aspect": 0.8788,
+                 "aspectBucket": "portrait"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:d647d2d779b49521",
+                "canonicalSignature": "c1:4a4c1c310e9624d8",
+                "repeatedSiblings": 1,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12333",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 278.2824401855469,
+                  "y": 1530.335205078125,
+                  "w": 22.753799438476562,
+                  "h": 8.204045295715332
+                 },
+                 "relBbox": {
+                  "x": 180.28244018554688,
+                  "y": 101.3351936340332,
+                  "w": 22.753799438476562,
+                  "h": 8.204045295715332
+                 },
+                 "aspect": 2.7735,
+                 "aspectBucket": "wide"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:b6534903ab826225",
+                "canonicalSignature": "c1:3aa7970dc860a510",
+                "repeatedSiblings": 1,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12334",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 286.32940673828125,
+                  "y": 1548.4271240234375,
+                  "w": 32.0501708984375,
+                  "h": 26.381898880004883
+                 },
+                 "relBbox": {
+                  "x": 188.3293914794922,
+                  "y": 119.42716598510742,
+                  "w": 32.0501708984375,
+                  "h": 26.381898880004883
+                 },
+                 "aspect": 1.2149,
+                 "aspectBucket": "landscape"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:fd793b993d39c0d8",
+                "canonicalSignature": "c1:d0c1578780197f5d",
+                "repeatedSiblings": 1,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12335",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 156.1890106201172,
+                  "y": 1505.17041015625,
+                  "w": 20.410531997680664,
+                  "h": 19.440366744995117
+                 },
+                 "relBbox": {
+                  "x": 58.18901062011719,
+                  "y": 76.17044258117676,
+                  "w": 20.410531997680664,
+                  "h": 19.440366744995117
+                 },
+                 "aspect": 1.0499,
+                 "aspectBucket": "square"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:680f32eb449d31f4",
+                "canonicalSignature": "c1:d460f489cf5c334d",
+                "repeatedSiblings": 1,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12336",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 106.92630004882812,
+                  "y": 1525.8597412109375,
+                  "w": 7.025282382965088,
+                  "h": 27.150676727294922
+                 },
+                 "relBbox": {
+                  "x": 8.926297187805176,
+                  "y": 96.85979080200195,
+                  "w": 7.025282382965088,
+                  "h": 27.150676727294922
+                 },
+                 "aspect": 0.2588,
+                 "aspectBucket": "portrait"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:d647d2d779b49521",
+                "canonicalSignature": "c1:4a4c1c310e9624d8",
+                "repeatedSiblings": 1,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12337",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 233.76268005371094,
+                  "y": 1523.7337646484375,
+                  "w": 17.286937713623047,
+                  "h": 15.700183868408203
+                 },
+                 "relBbox": {
+                  "x": 135.76268005371094,
+                  "y": 94.73381805419922,
+                  "w": 17.286937713623047,
+                  "h": 15.700183868408203
+                 },
+                 "aspect": 1.1011,
+                 "aspectBucket": "landscape"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:fd793b993d39c0d8",
+                "canonicalSignature": "c1:d0c1578780197f5d",
+                "repeatedSiblings": 2,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12338",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 163.82997131347656,
+                  "y": 1638.0946044921875,
+                  "w": 28.00640296936035,
+                  "h": 25.430509567260742
+                 },
+                 "relBbox": {
+                  "x": 65.82997131347656,
+                  "y": 209.0946502685547,
+                  "w": 28.00640296936035,
+                  "h": 25.430509567260742
+                 },
+                 "aspect": 1.1013,
+                 "aspectBucket": "landscape"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:fd793b993d39c0d8",
+                "canonicalSignature": "c1:d0c1578780197f5d",
+                "repeatedSiblings": 2,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12339",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 118.0655517578125,
+                  "y": 1591.0277099609375,
+                  "w": 18.892709732055664,
+                  "h": 27.919464111328125
+                 },
+                 "relBbox": {
+                  "x": 20.065547943115234,
+                  "y": 162.02774047851562,
+                  "w": 18.892709732055664,
+                  "h": 27.919464111328125
+                 },
+                 "aspect": 0.6767,
+                 "aspectBucket": "portrait"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:d647d2d779b49521",
+                "canonicalSignature": "c1:4a4c1c310e9624d8",
+                "repeatedSiblings": 1,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12340",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 252.74085998535156,
+                  "y": 1614.363525390625,
+                  "w": 46.4931640625,
+                  "h": 33.71345901489258
+                 },
+                 "relBbox": {
+                  "x": 154.74085998535156,
+                  "y": 185.36347198486328,
+                  "w": 46.4931640625,
+                  "h": 33.71345901489258
+                 },
+                 "aspect": 1.3791,
+                 "aspectBucket": "landscape"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:fd793b993d39c0d8",
+                "canonicalSignature": "c1:d0c1578780197f5d",
+                "repeatedSiblings": 1,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12341",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 199.23159790039062,
+                  "y": 1622.939697265625,
+                  "w": 33.44170379638672,
+                  "h": 10.275915145874023
+                 },
+                 "relBbox": {
+                  "x": 101.2315902709961,
+                  "y": 193.9396514892578,
+                  "w": 33.44170379638672,
+                  "h": 10.275915145874023
+                 },
+                 "aspect": 3.2544,
+                 "aspectBucket": "ultrawide"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:62a4b001015234d6",
+                "canonicalSignature": "c1:24ed0d237b3ec68b",
+                "repeatedSiblings": 1,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12342",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 350.943603515625,
+                  "y": 1605.4876708984375,
+                  "w": 19.418190002441406,
+                  "h": 23.324817657470703
+                 },
+                 "relBbox": {
+                  "x": 252.94361877441406,
+                  "y": 176.4876480102539,
+                  "w": 19.418190002441406,
+                  "h": 23.324817657470703
+                 },
+                 "aspect": 0.8325,
+                 "aspectBucket": "portrait"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:d647d2d779b49521",
+                "canonicalSignature": "c1:4a4c1c310e9624d8",
+                "repeatedSiblings": 1,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12343",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 196.14443969726562,
+                  "y": 1496.1796875,
+                  "w": 27.054664611816406,
+                  "h": 24.869150161743164
+                 },
+                 "relBbox": {
+                  "x": 98.1444320678711,
+                  "y": 67.17970657348633,
+                  "w": 27.054664611816406,
+                  "h": 24.869150161743164
+                 },
+                 "aspect": 1.0879,
+                 "aspectBucket": "landscape"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:fd793b993d39c0d8",
+                "canonicalSignature": "c1:d0c1578780197f5d",
+                "repeatedSiblings": 2,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12344",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 163.82997131347656,
+                  "y": 1715.8603515625,
+                  "w": 21.07358741760254,
+                  "h": 17.10696792602539
+                 },
+                 "relBbox": {
+                  "x": 65.82997131347656,
+                  "y": 286.86041259765625,
+                  "w": 21.07358741760254,
+                  "h": 17.10696792602539
+                 },
+                 "aspect": 1.2319,
+                 "aspectBucket": "landscape"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:fd793b993d39c0d8",
+                "canonicalSignature": "c1:d0c1578780197f5d",
+                "repeatedSiblings": 2,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12345",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 238.4990234375,
+                  "y": 1689.2034912109375,
+                  "w": 12.965774536132812,
+                  "h": 13.36453914642334
+                 },
+                 "relBbox": {
+                  "x": 140.4990234375,
+                  "y": 260.2035369873047,
+                  "w": 12.965774536132812,
+                  "h": 13.36453914642334
+                 },
+                 "aspect": 0.9702,
+                 "aspectBucket": "square"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:680f32eb449d31f4",
+                "canonicalSignature": "c1:d460f489cf5c334d",
+                "repeatedSiblings": 1,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12346",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 254.26116943359375,
+                  "y": 1722.490966796875,
+                  "w": 25.830041885375977,
+                  "h": 28.625099182128906
+                 },
+                 "relBbox": {
+                  "x": 156.26116943359375,
+                  "y": 293.49095153808594,
+                  "w": 25.830041885375977,
+                  "h": 28.625099182128906
+                 },
+                 "aspect": 0.9024,
+                 "aspectBucket": "portrait"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:d647d2d779b49521",
+                "canonicalSignature": "c1:4a4c1c310e9624d8",
+                "repeatedSiblings": 6,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12347",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 238.16751098632812,
+                  "y": 1763.531494140625,
+                  "w": 7.785325527191162,
+                  "h": 11.592507362365723
+                 },
+                 "relBbox": {
+                  "x": 140.16751098632812,
+                  "y": 334.5315246582031,
+                  "w": 7.785325527191162,
+                  "h": 11.592507362365723
+                 },
+                 "aspect": 0.6716,
+                 "aspectBucket": "portrait"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:d647d2d779b49521",
+                "canonicalSignature": "c1:4a4c1c310e9624d8",
+                "repeatedSiblings": 6,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12348",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 108.91776275634766,
+                  "y": 1783.135986328125,
+                  "w": 15.2210693359375,
+                  "h": 27.969066619873047
+                 },
+                 "relBbox": {
+                  "x": 10.917759895324707,
+                  "y": 354.1359558105469,
+                  "w": 15.2210693359375,
+                  "h": 27.969066619873047
+                 },
+                 "aspect": 0.5442,
+                 "aspectBucket": "portrait"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:d647d2d779b49521",
+                "canonicalSignature": "c1:4a4c1c310e9624d8",
+                "repeatedSiblings": 6,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12349",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 110.32290649414062,
+                  "y": 1733.6573486328125,
+                  "w": 9.598587989807129,
+                  "h": 13.856012344360352
+                 },
+                 "relBbox": {
+                  "x": 12.322906494140625,
+                  "y": 304.6573944091797,
+                  "w": 9.598587989807129,
+                  "h": 13.856012344360352
+                 },
+                 "aspect": 0.6927,
+                 "aspectBucket": "portrait"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:d647d2d779b49521",
+                "canonicalSignature": "c1:4a4c1c310e9624d8",
+                "repeatedSiblings": 6,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12350",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 307.1368408203125,
+                  "y": 1723.2955322265625,
+                  "w": 16.129962921142578,
+                  "h": 19.26450538635254
+                 },
+                 "relBbox": {
+                  "x": 209.1368408203125,
+                  "y": 294.2955627441406,
+                  "w": 16.129962921142578,
+                  "h": 19.26450538635254
+                 },
+                 "aspect": 0.8373,
+                 "aspectBucket": "portrait"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:d647d2d779b49521",
+                "canonicalSignature": "c1:4a4c1c310e9624d8",
+                "repeatedSiblings": 6,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12351",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 361.7356872558594,
+                  "y": 1800.8858642578125,
+                  "w": 7.221498012542725,
+                  "h": 19.85520362854004
+                 },
+                 "relBbox": {
+                  "x": 263.7356872558594,
+                  "y": 371.8858947753906,
+                  "w": 7.221498012542725,
+                  "h": 19.85520362854004
+                 },
+                 "aspect": 0.3637,
+                 "aspectBucket": "portrait"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:d647d2d779b49521",
+                "canonicalSignature": "c1:4a4c1c310e9624d8",
+                "repeatedSiblings": 6,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12352",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 281.8481140136719,
+                  "y": 1843.371337890625,
+                  "w": 34.506202697753906,
+                  "h": 18.975923538208008
+                 },
+                 "relBbox": {
+                  "x": 183.84811401367188,
+                  "y": 414.3713073730469,
+                  "w": 34.506202697753906,
+                  "h": 18.975923538208008
+                 },
+                 "aspect": 1.8184,
+                 "aspectBucket": "landscape"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:fd793b993d39c0d8",
+                "canonicalSignature": "c1:d0c1578780197f5d",
+                "repeatedSiblings": 1,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12353",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 236.9767608642578,
+                  "y": 1846.58642578125,
+                  "w": 20.54811668395996,
+                  "h": 10.06847858428955
+                 },
+                 "relBbox": {
+                  "x": 138.9767608642578,
+                  "y": 417.58636474609375,
+                  "w": 20.54811668395996,
+                  "h": 10.06847858428955
+                 },
+                 "aspect": 2.0408,
+                 "aspectBucket": "wide"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:b6534903ab826225",
+                "canonicalSignature": "c1:3aa7970dc860a510",
+                "repeatedSiblings": 1,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12354",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 128.46926879882812,
+                  "y": 1861.8599853515625,
+                  "w": 32.900428771972656,
+                  "h": 31.075719833374023
+                 },
+                 "relBbox": {
+                  "x": 30.469270706176758,
+                  "y": 432.8599548339844,
+                  "w": 32.900428771972656,
+                  "h": 31.075719833374023
+                 },
+                 "aspect": 1.0587,
+                 "aspectBucket": "landscape"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:fd793b993d39c0d8",
+                "canonicalSignature": "c1:d0c1578780197f5d",
+                "repeatedSiblings": 2,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12355",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 155.8665771484375,
+                  "y": 1808.0887451171875,
+                  "w": 22.01180076599121,
+                  "h": 13.366781234741211
+                 },
+                 "relBbox": {
+                  "x": 57.8665771484375,
+                  "y": 379.0887756347656,
+                  "w": 22.01180076599121,
+                  "h": 13.366781234741211
+                 },
+                 "aspect": 1.6468,
+                 "aspectBucket": "landscape"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:fd793b993d39c0d8",
+                "canonicalSignature": "c1:d0c1578780197f5d",
+                "repeatedSiblings": 2,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12356",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 211.3450164794922,
+                  "y": 1775.029296875,
+                  "w": 9.061823844909668,
+                  "h": 24.476856231689453
+                 },
+                 "relBbox": {
+                  "x": 113.34501647949219,
+                  "y": 346.02923583984375,
+                  "w": 9.061823844909668,
+                  "h": 24.476856231689453
+                 },
+                 "aspect": 0.3702,
+                 "aspectBucket": "portrait"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:d647d2d779b49521",
+                "canonicalSignature": "c1:4a4c1c310e9624d8",
+                "repeatedSiblings": 3,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12357",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 193.68597412109375,
+                  "y": 1884.968505859375,
+                  "w": 16.391576766967773,
+                  "h": 19.783044815063477
+                 },
+                 "relBbox": {
+                  "x": 95.68598175048828,
+                  "y": 455.96856689453125,
+                  "w": 16.391576766967773,
+                  "h": 19.783044815063477
+                 },
+                 "aspect": 0.8286,
+                 "aspectBucket": "portrait"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:d647d2d779b49521",
+                "canonicalSignature": "c1:4a4c1c310e9624d8",
+                "repeatedSiblings": 3,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               },
+               {
+                "id": "I1:5043;10111:12358",
+                "name": "Vector",
+                "type": "VECTOR",
+                "layout": {
+                 "mode": "none",
+                 "gap": null,
+                 "padding": {
+                  "top": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "right": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "bottom": {
+                   "value": 0,
+                   "unbound": false
+                  },
+                  "left": {
+                   "value": 0,
+                   "unbound": false
+                  }
+                 },
+                 "align": null,
+                 "justify": null,
+                 "wrap": false,
+                 "sizing": {
+                  "w": "fixed",
+                  "h": "fixed"
+                 },
+                 "positioning": "auto"
+                },
+                "geometry": {
+                 "bbox": {
+                  "x": 98,
+                  "y": 1490,
+                  "w": 281.0045471191406,
+                  "h": 420.318115234375
+                 },
+                 "relBbox": {
+                  "x": 0,
+                  "y": 61,
+                  "w": 281.0045471191406,
+                  "h": 420.318115234375
+                 },
+                 "aspect": 0.6686,
+                 "aspectBucket": "portrait"
+                },
+                "fill": {
+                 "raw": "#003da6",
+                 "unbound": true
+                },
+                "stroke": null,
+                "radius": {
+                 "value": 20,
+                 "unbound": true
+                },
+                "effects": [],
+                "opacity": 1,
+                "clipsContent": false,
+                "structuralSignature": "s2:d647d2d779b49521",
+                "canonicalSignature": "c1:4a4c1c310e9624d8",
+                "repeatedSiblings": 3,
+                "depth": 10,
+                "childCount": 0,
+                "children": []
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         },
+         {
+          "id": "I1:5043;13309:31350",
+          "name": "England-Squad 1",
+          "type": "IMAGE",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": null,
+           "justify": null,
+           "wrap": false,
+           "sizing": {
+            "w": "fixed",
+            "h": "fixed"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 87,
+            "y": 1470,
+            "w": 714,
+            "h": 897
+           },
+           "relBbox": {
+            "x": -11,
+            "y": 41,
+            "w": 714,
+            "h": 897
+           },
+           "aspect": 0.796,
+           "aspectBucket": "portrait"
+          },
+          "fill": {
+           "raw": "IMAGE:CROP",
+           "unbound": true
+          },
+          "stroke": null,
+          "radius": {
+           "value": 0,
+           "unbound": false
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "image": {
+           "fit": "CROP",
+           "hasImageFill": true
+          },
+          "structuralSignature": "s2:4cdec8cf0fc5525d",
+          "canonicalSignature": "c1:833903b94a64fc18",
+          "repeatedSiblings": 1,
+          "depth": 7,
+          "childCount": 0,
+          "children": []
+         },
+         {
+          "id": "I1:5043;13531:100959",
+          "name": "Untitled-1 1",
+          "type": "IMAGE",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": null,
+           "justify": null,
+           "wrap": false,
+           "sizing": {
+            "w": "fixed",
+            "h": "fixed"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 100,
+            "y": 1492.146240234375,
+            "w": 281,
+            "h": 363.7074890136719
+           },
+           "relBbox": {
+            "x": 2,
+            "y": 63.146240234375,
+            "w": 281,
+            "h": 363.7074890136719
+           },
+           "aspect": 0.7726,
+           "aspectBucket": "portrait"
+          },
+          "fill": {
+           "raw": "IMAGE:FILL",
+           "unbound": true
+          },
+          "stroke": null,
+          "radius": {
+           "value": 0,
+           "unbound": false
+          },
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "image": {
+           "fit": "FILL",
+           "hasImageFill": true
+          },
+          "structuralSignature": "s2:4cdec8cf0fc5525d",
+          "canonicalSignature": "c1:833903b94a64fc18",
+          "repeatedSiblings": 1,
+          "depth": 7,
+          "childCount": 0,
+          "children": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "I1:5043;10111:12388",
+    "name": "Group 1321314967",
+    "type": "GROUP",
+    "layout": {
+     "mode": "none",
+     "gap": null,
+     "padding": {
+      "top": {
+       "value": 0,
+       "unbound": false
+      },
+      "right": {
+       "value": 0,
+       "unbound": false
+      },
+      "bottom": {
+       "value": 0,
+       "unbound": false
+      },
+      "left": {
+       "value": 0,
+       "unbound": false
+      }
+     },
+     "align": null,
+     "justify": null,
+     "wrap": false,
+     "sizing": {
+      "w": "fixed",
+      "h": "fixed"
+     },
+     "positioning": "auto"
+    },
+    "geometry": {
+     "bbox": {
+      "x": 117,
+      "y": 1516,
+      "w": 240.99989318847656,
+      "h": 288
+     },
+     "relBbox": {
+      "x": 19,
+      "y": 87,
+      "w": 240.99989318847656,
+      "h": 288
+     },
+     "aspect": 0.8368,
+     "aspectBucket": "portrait"
+    },
+    "fill": null,
+    "stroke": null,
+    "radius": null,
+    "effects": [],
+    "opacity": 1,
+    "clipsContent": false,
+    "structuralSignature": "s2:87eaf0a7bfcccd76",
+    "canonicalSignature": "c1:d85d9ca707bc2bd5",
+    "repeatedSiblings": 1,
+    "depth": 4,
+    "childCount": 2,
+    "children": [
+     {
+      "id": "I1:5043;10111:12391",
+      "name": "Subtract",
+      "type": "VECTOR",
+      "layout": {
+       "mode": "none",
+       "gap": null,
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": null,
+       "justify": null,
+       "wrap": false,
+       "sizing": {
+        "w": "fixed",
+        "h": "fixed"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 119.9999008178711,
+        "y": 1516,
+        "w": 238,
+        "h": 288
+       },
+       "relBbox": {
+        "x": 21.999898195266724,
+        "y": 87,
+        "w": 238,
+        "h": 288
+       },
+       "aspect": 0.8264,
+       "aspectBucket": "portrait"
+      },
+      "fill": {
+       "raw": "GRADIENT_LINEAR(#fefefe 0%, #98989800 100%; m=[0,21.9462,-20.9286,-21.9462,0,11.4604])",
+       "unbound": true
+      },
+      "stroke": null,
+      "radius": {
+       "value": 0,
+       "unbound": false
+      },
+      "effects": [],
+      "opacity": 0.4000000059604645,
+      "clipsContent": false,
+      "structuralSignature": "s2:ef7df6361e2ac73c",
+      "canonicalSignature": "c1:b6751dc07932838b",
+      "repeatedSiblings": 1,
+      "depth": 5,
+      "childCount": 2,
+      "children": [
+       {
+        "id": "I1:5043;10111:12380",
+        "name": "Rectangle 34646483",
+        "type": "VECTOR",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "fixed",
+          "h": "fixed"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 119.9999008178711,
+          "y": 1516,
+          "w": 237.99981689453125,
+          "h": 288.00018310546875
+         },
+         "relBbox": {
+          "x": 21.999898195266724,
+          "y": 87,
+          "w": 237.99981689453125,
+          "h": 288.00018310546875
+         },
+         "aspect": 0.8264,
+         "aspectBucket": "portrait"
+        },
+        "fill": null,
+        "stroke": {
+         "raw": "GRADIENT_LINEAR(#fefefe 0%, #989898 100%; m=[0,1,0,-1,0,1])",
+         "weight": 1,
+         "unbound": true
+        },
+        "radius": {
+         "value": 16,
+         "tokenRef": "xl",
+         "unbound": false
+        },
+        "effects": [],
+        "opacity": 0.4000000059604645,
+        "clipsContent": false,
+        "structuralSignature": "s2:d647d2d779b49521",
+        "canonicalSignature": "c1:4a4c1c310e9624d8",
+        "repeatedSiblings": 2,
+        "depth": 6,
+        "childCount": 0,
+        "children": []
+       },
+       {
+        "id": "I1:5043;10111:12389",
+        "name": "Rectangle 34646486",
+        "type": "VECTOR",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "fixed",
+          "h": "fixed"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 113.8927230834961,
+          "y": 1550.918701171875,
+          "w": 15,
+          "h": 160
+         },
+         "relBbox": {
+          "x": 15.892720460891724,
+          "y": 121.918701171875,
+          "w": 15,
+          "h": 160
+         },
+         "aspect": 0.0938,
+         "aspectBucket": "portrait"
+        },
+        "fill": {
+         "raw": "#d9d9d9",
+         "unbound": true
+        },
+        "stroke": null,
+        "radius": {
+         "value": 0,
+         "unbound": false
+        },
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "structuralSignature": "s2:d647d2d779b49521",
+        "canonicalSignature": "c1:4a4c1c310e9624d8",
+        "repeatedSiblings": 2,
+        "depth": 6,
+        "childCount": 0,
+        "children": []
+       }
+      ]
+     },
+     {
+      "id": "I1:5043;10111:12383",
+      "name": "BOWLER",
+      "type": "TEXT",
+      "layout": {
+       "mode": "none",
+       "gap": null,
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": null,
+       "justify": null,
+       "wrap": false,
+       "sizing": {
+        "w": "fixed",
+        "h": "fixed"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 117.00000830867833,
+        "y": 1550.9999996503088,
+        "w": 8.00000695011073,
+        "h": 159.00000034969116
+       },
+       "relBbox": {
+        "x": 19.000013900221347,
+        "y": 281,
+        "w": 159,
+        "h": 8
+       },
+       "aspect": 0.0503,
+       "aspectBucket": "portrait"
+      },
+      "fill": {
+       "tokenRef": "background/main/surface",
+       "unbound": false
+      },
+      "stroke": null,
+      "radius": null,
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "text": {
+       "characters": "Batter",
+       "unbound": true,
+       "fontSize": 12,
+       "fontFamily": "Montserrat",
+       "fontWeight": 700,
+       "lineHeight": 26,
+       "autoResize": "HEIGHT",
+       "lines": 1
+      },
+      "structuralSignature": "s2:c8ea4f7385264c1e",
+      "canonicalSignature": "c1:29ade54d35a7326b",
+      "repeatedSiblings": 1,
+      "depth": 5,
+      "childCount": 0,
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "I1:5043;10111:12374",
+    "name": "PLAYER",
+    "type": "GROUP",
+    "layout": {
+     "mode": "none",
+     "gap": null,
+     "padding": {
+      "top": {
+       "value": 0,
+       "unbound": false
+      },
+      "right": {
+       "value": 0,
+       "unbound": false
+      },
+      "bottom": {
+       "value": 0,
+       "unbound": false
+      },
+      "left": {
+       "value": 0,
+       "unbound": false
+      }
+     },
+     "align": null,
+     "justify": null,
+     "wrap": false,
+     "sizing": {
+      "w": "fixed",
+      "h": "fixed"
+     },
+     "positioning": "auto"
+    },
+    "geometry": {
+     "bbox": {
+      "x": 98,
+      "y": 1412,
+      "w": 281,
+      "h": 429
+     },
+     "relBbox": {
+      "x": 0,
+      "y": -17,
+      "w": 281,
+      "h": 429
+     },
+     "aspect": 0.655,
+     "aspectBucket": "portrait"
+    },
+    "fill": null,
+    "stroke": null,
+    "radius": null,
+    "effects": [],
+    "opacity": 1,
+    "clipsContent": false,
+    "structuralSignature": "s2:28ce50875d182581",
+    "canonicalSignature": "c1:47d5a3be2d4e7363",
+    "repeatedSiblings": 1,
+    "depth": 4,
+    "childCount": 3,
+    "children": [
+     {
+      "id": "I1:5043;10111:12372",
+      "name": "Rectangle 34646484",
+      "type": "VECTOR",
+      "layout": {
+       "mode": "none",
+       "gap": null,
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": null,
+       "justify": null,
+       "wrap": false,
+       "sizing": {
+        "w": "fixed",
+        "h": "fixed"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 98,
+        "y": 1412,
+        "w": 281,
+        "h": 429
+       },
+       "relBbox": {
+        "x": 0,
+        "y": -17,
+        "w": 281,
+        "h": 429
+       },
+       "aspect": 0.655,
+       "aspectBucket": "portrait"
+      },
+      "fill": {
+       "raw": "GRADIENT_LINEAR(#1f2b7b 0%, #394fe100 100%; m=[0,1.9152,-0.654,-1.9152,0,1.4542])",
+       "unbound": true
+      },
+      "stroke": null,
+      "radius": {
+       "value": 20,
+       "unbound": true
+      },
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "structuralSignature": "s2:d647d2d779b49521",
+      "canonicalSignature": "c1:4a4c1c310e9624d8",
+      "repeatedSiblings": 1,
+      "depth": 5,
+      "childCount": 0,
+      "children": []
+     },
+     {
+      "id": "I1:5043;10128:16403",
+      "name": "Ellipse 285",
+      "type": "VECTOR",
+      "layout": {
+       "mode": "none",
+       "gap": null,
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": null,
+       "justify": null,
+       "wrap": false,
+       "sizing": {
+        "w": "fixed",
+        "h": "fixed"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 151,
+        "y": 1567,
+        "w": 175,
+        "h": 175
+       },
+       "relBbox": {
+        "x": 53,
+        "y": 138,
+        "w": 175,
+        "h": 175
+       },
+       "aspect": 1,
+       "aspectBucket": "square"
+      },
+      "fill": {
+       "raw": "#ffffff",
+       "unbound": true
+      },
+      "stroke": null,
+      "radius": {
+       "value": 0,
+       "unbound": false
+      },
+      "effects": [
+       {
+        "type": "LAYER_BLUR",
+        "unbound": true
+       }
+      ],
+      "opacity": 0.5600000023841858,
+      "clipsContent": false,
+      "structuralSignature": "s2:680f32eb449d31f4",
+      "canonicalSignature": "c1:d460f489cf5c334d",
+      "repeatedSiblings": 1,
+      "depth": 5,
+      "childCount": 0,
+      "children": []
+     },
+     {
+      "id": "I1:5043;10111:12370",
+      "name": "image 660",
+      "type": "IMAGE",
+      "layout": {
+       "mode": "none",
+       "gap": null,
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": null,
+       "justify": null,
+       "wrap": false,
+       "sizing": {
+        "w": "fixed",
+        "h": "fixed"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 116,
+        "y": 1412,
+        "w": 249,
+        "h": 376
+       },
+       "relBbox": {
+        "x": 18,
+        "y": -17,
+        "w": 249,
+        "h": 376
+       },
+       "aspect": 0.6622,
+       "aspectBucket": "portrait"
+      },
+      "fill": {
+       "raw": "IMAGE:CROP",
+       "unbound": true
+      },
+      "stroke": null,
+      "radius": {
+       "value": 0,
+       "unbound": false
+      },
+      "effects": [
+       {
+        "type": "DROP_SHADOW",
+        "unbound": true
+       }
+      ],
+      "opacity": 1,
+      "clipsContent": false,
+      "image": {
+       "fit": "CROP",
+       "hasImageFill": true
+      },
+      "structuralSignature": "s2:4cdec8cf0fc5525d",
+      "canonicalSignature": "c1:833903b94a64fc18",
+      "repeatedSiblings": 1,
+      "depth": 5,
+      "childCount": 0,
+      "children": []
+     },
+     {
+      "id": "I1:5043;13531:101076",
+      "name": "Warstwa-26 2",
+      "type": "IMAGE",
+      "layout": {
+       "mode": "none",
+       "gap": null,
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": null,
+       "justify": null,
+       "wrap": false,
+       "sizing": {
+        "w": "fixed",
+        "h": "fixed"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 146,
+        "y": 1441,
+        "w": 185,
+        "h": 347
+       },
+       "relBbox": {
+        "x": 48,
+        "y": 12,
+        "w": 185,
+        "h": 347
+       },
+       "aspect": 0.5331,
+       "aspectBucket": "portrait"
+      },
+      "fill": {
+       "raw": "IMAGE:FILL",
+       "unbound": true
+      },
+      "stroke": null,
+      "radius": {
+       "value": 0,
+       "unbound": false
+      },
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "image": {
+       "fit": "FILL",
+       "hasImageFill": true
+      },
+      "structuralSignature": "s2:4cdec8cf0fc5525d",
+      "canonicalSignature": "c1:833903b94a64fc18",
+      "repeatedSiblings": 1,
+      "depth": 5,
+      "childCount": 0,
+      "children": []
+     }
+    ]
+   },
+   {
+    "id": "I1:5043;10111:12382",
+    "name": "Jofra Archer",
+    "type": "TEXT",
+    "layout": {
+     "mode": "none",
+     "gap": null,
+     "padding": {
+      "top": {
+       "value": 0,
+       "unbound": false
+      },
+      "right": {
+       "value": 0,
+       "unbound": false
+      },
+      "bottom": {
+       "value": 0,
+       "unbound": false
+      },
+      "left": {
+       "value": 0,
+       "unbound": false
+      }
+     },
+     "align": null,
+     "justify": null,
+     "wrap": false,
+     "sizing": {
+      "w": "fixed",
+      "h": "fixed"
+     },
+     "positioning": "auto"
+    },
+    "geometry": {
+     "bbox": {
+      "x": 119,
+      "y": 1680,
+      "w": 239,
+      "h": 62
+     },
+     "relBbox": {
+      "x": 21,
+      "y": 251,
+      "w": 239,
+      "h": 62
+     },
+     "aspect": 3.8548,
+     "aspectBucket": "ultrawide"
+    },
+    "fill": {
+     "tokenRef": "text/prim/high",
+     "unbound": false
+    },
+    "stroke": null,
+    "radius": null,
+    "effects": [],
+    "opacity": 1,
+    "clipsContent": false,
+    "text": {
+     "characters": "Ben\nMcKinney",
+     "styleRef": "dp_3/regular",
+     "styleId": "S:57221fe47639e239129cc2c51f731cdf791b7da0,18152:140",
+     "unbound": false,
+     "fontSize": 36,
+     "fontFamily": "Bakbak One",
+     "fontWeight": 400,
+     "lineHeight": 40,
+     "autoResize": "HEIGHT",
+     "lines": 2
+    },
+    "structuralSignature": "s2:55a2f40d9193a189",
+    "canonicalSignature": "c1:27b9baff4c5dc578",
+    "repeatedSiblings": 1,
+    "depth": 4,
+    "childCount": 0,
+    "children": []
+   },
+   {
+    "id": "I1:5043;13706:39000",
+    "name": "Frame 1984078917",
+    "type": "FRAME",
+    "layout": {
+     "mode": "horizontal",
+     "gap": {
+      "value": 13,
+      "unbound": true
+     },
+     "padding": {
+      "top": {
+       "value": 10,
+       "tokenRef": "2_5",
+       "unbound": false
+      },
+      "right": {
+       "value": 20,
+       "tokenRef": "5",
+       "unbound": false
+      },
+      "bottom": {
+       "value": 10,
+       "tokenRef": "2_5",
+       "unbound": false
+      },
+      "left": {
+       "value": 20,
+       "tokenRef": "5",
+       "unbound": false
+      }
+     },
+     "align": "CENTER",
+     "justify": "SPACE_BETWEEN",
+     "wrap": false,
+     "sizing": {
+      "w": "fixed",
+      "h": "fixed"
+     },
+     "positioning": "auto"
+    },
+    "geometry": {
+     "bbox": {
+      "x": 114,
+      "y": 1765,
+      "w": 249,
+      "h": 60
+     },
+     "relBbox": {
+      "x": 16,
+      "y": 336,
+      "w": 249,
+      "h": 60
+     },
+     "aspect": 4.15,
+     "aspectBucket": "ultrawide"
+    },
+    "fill": {
+     "tokenRef": "background/sec/container_2",
+     "unbound": false
+    },
+    "stroke": null,
+    "radius": {
+     "value": 16,
+     "tokenRef": "xl",
+     "unbound": false
+    },
+    "effects": [
+     {
+      "type": "BACKGROUND_BLUR",
+      "unbound": true
+     }
+    ],
+    "opacity": 1,
+    "clipsContent": false,
+    "structuralSignature": "s2:07fa2520005e025e",
+    "canonicalSignature": "c1:5150b2c88fb3da77",
+    "repeatedSiblings": 1,
+    "depth": 4,
+    "childCount": 5,
+    "children": [
+     {
+      "id": "I1:5043;13706:39001",
+      "name": "Frame 1984078915",
+      "type": "FRAME",
+      "layout": {
+       "mode": "vertical",
+       "gap": {
+        "value": 10,
+        "unbound": true
+       },
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": "CENTER",
+       "justify": "CENTER",
+       "wrap": false,
+       "sizing": {
+        "w": "hug",
+        "h": "hug"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 134,
+        "y": 1781,
+        "w": 51,
+        "h": 28
+       },
+       "relBbox": {
+        "x": 20,
+        "y": 16,
+        "w": 51,
+        "h": 28
+       },
+       "aspect": 1.8214,
+       "aspectBucket": "landscape"
+      },
+      "fill": null,
+      "stroke": null,
+      "radius": {
+       "value": 0,
+       "unbound": false
+      },
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "structuralSignature": "s2:9c1884a35c497d7e",
+      "canonicalSignature": "c1:5af23e3db06436b1",
+      "repeatedSiblings": 1,
+      "depth": 5,
+      "childCount": 2,
+      "children": [
+       {
+        "id": "I1:5043;13706:39002",
+        "name": "MATCHES",
+        "type": "TEXT",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "hug",
+          "h": "hug"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 134,
+          "y": 1781,
+          "w": 51,
+          "h": 7
+         },
+         "relBbox": {
+          "x": 0,
+          "y": 0,
+          "w": 51,
+          "h": 7
+         },
+         "aspect": 7.2857,
+         "aspectBucket": "ultrawide"
+        },
+        "fill": {
+         "tokenRef": "text/sec/medium",
+         "unbound": false
+        },
+        "stroke": null,
+        "radius": null,
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "text": {
+         "characters": "MATCHES",
+         "styleRef": "body_xs/regular",
+         "styleId": "S:597bc2826343bd9e288f4fca34eaad4a91472d9e,18116:7",
+         "unbound": false,
+         "fontSize": 10,
+         "fontFamily": "Montserrat",
+         "fontWeight": 400,
+         "lineHeight": 14,
+         "autoResize": "WIDTH_AND_HEIGHT",
+         "lines": 1
+        },
+        "structuralSignature": "s2:3dc6d74c9ab7bde9",
+        "canonicalSignature": "c1:98dd98822112fb40",
+        "repeatedSiblings": 2,
+        "depth": 6,
+        "childCount": 0,
+        "children": []
+       },
+       {
+        "id": "I1:5043;13706:39003",
+        "name": "10",
+        "type": "TEXT",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "hug",
+          "h": "hug"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 150.5,
+          "y": 1798,
+          "w": 18,
+          "h": 11
+         },
+         "relBbox": {
+          "x": 16.5,
+          "y": 17,
+          "w": 18,
+          "h": 11
+         },
+         "aspect": 1.6364,
+         "aspectBucket": "landscape"
+        },
+        "fill": {
+         "tokenRef": "text/prim/high",
+         "unbound": false
+        },
+        "stroke": null,
+        "radius": null,
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "text": {
+         "characters": "10",
+         "styleRef": "h3/bold",
+         "styleId": "S:3f817bb24a5675e20119bcf4ef461dfede1cfd05,18101:236",
+         "unbound": false,
+         "fontSize": 16,
+         "fontFamily": "Montserrat",
+         "fontWeight": 700,
+         "lineHeight": 24,
+         "autoResize": "WIDTH_AND_HEIGHT",
+         "lines": 1
+        },
+        "structuralSignature": "s2:3dc6d74c9ab7bde9",
+        "canonicalSignature": "c1:98dd98822112fb40",
+        "repeatedSiblings": 2,
+        "depth": 6,
+        "childCount": 0,
+        "children": []
+       }
+      ]
+     },
+     {
+      "id": "I1:5043;13706:39004",
+      "name": "Line 422",
+      "type": "VECTOR",
+      "layout": {
+       "mode": "none",
+       "gap": null,
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": null,
+       "justify": null,
+       "wrap": false,
+       "sizing": {
+        "w": "fixed",
+        "h": "fill"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 200.24999825154447,
+        "y": 1775,
+        "w": 0.0000017484555314695172,
+        "h": 40
+       },
+       "relBbox": {
+        "x": 86.25,
+        "y": 10,
+        "w": 40,
+        "h": 0
+       },
+       "aspect": 0,
+       "aspectBucket": "square"
+      },
+      "fill": null,
+      "stroke": {
+       "tokenRef": "border/sec/default",
+       "weight": 0.5,
+       "unbound": false
+      },
+      "radius": null,
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "structuralSignature": "s2:c111566e1c14785f",
+      "canonicalSignature": "c1:06130900060d32ba",
+      "repeatedSiblings": 1,
+      "depth": 5,
+      "childCount": 0,
+      "children": []
+     },
+     {
+      "id": "I1:5043;13706:39005",
+      "name": "Frame 1984078916",
+      "type": "FRAME",
+      "layout": {
+       "mode": "vertical",
+       "gap": {
+        "value": 10,
+        "unbound": true
+       },
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": "CENTER",
+       "justify": "CENTER",
+       "wrap": false,
+       "sizing": {
+        "w": "hug",
+        "h": "hug"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 215.5,
+        "y": 1781,
+        "w": 32,
+        "h": 28
+       },
+       "relBbox": {
+        "x": 101.5,
+        "y": 16,
+        "w": 32,
+        "h": 28
+       },
+       "aspect": 1.1429,
+       "aspectBucket": "landscape"
+      },
+      "fill": null,
+      "stroke": null,
+      "radius": {
+       "value": 0,
+       "unbound": false
+      },
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "structuralSignature": "s2:9c1884a35c497d7e",
+      "canonicalSignature": "c1:5af23e3db06436b1",
+      "repeatedSiblings": 1,
+      "depth": 5,
+      "childCount": 2,
+      "children": [
+       {
+        "id": "I1:5043;13706:39006",
+        "name": "RUNS",
+        "type": "TEXT",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "hug",
+          "h": "hug"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 216.5,
+          "y": 1781,
+          "w": 30,
+          "h": 7
+         },
+         "relBbox": {
+          "x": 1,
+          "y": 0,
+          "w": 30,
+          "h": 7
+         },
+         "aspect": 4.2857,
+         "aspectBucket": "ultrawide"
+        },
+        "fill": {
+         "tokenRef": "text/sec/medium",
+         "unbound": false
+        },
+        "stroke": null,
+        "radius": null,
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "text": {
+         "characters": "RUNS",
+         "styleRef": "body_xs/regular",
+         "styleId": "S:597bc2826343bd9e288f4fca34eaad4a91472d9e,18116:7",
+         "unbound": false,
+         "fontSize": 10,
+         "fontFamily": "Montserrat",
+         "fontWeight": 400,
+         "lineHeight": 14,
+         "autoResize": "WIDTH_AND_HEIGHT",
+         "lines": 1
+        },
+        "structuralSignature": "s2:3dc6d74c9ab7bde9",
+        "canonicalSignature": "c1:98dd98822112fb40",
+        "repeatedSiblings": 2,
+        "depth": 6,
+        "childCount": 0,
+        "children": []
+       },
+       {
+        "id": "I1:5043;13706:39007",
+        "name": "300",
+        "type": "TEXT",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "hug",
+          "h": "hug"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 215.5,
+          "y": 1798,
+          "w": 32,
+          "h": 11
+         },
+         "relBbox": {
+          "x": 0,
+          "y": 17,
+          "w": 32,
+          "h": 11
+         },
+         "aspect": 2.9091,
+         "aspectBucket": "wide"
+        },
+        "fill": {
+         "tokenRef": "text/prim/high",
+         "unbound": false
+        },
+        "stroke": null,
+        "radius": null,
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "text": {
+         "characters": "300",
+         "styleRef": "h3/bold",
+         "styleId": "S:3f817bb24a5675e20119bcf4ef461dfede1cfd05,18101:236",
+         "unbound": false,
+         "fontSize": 16,
+         "fontFamily": "Montserrat",
+         "fontWeight": 700,
+         "lineHeight": 24,
+         "autoResize": "WIDTH_AND_HEIGHT",
+         "lines": 1
+        },
+        "structuralSignature": "s2:3dc6d74c9ab7bde9",
+        "canonicalSignature": "c1:98dd98822112fb40",
+        "repeatedSiblings": 2,
+        "depth": 6,
+        "childCount": 0,
+        "children": []
+       }
+      ]
+     },
+     {
+      "id": "I1:5043;13706:39008",
+      "name": "Line 423",
+      "type": "VECTOR",
+      "layout": {
+       "mode": "none",
+       "gap": null,
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": null,
+       "justify": null,
+       "wrap": false,
+       "sizing": {
+        "w": "fixed",
+        "h": "fill"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 262.74999825154447,
+        "y": 1775,
+        "w": 0.0000017484555314695172,
+        "h": 40
+       },
+       "relBbox": {
+        "x": 148.75,
+        "y": 10,
+        "w": 40,
+        "h": 0
+       },
+       "aspect": 0,
+       "aspectBucket": "square"
+      },
+      "fill": null,
+      "stroke": {
+       "tokenRef": "border/sec/default",
+       "weight": 0.5,
+       "unbound": false
+      },
+      "radius": null,
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "structuralSignature": "s2:c111566e1c14785f",
+      "canonicalSignature": "c1:06130900060d32ba",
+      "repeatedSiblings": 1,
+      "depth": 5,
+      "childCount": 0,
+      "children": []
+     },
+     {
+      "id": "I1:5043;13706:39009",
+      "name": "Frame 1984078917",
+      "type": "FRAME",
+      "layout": {
+       "mode": "vertical",
+       "gap": {
+        "value": 10,
+        "unbound": true
+       },
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": "CENTER",
+       "justify": "CENTER",
+       "wrap": false,
+       "sizing": {
+        "w": "hug",
+        "h": "hug"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 278,
+        "y": 1781,
+        "w": 65,
+        "h": 28
+       },
+       "relBbox": {
+        "x": 164,
+        "y": 16,
+        "w": 65,
+        "h": 28
+       },
+       "aspect": 2.3214,
+       "aspectBucket": "wide"
+      },
+      "fill": null,
+      "stroke": null,
+      "radius": {
+       "value": 0,
+       "unbound": false
+      },
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "structuralSignature": "s2:9c1884a35c497d7e",
+      "canonicalSignature": "c1:5af23e3db06436b1",
+      "repeatedSiblings": 1,
+      "depth": 5,
+      "childCount": 2,
+      "children": [
+       {
+        "id": "I1:5043;13706:39010",
+        "name": "STRIKE RATE",
+        "type": "TEXT",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "hug",
+          "h": "hug"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 278,
+          "y": 1781,
+          "w": 65,
+          "h": 7
+         },
+         "relBbox": {
+          "x": 0,
+          "y": 0,
+          "w": 65,
+          "h": 7
+         },
+         "aspect": 9.2857,
+         "aspectBucket": "ultrawide"
+        },
+        "fill": {
+         "tokenRef": "text/sec/medium",
+         "unbound": false
+        },
+        "stroke": null,
+        "radius": null,
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "text": {
+         "characters": "STRIKE RATE",
+         "styleRef": "body_xs/regular",
+         "styleId": "S:597bc2826343bd9e288f4fca34eaad4a91472d9e,18116:7",
+         "unbound": false,
+         "fontSize": 10,
+         "fontFamily": "Montserrat",
+         "fontWeight": 400,
+         "lineHeight": 14,
+         "autoResize": "WIDTH_AND_HEIGHT",
+         "lines": 1
+        },
+        "structuralSignature": "s2:3dc6d74c9ab7bde9",
+        "canonicalSignature": "c1:98dd98822112fb40",
+        "repeatedSiblings": 2,
+        "depth": 6,
+        "childCount": 0,
+        "children": []
+       },
+       {
+        "id": "I1:5043;13706:39011",
+        "name": "116.67",
+        "type": "TEXT",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "hug",
+          "h": "hug"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 287,
+          "y": 1798,
+          "w": 47,
+          "h": 11
+         },
+         "relBbox": {
+          "x": 9,
+          "y": 17,
+          "w": 47,
+          "h": 11
+         },
+         "aspect": 4.2727,
+         "aspectBucket": "ultrawide"
+        },
+        "fill": {
+         "tokenRef": "text/prim/high",
+         "unbound": false
+        },
+        "stroke": null,
+        "radius": null,
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "text": {
+         "characters": "116.67",
+         "styleRef": "h3/bold",
+         "styleId": "S:3f817bb24a5675e20119bcf4ef461dfede1cfd05,18101:236",
+         "unbound": false,
+         "fontSize": 16,
+         "fontFamily": "Montserrat",
+         "fontWeight": 700,
+         "lineHeight": 24,
+         "autoResize": "WIDTH_AND_HEIGHT",
+         "lines": 1
+        },
+        "structuralSignature": "s2:3dc6d74c9ab7bde9",
+        "canonicalSignature": "c1:98dd98822112fb40",
+        "repeatedSiblings": 2,
+        "depth": 6,
+        "childCount": 0,
+        "children": []
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "I1:5043;10114:12573",
+    "name": "Group 1321314968",
+    "type": "GROUP",
+    "layout": {
+     "mode": "none",
+     "gap": null,
+     "padding": {
+      "top": {
+       "value": 0,
+       "unbound": false
+      },
+      "right": {
+       "value": 0,
+       "unbound": false
+      },
+      "bottom": {
+       "value": 0,
+       "unbound": false
+      },
+      "left": {
+       "value": 0,
+       "unbound": false
+      }
+     },
+     "align": null,
+     "justify": null,
+     "wrap": false,
+     "sizing": {
+      "w": "fixed",
+      "h": "fixed"
+     },
+     "positioning": "auto"
+    },
+    "geometry": {
+     "bbox": {
+      "x": 139,
+      "y": 1853,
+      "w": 198,
+      "h": 205
+     },
+     "relBbox": {
+      "x": 41,
+      "y": 424,
+      "w": 198,
+      "h": 205
+     },
+     "aspect": 0.9659,
+     "aspectBucket": "square"
+    },
+    "fill": null,
+    "stroke": null,
+    "radius": null,
+    "effects": [],
+    "opacity": 1,
+    "clipsContent": false,
+    "structuralSignature": "s2:1b0ae557fca2517d",
+    "canonicalSignature": "c1:bfa6fa9b2b44e020",
+    "repeatedSiblings": 1,
+    "depth": 4,
+    "childCount": 2,
+    "children": [
+     {
+      "id": "I1:5043;10114:12488",
+      "name": "Rectangle 34646487",
+      "type": "VECTOR",
+      "layout": {
+       "mode": "none",
+       "gap": null,
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": null,
+       "justify": null,
+       "wrap": false,
+       "sizing": {
+        "w": "fixed",
+        "h": "fixed"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 139,
+        "y": 1853,
+        "w": 198,
+        "h": 205
+       },
+       "relBbox": {
+        "x": 41,
+        "y": 424,
+        "w": 198,
+        "h": 205
+       },
+       "aspect": 0.9659,
+       "aspectBucket": "square"
+      },
+      "fill": {
+       "raw": "#2137ff4d",
+       "unbound": true
+      },
+      "stroke": null,
+      "radius": {
+       "value": 20,
+       "unbound": true
+      },
+      "effects": [
+       {
+        "type": "BACKGROUND_BLUR",
+        "unbound": true
+       }
+      ],
+      "opacity": 1,
+      "clipsContent": false,
+      "structuralSignature": "s2:680f32eb449d31f4",
+      "canonicalSignature": "c1:d460f489cf5c334d",
+      "repeatedSiblings": 1,
+      "depth": 5,
+      "childCount": 0,
+      "children": []
+     },
+     {
+      "id": "I1:5043;10114:12504",
+      "name": "Frame 1984078917",
+      "type": "FRAME",
+      "layout": {
+       "mode": "vertical",
+       "gap": {
+        "value": 13,
+        "unbound": true
+       },
+       "padding": {
+        "top": {
+         "value": 0,
+         "unbound": false
+        },
+        "right": {
+         "value": 0,
+         "unbound": false
+        },
+        "bottom": {
+         "value": 0,
+         "unbound": false
+        },
+        "left": {
+         "value": 0,
+         "unbound": false
+        }
+       },
+       "align": "MIN",
+       "justify": "SPACE_BETWEEN",
+       "wrap": false,
+       "sizing": {
+        "w": "fixed",
+        "h": "fixed"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 151.95321655273438,
+        "y": 1873,
+        "w": 171.168212890625,
+        "h": 165
+       },
+       "relBbox": {
+        "x": 53.95321846008301,
+        "y": 444,
+        "w": 171.168212890625,
+        "h": 165
+       },
+       "aspect": 1.0374,
+       "aspectBucket": "square"
+      },
+      "fill": null,
+      "stroke": null,
+      "radius": {
+       "value": 0,
+       "unbound": false
+      },
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "structuralSignature": "s2:8ade08ae72f6a712",
+      "canonicalSignature": "c1:156d1ef853d08abb",
+      "repeatedSiblings": 1,
+      "depth": 5,
+      "childCount": 5,
+      "children": [
+       {
+        "id": "I1:5043;10114:12494",
+        "name": "Frame 1984078915",
+        "type": "FRAME",
+        "layout": {
+         "mode": "vertical",
+         "gap": {
+          "value": 10,
+          "unbound": true
+         },
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": "MIN",
+         "justify": "CENTER",
+         "wrap": false,
+         "sizing": {
+          "w": "hug",
+          "h": "hug"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 151.95321655273438,
+          "y": 1873,
+          "w": 58,
+          "h": 37
+         },
+         "relBbox": {
+          "x": 0,
+          "y": 0,
+          "w": 58,
+          "h": 37
+         },
+         "aspect": 1.5676,
+         "aspectBucket": "landscape"
+        },
+        "fill": null,
+        "stroke": null,
+        "radius": {
+         "value": 0,
+         "unbound": false
+        },
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "structuralSignature": "s2:9c1884a35c497d7e",
+        "canonicalSignature": "c1:5af23e3db06436b1",
+        "repeatedSiblings": 1,
+        "depth": 6,
+        "childCount": 2,
+        "children": [
+         {
+          "id": "I1:5043;10114:12492",
+          "name": "Matches",
+          "type": "TEXT",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": null,
+           "justify": null,
+           "wrap": false,
+           "sizing": {
+            "w": "hug",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 151.95321655273438,
+            "y": 1873,
+            "w": 58,
+            "h": 8
+           },
+           "relBbox": {
+            "x": 0,
+            "y": 0,
+            "w": 58,
+            "h": 8
+           },
+           "aspect": 7.25,
+           "aspectBucket": "ultrawide"
+          },
+          "fill": {
+           "tokenRef": "background/main/surface",
+           "unbound": false
+          },
+          "stroke": null,
+          "radius": null,
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "text": {
+           "characters": "Matches",
+           "unbound": true,
+           "fontSize": 12,
+           "fontFamily": "Montserrat",
+           "fontWeight": 400,
+           "lineHeight": 37.77,
+           "autoResize": "WIDTH_AND_HEIGHT",
+           "lines": 1
+          },
+          "structuralSignature": "s2:3dc6d74c9ab7bde9",
+          "canonicalSignature": "c1:98dd98822112fb40",
+          "repeatedSiblings": 2,
+          "depth": 7,
+          "childCount": 0,
+          "children": []
+         },
+         {
+          "id": "I1:5043;10114:12490",
+          "name": "6",
+          "type": "TEXT",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": null,
+           "justify": null,
+           "wrap": false,
+           "sizing": {
+            "w": "hug",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 151.95321655273438,
+            "y": 1891,
+            "w": 18,
+            "h": 19
+           },
+           "relBbox": {
+            "x": 0,
+            "y": 18,
+            "w": 18,
+            "h": 19
+           },
+           "aspect": 0.9474,
+           "aspectBucket": "portrait"
+          },
+          "fill": {
+           "tokenRef": "background/main/surface",
+           "unbound": false
+          },
+          "stroke": null,
+          "radius": null,
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "text": {
+           "characters": "6",
+           "unbound": true,
+           "fontSize": 32,
+           "fontFamily": "Bakbak One",
+           "fontWeight": 400,
+           "lineHeight": 37.77,
+           "autoResize": "WIDTH_AND_HEIGHT",
+           "lines": 1
+          },
+          "structuralSignature": "s2:3dc6d74c9ab7bde9",
+          "canonicalSignature": "c1:98dd98822112fb40",
+          "repeatedSiblings": 2,
+          "depth": 7,
+          "childCount": 0,
+          "children": []
+         }
+        ]
+       },
+       {
+        "id": "I1:5043;10114:12544",
+        "name": "Line 422",
+        "type": "VECTOR",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "fill",
+          "h": "fixed"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 151.95321655273438,
+          "y": 1923.5,
+          "w": 171.168212890625,
+          "h": 0
+         },
+         "relBbox": {
+          "x": 0,
+          "y": 50.5,
+          "w": 171.168212890625,
+          "h": 0
+         },
+         "aspect": 0,
+         "aspectBucket": "square"
+        },
+        "fill": null,
+        "stroke": {
+         "raw": "#ffffff",
+         "weight": 1,
+         "unbound": true
+        },
+        "radius": null,
+        "effects": [],
+        "opacity": 0.10000000149011612,
+        "clipsContent": false,
+        "structuralSignature": "s2:81efdc6013ce751f",
+        "canonicalSignature": "c1:2eb74cded75d447a",
+        "repeatedSiblings": 1,
+        "depth": 6,
+        "childCount": 0,
+        "children": []
+       },
+       {
+        "id": "I1:5043;10114:12498",
+        "name": "Frame 1984078916",
+        "type": "FRAME",
+        "layout": {
+         "mode": "vertical",
+         "gap": {
+          "value": 10,
+          "unbound": true
+         },
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": "MIN",
+         "justify": "CENTER",
+         "wrap": false,
+         "sizing": {
+          "w": "fill",
+          "h": "hug"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 151.95321655273438,
+          "y": 1937,
+          "w": 171.168212890625,
+          "h": 37
+         },
+         "relBbox": {
+          "x": 0,
+          "y": 64,
+          "w": 171.168212890625,
+          "h": 37
+         },
+         "aspect": 4.6262,
+         "aspectBucket": "ultrawide"
+        },
+        "fill": null,
+        "stroke": null,
+        "radius": {
+         "value": 0,
+         "unbound": false
+        },
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "structuralSignature": "s2:865de31284959877",
+        "canonicalSignature": "c1:ad6220284c0dfdcc",
+        "repeatedSiblings": 1,
+        "depth": 6,
+        "childCount": 2,
+        "children": [
+         {
+          "id": "I1:5043;10114:12499",
+          "name": "Balls Bowled",
+          "type": "TEXT",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": null,
+           "justify": null,
+           "wrap": false,
+           "sizing": {
+            "w": "hug",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 151.95321655273438,
+            "y": 1937,
+            "w": 96,
+            "h": 8
+           },
+           "relBbox": {
+            "x": 0,
+            "y": 0,
+            "w": 96,
+            "h": 8
+           },
+           "aspect": 12,
+           "aspectBucket": "ultrawide"
+          },
+          "fill": {
+           "tokenRef": "background/main/surface",
+           "unbound": false
+          },
+          "stroke": null,
+          "radius": null,
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "text": {
+           "characters": "Balls Bowled",
+           "unbound": true,
+           "fontSize": 12,
+           "fontFamily": "Montserrat",
+           "fontWeight": 400,
+           "lineHeight": 37.77,
+           "autoResize": "WIDTH_AND_HEIGHT",
+           "lines": 1
+          },
+          "structuralSignature": "s2:3dc6d74c9ab7bde9",
+          "canonicalSignature": "c1:98dd98822112fb40",
+          "repeatedSiblings": 2,
+          "depth": 7,
+          "childCount": 0,
+          "children": []
+         },
+         {
+          "id": "I1:5043;10114:12500",
+          "name": "120",
+          "type": "TEXT",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": null,
+           "justify": null,
+           "wrap": false,
+           "sizing": {
+            "w": "hug",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 151.95321655273438,
+            "y": 1955,
+            "w": 46,
+            "h": 19
+           },
+           "relBbox": {
+            "x": 0,
+            "y": 18,
+            "w": 46,
+            "h": 19
+           },
+           "aspect": 2.4211,
+           "aspectBucket": "wide"
+          },
+          "fill": {
+           "tokenRef": "background/main/surface",
+           "unbound": false
+          },
+          "stroke": null,
+          "radius": null,
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "text": {
+           "characters": "120",
+           "unbound": true,
+           "fontSize": 32,
+           "fontFamily": "Bakbak One",
+           "fontWeight": 400,
+           "lineHeight": 37.77,
+           "autoResize": "WIDTH_AND_HEIGHT",
+           "lines": 1
+          },
+          "structuralSignature": "s2:3dc6d74c9ab7bde9",
+          "canonicalSignature": "c1:98dd98822112fb40",
+          "repeatedSiblings": 2,
+          "depth": 7,
+          "childCount": 0,
+          "children": []
+         }
+        ]
+       },
+       {
+        "id": "I1:5043;10114:12571",
+        "name": "Line 423",
+        "type": "VECTOR",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "fill",
+          "h": "fixed"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 151.95321655273438,
+          "y": 1987.5,
+          "w": 171.168212890625,
+          "h": 0
+         },
+         "relBbox": {
+          "x": 0,
+          "y": 114.5,
+          "w": 171.168212890625,
+          "h": 0
+         },
+         "aspect": 0,
+         "aspectBucket": "square"
+        },
+        "fill": null,
+        "stroke": {
+         "raw": "#ffffff",
+         "weight": 1,
+         "unbound": true
+        },
+        "radius": null,
+        "effects": [],
+        "opacity": 0.10000000149011612,
+        "clipsContent": false,
+        "structuralSignature": "s2:81efdc6013ce751f",
+        "canonicalSignature": "c1:2eb74cded75d447a",
+        "repeatedSiblings": 1,
+        "depth": 6,
+        "childCount": 0,
+        "children": []
+       },
+       {
+        "id": "I1:5043;10114:12512",
+        "name": "Frame 1984078917",
+        "type": "FRAME",
+        "layout": {
+         "mode": "vertical",
+         "gap": {
+          "value": 10,
+          "unbound": true
+         },
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": "MIN",
+         "justify": "CENTER",
+         "wrap": false,
+         "sizing": {
+          "w": "fill",
+          "h": "hug"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 151.95321655273438,
+          "y": 2001,
+          "w": 171.168212890625,
+          "h": 37
+         },
+         "relBbox": {
+          "x": 0,
+          "y": 128,
+          "w": 171.168212890625,
+          "h": 37
+         },
+         "aspect": 4.6262,
+         "aspectBucket": "ultrawide"
+        },
+        "fill": null,
+        "stroke": null,
+        "radius": {
+         "value": 0,
+         "unbound": false
+        },
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "structuralSignature": "s2:865de31284959877",
+        "canonicalSignature": "c1:ad6220284c0dfdcc",
+        "repeatedSiblings": 1,
+        "depth": 6,
+        "childCount": 2,
+        "children": [
+         {
+          "id": "I1:5043;10114:12513",
+          "name": "Wickets",
+          "type": "TEXT",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": null,
+           "justify": null,
+           "wrap": false,
+           "sizing": {
+            "w": "hug",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 151.95321655273438,
+            "y": 2001,
+            "w": 54,
+            "h": 8
+           },
+           "relBbox": {
+            "x": 0,
+            "y": 0,
+            "w": 54,
+            "h": 8
+           },
+           "aspect": 6.75,
+           "aspectBucket": "ultrawide"
+          },
+          "fill": {
+           "tokenRef": "background/main/surface",
+           "unbound": false
+          },
+          "stroke": null,
+          "radius": null,
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "text": {
+           "characters": "Wickets",
+           "unbound": true,
+           "fontSize": 12,
+           "fontFamily": "Montserrat",
+           "fontWeight": 400,
+           "lineHeight": 37.77,
+           "autoResize": "WIDTH_AND_HEIGHT",
+           "lines": 1
+          },
+          "structuralSignature": "s2:3dc6d74c9ab7bde9",
+          "canonicalSignature": "c1:98dd98822112fb40",
+          "repeatedSiblings": 2,
+          "depth": 7,
+          "childCount": 0,
+          "children": []
+         },
+         {
+          "id": "I1:5043;10114:12514",
+          "name": "8",
+          "type": "TEXT",
+          "layout": {
+           "mode": "none",
+           "gap": null,
+           "padding": {
+            "top": {
+             "value": 0,
+             "unbound": false
+            },
+            "right": {
+             "value": 0,
+             "unbound": false
+            },
+            "bottom": {
+             "value": 0,
+             "unbound": false
+            },
+            "left": {
+             "value": 0,
+             "unbound": false
+            }
+           },
+           "align": null,
+           "justify": null,
+           "wrap": false,
+           "sizing": {
+            "w": "hug",
+            "h": "hug"
+           },
+           "positioning": "auto"
+          },
+          "geometry": {
+           "bbox": {
+            "x": 151.95321655273438,
+            "y": 2019,
+            "w": 18,
+            "h": 19
+           },
+           "relBbox": {
+            "x": 0,
+            "y": 18,
+            "w": 18,
+            "h": 19
+           },
+           "aspect": 0.9474,
+           "aspectBucket": "portrait"
+          },
+          "fill": {
+           "tokenRef": "background/main/surface",
+           "unbound": false
+          },
+          "stroke": null,
+          "radius": null,
+          "effects": [],
+          "opacity": 1,
+          "clipsContent": false,
+          "text": {
+           "characters": "8",
+           "unbound": true,
+           "fontSize": 32,
+           "fontFamily": "Bakbak One",
+           "fontWeight": 400,
+           "lineHeight": 37.77,
+           "autoResize": "WIDTH_AND_HEIGHT",
+           "lines": 1
+          },
+          "structuralSignature": "s2:3dc6d74c9ab7bde9",
+          "canonicalSignature": "c1:98dd98822112fb40",
+          "repeatedSiblings": 2,
+          "depth": 7,
+          "childCount": 0,
+          "children": []
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   },
+   {
+    "id": "I1:5043;13560:112032",
+    "name": "Frame 1984079036",
+    "type": "FRAME",
+    "layout": {
+     "mode": "vertical",
+     "gap": {
+      "value": 12,
+      "tokenRef": "3",
+      "unbound": false
+     },
+     "padding": {
+      "top": {
+       "value": 0,
+       "unbound": false
+      },
+      "right": {
+       "value": 0,
+       "unbound": false
+      },
+      "bottom": {
+       "value": 0,
+       "unbound": false
+      },
+      "left": {
+       "value": 0,
+       "unbound": false
+      }
+     },
+     "align": "MIN",
+     "justify": "MIN",
+     "wrap": false,
+     "sizing": {
+      "w": "fixed",
+      "h": "fixed"
+     },
+     "positioning": "auto"
+    },
+    "geometry": {
+     "bbox": {
+      "x": 344.67578125,
+      "y": 1537.5751953125,
+      "w": 24.194332122802734,
+      "h": 60.13953399658203
+     },
+     "relBbox": {
+      "x": 246.67578125,
+      "y": 108.5751953125,
+      "w": 24.194332122802734,
+      "h": 60.13953399658203
+     },
+     "aspect": 0.4023,
+     "aspectBucket": "portrait"
+    },
+    "fill": null,
+    "stroke": null,
+    "radius": {
+     "value": 0,
+     "unbound": false
+    },
+    "effects": [],
+    "opacity": 1,
+    "clipsContent": false,
+    "structuralSignature": "s2:bb1601c859511e79",
+    "canonicalSignature": "c1:5cf54945582b4ee5",
+    "repeatedSiblings": 1,
+    "depth": 4,
+    "childCount": 1,
+    "children": [
+     {
+      "id": "I1:5043;13560:112033",
+      "name": "atom_badges_master",
+      "type": "INSTANCE",
+      "componentKey": "c9c1722b2ae95dbfe485a7e5eb3411ecf3d0479a",
+      "layout": {
+       "mode": "horizontal",
+       "gap": {
+        "value": 3.333,
+        "unbound": true
+       },
+       "padding": {
+        "top": {
+         "value": 1.667,
+         "unbound": true
+        },
+        "right": {
+         "value": 1.667,
+         "unbound": true
+        },
+        "bottom": {
+         "value": 1.667,
+         "unbound": true
+        },
+        "left": {
+         "value": 1.667,
+         "unbound": true
+        }
+       },
+       "align": "CENTER",
+       "justify": "CENTER",
+       "wrap": false,
+       "sizing": {
+        "w": "fill",
+        "h": "fixed"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 344.67578125,
+        "y": 1537.5751953125,
+        "w": 24.194332122802734,
+        "h": 24
+       },
+       "relBbox": {
+        "x": 0,
+        "y": 0,
+        "w": 24.194332122802734,
+        "h": 24
+       },
+       "aspect": 1.0081,
+       "aspectBucket": "square"
+      },
+      "fill": {
+       "tokenRef": "background/main/card",
+       "unbound": false
+      },
+      "stroke": null,
+      "radius": {
+       "value": 832.5,
+       "unbound": true
+      },
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "structuralSignature": "s2:f3ee3a691546ac45",
+      "canonicalSignature": "c1:1fd2d00f5af13bbe",
+      "repeatedSiblings": 1,
+      "depth": 5,
+      "childCount": 1,
+      "children": [
+       {
+        "id": "I1:5043;13560:112033;13384:37681",
+        "name": "C",
+        "type": "TEXT",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "hug",
+          "h": "hug"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 351.77294921875,
+          "y": 1545.0751953125,
+          "w": 10,
+          "h": 9
+         },
+         "relBbox": {
+          "x": 7.097166538238525,
+          "y": 7.5,
+          "w": 10,
+          "h": 9
+         },
+         "aspect": 1.1111,
+         "aspectBucket": "landscape"
+        },
+        "fill": {
+         "tokenRef": "text/main/sec",
+         "unbound": false
+        },
+        "stroke": null,
+        "radius": null,
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "text": {
+         "characters": "C",
+         "unbound": true,
+         "fontSize": 13.33,
+         "fontFamily": "Montserrat",
+         "fontWeight": 700,
+         "lineHeight": 20,
+         "autoResize": "WIDTH_AND_HEIGHT",
+         "lines": 1
+        },
+        "structuralSignature": "s2:3dc6d74c9ab7bde9",
+        "canonicalSignature": "c1:98dd98822112fb40",
+        "repeatedSiblings": 1,
+        "depth": 6,
+        "childCount": 0,
+        "children": []
+       }
+      ]
+     },
+     {
+      "id": "I1:5043;13560:112034",
+      "name": "atom_badges_master",
+      "type": "INSTANCE",
+      "componentKey": "dcbea111039b3757a301a92783a6775733e2379a",
+      "layout": {
+       "mode": "horizontal",
+       "gap": {
+        "value": 3.333,
+        "unbound": true
+       },
+       "padding": {
+        "top": {
+         "value": 3.333,
+         "unbound": true
+        },
+        "right": {
+         "value": 3.333,
+         "unbound": true
+        },
+        "bottom": {
+         "value": 3.333,
+         "unbound": true
+        },
+        "left": {
+         "value": 3.333,
+         "unbound": true
+        }
+       },
+       "align": "CENTER",
+       "justify": "CENTER",
+       "wrap": false,
+       "sizing": {
+        "w": "fixed",
+        "h": "fixed"
+       },
+       "positioning": "auto"
+      },
+      "geometry": {
+       "bbox": {
+        "x": 344.67578125,
+        "y": 1573.5751953125,
+        "w": 24.194332122802734,
+        "h": 24
+       },
+       "relBbox": {
+        "x": 0,
+        "y": 36,
+        "w": 24.194332122802734,
+        "h": 24
+       },
+       "aspect": 1.0081,
+       "aspectBucket": "square"
+      },
+      "fill": {
+       "tokenRef": "background/sec/container_2",
+       "unbound": false
+      },
+      "stroke": null,
+      "radius": {
+       "value": 832.5,
+       "unbound": true
+      },
+      "effects": [],
+      "opacity": 1,
+      "clipsContent": false,
+      "structuralSignature": "s2:eb868abc904cdd72",
+      "canonicalSignature": "c1:0d04e110b506eca7",
+      "repeatedSiblings": 1,
+      "depth": 5,
+      "childCount": 1,
+      "children": [
+       {
+        "id": "I1:5043;13560:112034;13384:37679",
+        "name": "Vector",
+        "type": "VECTOR",
+        "layout": {
+         "mode": "none",
+         "gap": null,
+         "padding": {
+          "top": {
+           "value": 0,
+           "unbound": false
+          },
+          "right": {
+           "value": 0,
+           "unbound": false
+          },
+          "bottom": {
+           "value": 0,
+           "unbound": false
+          },
+          "left": {
+           "value": 0,
+           "unbound": false
+          }
+         },
+         "align": null,
+         "justify": null,
+         "wrap": false,
+         "sizing": {
+          "w": "fixed",
+          "h": "fixed"
+         },
+         "positioning": "auto"
+        },
+        "geometry": {
+         "bbox": {
+          "x": 351.77294921875,
+          "y": 1580.5751953125,
+          "w": 10,
+          "h": 10
+         },
+         "relBbox": {
+          "x": 7.097166061401367,
+          "y": 7,
+          "w": 10,
+          "h": 10
+         },
+         "aspect": 1,
+         "aspectBucket": "square"
+        },
+        "fill": {
+         "tokenRef": "text/prim/high",
+         "unbound": false
+        },
+        "stroke": null,
+        "radius": {
+         "value": 0,
+         "unbound": false
+        },
+        "effects": [],
+        "opacity": 1,
+        "clipsContent": false,
+        "structuralSignature": "s2:680f32eb449d31f4",
+        "canonicalSignature": "c1:d460f489cf5c334d",
+        "repeatedSiblings": 1,
+        "depth": 6,
+        "childCount": 0,
+        "children": []
+       }
+      ]
+     }
+    ]
+   }
+  ]
+ }
+}
