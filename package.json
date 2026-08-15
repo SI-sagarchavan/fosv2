@@ -11,7 +11,11 @@
     "build": "pnpm -r run build",
     "test": "pnpm -r run test",
     "typecheck": "pnpm -r run typecheck",
-    "clean": "pnpm -r run clean"
+    "clean": "pnpm -r run clean",
+    "dev:studio": "pnpm --filter @fanos/surface-studio dev",
+    "dev:web": "pnpm --filter @fanos/web dev",
+    "dev:api": "pnpm --filter @fanos/api dev",
+    "dev:worker": "pnpm --filter @fanos/api dev:worker"
   },
   "devDependencies": {
     "typescript": "^5.6.3"

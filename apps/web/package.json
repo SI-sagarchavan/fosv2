@@ -1,0 +1,32 @@
+{
+  "name": "@fanos/web",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Client-facing site. Fetches SDUI from the control plane and renders it with @fanos/renderer.",
+  "type": "module",
+  "scripts": {
+    "build": "next build",
+    "dev": "next dev --port 3415",
+    "start": "next start --port 3415",
+    "test": "echo \"no tests in @fanos/web — rendering logic is tested in @fanos/renderer\" && exit 0",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf .next"
+  },
+  "dependencies": {
+    "@fanos/dsl": "workspace:*",
+    "@fanos/renderer": "workspace:*",
+    "@fanos/tokens": "workspace:*",
+    "next": "^15.1.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "typescript": "^5.6.3"
+  },
+  "engines": {
+    "node": ">=22"
+  }
+}

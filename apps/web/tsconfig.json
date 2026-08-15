@@ -1,0 +1,20 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "target": "ES2022",
+    "jsx": "preserve",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["node"],
+    "allowJs": false,
+    "plugins": [{ "name": "next" }],
+    "noEmit": true,
+    "incremental": true,
+    // `next dev` rewrites this file on every run; pinning the build-info path
+    // keeps that from colliding with anything else in the workspace.
+    "tsBuildInfoFile": "./.tsbuildinfo"
+  },
+  "include": ["app/**/*", "next-env.d.ts", ".next/types/**/*.ts"],
+  "exclude": ["node_modules", ".next"]
+}

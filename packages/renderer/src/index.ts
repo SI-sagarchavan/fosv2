@@ -1,8 +1,14 @@
 /**
- * @fanos/renderer — web SDUI renderer + visual diff harness.
+ * @fanos/renderer — the SDUI rendering SDK.
  *
  * Seven node types: Box, Stack, Overlay, Text, Image, Icon, Divider.
  * Every component is a Server Component. No "use client".
+ *
+ * This entry is framework-free on purpose: it imports React and nothing from
+ * Next, so `apps/web` is one consumer rather than the only possible one. The
+ * Playwright screenshot/diff harness deliberately does NOT live here — it is
+ * behind `@fanos/renderer/harness`, so a client-facing app that imports this
+ * entry never pulls a browser automation stack into its dependency graph.
  */
 
 // Pure resolvers
@@ -25,14 +31,6 @@ export { Text } from "./components/Text.js";
 export { Image } from "./components/Image.js";
 export { Icon } from "./components/Icon.js";
 export { Divider } from "./components/Divider.js";
-
-// Harness
-export { measureNodeBoxes, renderToPng, writePng, closeBrowser } from "./harness/renderToPng.js";
-export type { MeasuredBox, RenderToPngOptions } from "./harness/renderToPng.js";
-export { diff, findRegions } from "./harness/diff.js";
-export type { DiffResult, DiffRegion } from "./harness/diff.js";
-export { mapRegionsToNodes, COLLECT_NODE_BOXES_SCRIPT } from "./harness/mapRegions.js";
-export type { NodeBox, RegionNodes } from "./harness/mapRegions.js";
 
 // Fonts
 export { FONT_FACE_CSS, REQUIRED_FONTS } from "./fonts.js";
