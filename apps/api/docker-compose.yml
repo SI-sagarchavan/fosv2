@@ -1,0 +1,35 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: fanos
+      POSTGRES_PASSWORD: fanos
+      POSTGRES_DB: fanos
+    ports:
+      # 5433 on the host: a locally-installed Postgres on 5432 silently wins the
+      # bind and you get "role fanos does not exist" from a server you did not
+      # mean to talk to. Not worth the half hour it costs to work out why.
+      - "5433:5432"
+    volumes:
+      - fanos-pg:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U fanos"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - fanos-redis:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+volumes:
+  fanos-pg:
+  fanos-redis:
