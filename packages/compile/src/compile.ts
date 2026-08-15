@@ -21,7 +21,7 @@
 
 import type { FlatNode, FlatTree } from "@fanos/dsl";
 import { SCHEMA_VERSION } from "@fanos/dsl";
-import type { FrameIRDocument, FrameIRNode } from "@fanos/figma-ir-extractor/ir";
+import type { FrameIRDocument, FrameIRNode } from "@fanos/surface-canvas/ir";
 import type { NormalizedTheme, SurfaceSet } from "@fanos/tokens";
 import { classify, flowChildren, isFillPlate, isIconGroup, type DslType } from "./classify.js";
 import { IdAllocator, isMeaningful, slug } from "./ids.js";

@@ -11,7 +11,7 @@
  * the compiler emits the safe thing and records a note, rather than guessing.
  */
 
-import type { FrameIRNode } from "@fanos/figma-ir-extractor/ir";
+import type { FrameIRNode } from "@fanos/surface-canvas/ir";
 
 export type DslType = "Box" | "Stack" | "Overlay" | "Text" | "Image" | "Icon" | "Divider";
 

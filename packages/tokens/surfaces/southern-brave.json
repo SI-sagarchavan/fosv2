@@ -6,7 +6,8 @@
     "texture.card_bg": "/assets/textures/card_bg.png",
     "decor.wave": "/assets/decors/wave.png",
     "logo.birmingham_phoenix": "/assets/logos/birmingham_phoenix.png",
-    "logo.southern_brave": "/assets/logos/southern_brave.png"
+    "logo.southern_brave": "/assets/logos/southern_brave.png",
+    "texture.tickets_plate": "/assets/textures/tickets_plate.png"
   },
   "surfaces": {
     "card_player": {

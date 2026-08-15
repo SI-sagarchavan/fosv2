@@ -6,7 +6,7 @@
  * relative to some other node. Building the index once keeps every check O(n).
  */
 
-import type { FrameIRDocument, FrameIRNode } from "@fanos/figma-ir-extractor/ir";
+import type { FrameIRDocument, FrameIRNode } from "@fanos/surface-canvas/ir";
 
 export interface IrIndex {
   readonly doc: FrameIRDocument;

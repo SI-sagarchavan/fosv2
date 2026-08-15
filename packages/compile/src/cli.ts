@@ -11,7 +11,7 @@ import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { createRegistry, loadSurfaces, loadTheme } from "@fanos/tokens";
 import { validate } from "@fanos/dsl";
-import { parseFrameIRDocument } from "@fanos/figma-ir-extractor/ir";
+import { parseFrameIRDocument } from "@fanos/surface-canvas/ir";
 import { compile } from "./compile.js";
 
 const USAGE = `fos-compile — deterministic Figma IR -> DSL tree

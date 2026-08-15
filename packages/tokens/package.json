@@ -10,7 +10,9 @@
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./dist/index.js"
-    }
+    },
+    "./fixtures/*.json": "./fixtures/*.json",
+    "./surfaces/*.json": "./surfaces/*.json"
   },
   "bin": {
     "fos-tokens": "./dist/bin.js"

@@ -8,7 +8,7 @@
  * different viewport and one pinned to the width it was exported at.
  */
 
-import type { FrameIRNode, Layout, TokenValue } from "@fanos/figma-ir-extractor/ir";
+import type { FrameIRNode, Layout, TokenValue } from "@fanos/surface-canvas/ir";
 import type { NormalizedTheme } from "@fanos/tokens";
 import { canonicalRef } from "./refs.js";
 

@@ -12,7 +12,7 @@
  * drop the paint, or silently invent a token that does not resolve.
  */
 
-import type { FrameIRNode } from "@fanos/figma-ir-extractor/ir";
+import type { FrameIRNode } from "@fanos/surface-canvas/ir";
 import type { NormalizedTheme, Surface, SurfaceSet } from "@fanos/tokens";
 import { canonicalRef, paintRef } from "./refs.js";
 

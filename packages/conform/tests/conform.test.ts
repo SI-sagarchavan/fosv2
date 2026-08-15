@@ -14,7 +14,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { flatTreeSchema, type FlatTree } from "@fanos/dsl";
 import { loadTheme } from "@fanos/tokens";
-import { parseFrameIRDocument, type FrameIRDocument } from "@fanos/figma-ir-extractor/ir";
+import { parseFrameIRDocument, type FrameIRDocument } from "@fanos/surface-canvas/ir";
 import { conform } from "../src/conform.js";
 import { issuesByCode } from "../src/issues.js";
 import { sliceIr } from "../src/slice.js";

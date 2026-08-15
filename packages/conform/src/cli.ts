@@ -12,7 +12,7 @@ import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { flatTreeSchema } from "@fanos/dsl";
 import { loadTheme } from "@fanos/tokens";
-import { parseFrameIRDocument } from "@fanos/figma-ir-extractor/ir";
+import { parseFrameIRDocument } from "@fanos/surface-canvas/ir";
 import { conform } from "./conform.js";
 import { formatReport } from "./report.js";
 import type { NodeBox } from "./checks/geometry.js";

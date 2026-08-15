@@ -13,7 +13,7 @@ import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
 import { createRegistry, loadSurfaces, loadTheme } from "@fanos/tokens";
 import { flatTreeSchema, reify, validate } from "@fanos/dsl";
-import { parseFrameIRDocument, type FrameIRDocument } from "@fanos/figma-ir-extractor/ir";
+import { parseFrameIRDocument, type FrameIRDocument } from "@fanos/surface-canvas/ir";
 import { compile } from "../src/compile.js";
 import { isMeaningful, slug } from "../src/ids.js";
 import { canonicalRef, paintRef } from "../src/refs.js";

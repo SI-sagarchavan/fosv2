@@ -13,3 +13,11 @@ out/
 # Playwright/vitest scratch
 test-results/
 playwright-report/
+
+# Local env. `.env.example` is the tracked template.
+.env
+.env.local
+
+# Local artifact blob store (@fanos/api). Content-addressed and regenerable.
+.blobs/
+.blobs-test/

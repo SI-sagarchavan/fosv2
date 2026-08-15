@@ -1,6 +1,6 @@
 import { defineConfig } from "tsup";
 
-const external = ["zod", "@fanos/tokens", "@fanos/dsl", "@fanos/figma-ir-extractor"];
+const external = ["zod", "@fanos/tokens", "@fanos/dsl", "@fanos/surface-canvas"];
 
 export default defineConfig([
   { entry: ["src/index.ts"], format: ["esm"], dts: true, clean: true, sourcemap: true, target: "node22", external },

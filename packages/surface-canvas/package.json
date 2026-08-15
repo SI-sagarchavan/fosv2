@@ -1,0 +1,45 @@
+{
+  "name": "@fanos/surface-canvas",
+  "version": "0.2.0",
+  "private": true,
+  "description": "FanOS Surface Canvas — the Figma plugin: token-binding health, layout hug, and send to Surface Studio",
+  "type": "module",
+  "scripts": {
+    "build": "node esbuild.mjs && tsup",
+    "watch": "node esbuild.mjs --watch",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@fanos/tokens": "workspace:*",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^3.25.76"
+  },
+  "devDependencies": {
+    "@figma/plugin-typings": "^1.109.0",
+    "@types/node": "^22",
+    "@types/react": "^19.0.0",
+    "@types/react-dom": "^19.0.0",
+    "esbuild": "^0.24.0",
+    "tsup": "^8.3.5",
+    "typescript": "^5.6.3",
+    "vitest": "^2.1.8"
+  },
+  "exports": {
+    "./ir": {
+      "types": "./dist/ir/index.d.ts",
+      "import": "./dist/ir/index.js"
+    },
+    "./health": {
+      "types": "./dist/health/index.d.ts",
+      "import": "./dist/health/index.js"
+    }
+  },
+  "files": [
+    "dist",
+    "manifest.json"
+  ]
+}

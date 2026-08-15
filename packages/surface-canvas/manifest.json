@@ -1,0 +1,15 @@
+{
+  "name": "FanOS Surface Canvas",
+  "id": "fanos-surface-canvas",
+  "api": "1.0.0",
+  "main": "dist/code.js",
+  "ui": "dist/ui.html",
+  "editorType": ["figma"],
+  "documentAccess": "dynamic-page",
+  "permissions": ["teamlibrary", "currentuser"],
+  "networkAccess": {
+    "allowedDomains": ["http://localhost:3000"],
+    "reasoning": "Posts frame IR and section PNGs to Surface Studio. Themes stay compiled into the plugin and are never fetched.",
+    "devAllowedDomains": ["http://localhost:3000"]
+  }
+}

@@ -1,0 +1,526 @@
+<!-- Shell for the React bundle. esbuild splices the compiled JS into the marker
+     below — Figma only accepts a single self-contained UI file, so there is no
+     second request to make. -->
+<style>
+  :root {
+    --fos-bg: var(--figma-color-bg, #ffffff);
+    --fos-bg-secondary: var(--figma-color-bg-secondary, #f5f5f5);
+    --fos-bg-hover: var(--figma-color-bg-hover, #f0f0f0);
+    --fos-text: var(--figma-color-text, #1a1a1a);
+    --fos-text-secondary: var(--figma-color-text-secondary, #6b6b6b);
+    --fos-border: var(--figma-color-border, #e6e6e6);
+    --fos-brand: var(--figma-color-bg-brand, #2939a3);
+    --fos-brand-text: var(--figma-color-text-onbrand, #ffffff);
+    --fos-danger: var(--figma-color-text-danger, #d32029);
+    --fos-warn: var(--figma-color-text-warning, #a35b00);
+    --fos-success: var(--figma-color-text-success, #1e7a3c);
+    --fos-radius: 5px;
+
+    /* The coverage-led surfaces. A card is one step off the page and a meter
+       track one step further, so the three read as depth rather than as three
+       greys. Derived from the Figma theme vars, not hardcoded: this panel is
+       drawn inside somebody else's light or dark UI. */
+    --fos-card: var(--figma-color-bg-secondary, #f7f7f7);
+    --fos-card-border: var(--figma-color-border, #e6e6e6);
+    --fos-track: var(--figma-color-bg-tertiary, #e9e9e9);
+    --fos-link: var(--figma-color-text-brand, #0d99ff);
+    --fos-card-radius: 7px;
+    /* Half a step off the page, so the coverage block separates without
+       becoming a second card competing with the queue. */
+    --fos-cov-bg: color-mix(in srgb, var(--figma-color-bg-secondary, #f5f5f5) 60%, var(--fos-bg));
+
+    /* One scale, five steps, so a row's hierarchy is a choice rather than
+       whatever number was typed last. Figma ships Inter, which is what the rest
+       of its UI is set in — matching it is what keeps this panel from reading as
+       a web page bolted into the sidebar.
+
+       micro  a label under a number, or a unit
+       small  supporting text: notes, metadata, candidate values
+       base   the reading size — body copy and row values
+       lead   things you navigate by: tabs, section heads, the product name
+       hero   the score, and nothing else */
+    --fos-font: Inter, "Helvetica Neue", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --fos-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+    --fos-t-micro: 9.5px;
+    --fos-t-small: 10.5px;
+    --fos-t-base: 11px;
+    --fos-t-lead: 12px;
+    --fos-t-hero: 24px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    overflow: hidden;
+    background: var(--fos-bg);
+    color: var(--fos-text);
+    font: 400 var(--fos-t-base)/1.45 var(--fos-font);
+    /* Inter's default figures are proportional, which makes a column of counts
+       jitter as it updates. Every number in this panel is one that changes. */
+    font-variant-numeric: tabular-nums;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  #root { height: 100%; display: flex; flex-direction: column; }
+
+  button {
+    font: inherit;
+    font-weight: 500;
+    border: 1px solid transparent;
+    border-radius: var(--fos-radius);
+    padding: 5px 10px;
+    cursor: pointer;
+    background: var(--fos-bg-secondary);
+    color: var(--fos-text);
+  }
+  button:hover:not(:disabled) { background: var(--fos-bg-hover); }
+  button:disabled { opacity: 0.45; cursor: not-allowed; }
+  /* A commitment carries more weight than the label of a thing you might do. */
+  button.primary {
+    background: var(--fos-brand); color: var(--fos-brand-text); border-color: transparent;
+    font-weight: 600;
+  }
+  button.outline { background: transparent; border-color: var(--fos-border); }
+  button.ghost { background: transparent; border-color: transparent; color: var(--fos-text-secondary); padding: 3px 6px; }
+  button.ghost:hover:not(:disabled) { color: var(--fos-text); background: var(--fos-bg-hover); }
+
+  select {
+    font: inherit;
+    background: transparent;
+    color: var(--fos-text);
+    border: 1px solid var(--fos-border);
+    border-radius: var(--fos-radius);
+    padding: 3px 6px;
+    max-width: 132px;
+    flex: 0 0 auto;
+  }
+
+  .row { display: flex; align-items: center; gap: 8px; }
+  .grow { flex: 1 1 auto; min-width: 0; }
+  .muted { color: var(--fos-text-secondary); }
+  /* Monospace runs optically larger than Inter at the same nominal size and
+     tracks wider. Both are corrected here so a token sitting next to a label
+     reads as the same size, which is the only reason to use ems for this. */
+  .mono {
+    font-family: var(--fos-mono);
+    font-size: 0.94em;
+    letter-spacing: -0.01em;
+  }
+  .truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .section { padding: 10px 14px; border-bottom: 1px solid var(--fos-border); }
+  .scroll { overflow-y: auto; overflow-x: hidden; flex: 1 1 auto; min-height: 0; }
+  .tab-body {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tabs { display: flex; gap: 0; padding: 0 14px; border-bottom: 1px solid var(--fos-border); }
+  .tab {
+    border-radius: 0; background: transparent; color: var(--fos-text-secondary);
+    padding: 8px 12px 9px; border-bottom: 2px solid transparent; margin-bottom: -1px;
+    font-size: var(--fos-t-lead); font-weight: 500;
+  }
+  /* Weight as well as colour. On a dark panel the colour shift alone is subtle
+     enough that the selected tab has to be found rather than seen. */
+  .tab[aria-selected="true"] {
+    background: transparent; color: var(--fos-text); border-bottom-color: var(--fos-text);
+    font-weight: 600;
+  }
+
+  button.compact { padding: 3px 7px; }
+  .loss { color: var(--fos-warn); font-variant-numeric: tabular-nums; }
+
+  /* A text button that reads as a link, because that is what it is: Undo, and
+     "select these on canvas". Neither is a commitment worth a filled rectangle. */
+  button.link {
+    background: transparent; border-color: transparent; color: var(--fos-link);
+    padding: 0; font-weight: 500; flex: 0 0 auto;
+  }
+  button.link:hover:not(:disabled) { background: transparent; text-decoration: underline; }
+
+  /* --- header ---------------------------------------------------------- */
+
+  .head {
+    display: flex; align-items: center; gap: 8px;
+    padding: 8px 12px; border-bottom: 1px solid var(--fos-border);
+    flex: 0 0 auto;
+  }
+  .head-name {
+    font-size: var(--fos-t-lead); font-weight: 600; letter-spacing: -0.1px;
+  }
+  .head-retarget { padding: 0 12px 8px; display: flex; }
+
+  /* The chip is drawn; the real <select> lies over the whole of it at zero
+     opacity. Chromium reserves space for its own arrow inside a <select> no
+     matter what padding says, so a styled one clips a long tenant name mid-word
+     and paints its arrow over the tail. Overlaying keeps the native menu,
+     keyboard and screen-reader behaviour and lets the label truncate properly. */
+  .theme-chip {
+    position: relative;
+    display: inline-flex; align-items: center; gap: 6px;
+    flex: 0 1 auto; min-width: 0; max-width: 172px;
+    padding: 4px 7px 4px 8px;
+    border: 1px solid var(--fos-border); border-radius: var(--fos-radius);
+    background: var(--fos-bg-secondary);
+  }
+  .theme-chip:hover:not(.is-disabled) { background: var(--fos-bg-hover); }
+  .theme-chip.is-disabled { opacity: 0.5; }
+  .theme-name { font-size: var(--fos-t-small); font-weight: 500; min-width: 0; }
+  .chev { font-size: 10px; line-height: 1; color: var(--fos-text-secondary); flex: 0 0 auto; }
+  .theme-chip > select {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%; max-width: none;
+    margin: 0; padding: 0; border: none; opacity: 0;
+    cursor: pointer;
+  }
+  .theme-chip.is-disabled > select { cursor: not-allowed; }
+
+  .dot { width: 7px; height: 7px; border-radius: 2px; flex: 0 0 auto; }
+
+  /* --- coverage -------------------------------------------------------- */
+
+  /* One step off the page: this block is the only reading on the tab, and
+     everything below it is work. */
+  .cov {
+    margin: 12px 14px 10px; padding: 11px 12px 12px;
+    border: 1px solid var(--fos-border); border-radius: 9px;
+    background: var(--fos-cov-bg);
+  }
+  .cov-top { display: flex; align-items: baseline; gap: 7px; }
+  .cov-score {
+    font-size: var(--fos-t-hero); font-weight: 600; line-height: 1.1;
+    /* Large type needs the tracking pulled in; the default was drawn for text. */
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+  }
+  .cov-of {
+    font-size: 9px; font-weight: 500; letter-spacing: 0.09em; text-transform: uppercase;
+    color: var(--fos-text-secondary);
+  }
+  .cov-frame { font-size: var(--fos-t-small); color: var(--fos-text-secondary); flex: 0 1 auto; }
+
+  /* Solid = bound. Dashed = what the footer's Bind button would add, so the
+     promise and the picture are the same number. */
+  .meter {
+    display: flex; height: 6px; margin: 9px 0 10px;
+    border-radius: 3px; background: var(--fos-track); overflow: hidden;
+  }
+  .meter-bound { background: var(--fos-success); transition: width 0.35s ease; }
+  .meter-ready {
+    transition: width 0.35s ease;
+    background-image: repeating-linear-gradient(
+      135deg, var(--fos-success) 0 3px, transparent 3px 6px
+    );
+    background-color: color-mix(in srgb, var(--fos-success) 22%, transparent);
+  }
+
+  .stats { display: flex; align-items: flex-end; gap: 16px; }
+  .stat-value {
+    font-family: var(--fos-mono);
+    font-size: 12.5px; font-weight: 600; line-height: 1.25;
+    letter-spacing: -0.02em; font-variant-numeric: tabular-nums;
+  }
+  .stat-label { font-size: var(--fos-t-micro); color: var(--fos-text-secondary); }
+  .stat-value.gain { color: var(--fos-success); }
+  .stat-value.warn { color: var(--fos-warn); }
+
+  /* --- the one status line --------------------------------------------- */
+
+  .status {
+    display: flex; align-items: center; gap: 7px;
+    margin: 0 14px 12px; padding: 6px 9px;
+    background: var(--fos-bg-secondary); border: 1px solid var(--fos-border);
+    border-radius: var(--fos-card-radius);
+  }
+  .others { display: inline-flex; gap: 2px; flex: 0 0 auto; }
+
+  /* --- queue ----------------------------------------------------------- */
+
+  .qhead {
+    display: flex; align-items: baseline; gap: 8px;
+    padding: 2px 14px 10px; font-size: var(--fos-t-lead); font-weight: 600;
+    letter-spacing: -0.15px;
+  }
+  .qhead > .muted { font-size: var(--fos-t-small); font-weight: 500; letter-spacing: 0; }
+  .queue-empty { padding: 4px 14px 14px; }
+
+  .card {
+    margin: 0 14px 8px;
+    border: 1px solid var(--fos-card-border); border-radius: var(--fos-card-radius);
+    background: var(--fos-card);
+    overflow: hidden;
+  }
+  /* The open card is the decision on the bench: a hair stronger edge, and
+     everything under the head hangs from the specimen tile. */
+  .card-open {
+    border-color: color-mix(in srgb, var(--fos-text) 32%, var(--fos-card-border));
+  }
+
+  /* The whole closed row is the disclosure control, so it is a real button —
+     keyboard and screen readers get the same affordance the pointer does. */
+  .card-head {
+    display: flex; align-items: center; gap: 10px; width: 100%;
+    padding: 10px 11px; border-radius: 0; border: none; background: transparent;
+    text-align: left; font-weight: 400;
+  }
+  .card-open .card-head { padding-bottom: 7px; }
+  .card-head:hover:not(:disabled) { background: var(--fos-bg-hover); }
+
+  .tile {
+    width: 28px; height: 28px; border-radius: 6px; flex: 0 0 auto;
+    display: grid; place-items: center;
+    border: 1px solid color-mix(in srgb, var(--fos-text) 12%, var(--fos-border));
+    background: var(--fos-track); color: var(--fos-text-secondary);
+    font-family: var(--fos-mono);
+    font-size: 10px; font-weight: 600; letter-spacing: 0.04em;
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fos-text) 10%, transparent);
+  }
+
+  .card-main { flex: 1 1 auto; min-width: 0; display: block; }
+  .card-title { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+  /* The value is the subject of the row. Hex digits carry the weight; the hash
+     stays quiet so a column of colours lines up on the first figure. */
+  .card-value { font-size: 12.5px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.2; }
+  .hash { color: var(--fos-text-secondary); font-weight: 500; margin-right: 0.5px; }
+  .card-layers {
+    font-size: 10px; font-weight: 500; line-height: 1.4; flex: 0 0 auto;
+    color: var(--fos-text-secondary);
+    background: color-mix(in srgb, var(--fos-text) 9%, transparent);
+    padding: 1px 6px; border-radius: 999px;
+  }
+  /* Set at the supporting size rather than the micro one: when there is no
+     token this line is a whole sentence explaining why, and 9.5px prose on a
+     dark panel is a line people skip. The arrow stays out of the mono run so it
+     keeps Inter's weight next to the token. */
+  .card-target {
+    display: flex; align-items: center; gap: 6px; min-width: 0;
+    font-size: var(--fos-t-small); margin-top: 4px;
+    color: var(--fos-text-secondary);
+  }
+  .card-token {
+    min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-size: 1em; font-weight: 500; color: var(--fos-text);
+  }
+  .card-note {
+    min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    color: var(--fos-text-secondary);
+  }
+  .arrow { opacity: 0.55; flex: 0 0 auto; }
+
+  .card-impact {
+    flex: 0 0 auto; display: flex; flex-direction: column; align-items: flex-end; gap: 5px;
+  }
+  .card-impact > .gain {
+    font-size: 11px; font-weight: 600; letter-spacing: -0.03em; line-height: 1;
+  }
+  .card-impact.is-inert > .gain { color: var(--fos-text-secondary); }
+  .card-impact.is-inert .impact-fill { background: var(--fos-text-secondary); opacity: 0.45; }
+  .impact-track {
+    width: 40px; height: 3px; border-radius: 2px;
+    background: var(--fos-track); overflow: hidden; display: block;
+  }
+  .impact-fill { display: block; height: 100%; background: var(--fos-success); }
+
+  /* Hang the decision from the specimen: 11 pad + 28 tile + 10 gap. */
+  .card-body {
+    margin: 0 11px 0 49px; padding: 9px 0 11px;
+    border-top: 1px solid var(--fos-border);
+  }
+  /* Prose, and the one thing on the card that has to be read rather than
+     scanned: reading size, generous leading, and a measure the panel can hold. */
+  .card-hint {
+    font-size: var(--fos-t-base); line-height: 1.5; max-width: 36em;
+    color: color-mix(in srgb, var(--fos-text) 78%, var(--fos-text-secondary));
+    margin: 0 0 9px;
+  }
+
+  .cand {
+    display: flex; align-items: flex-start; gap: 8px; width: 100%;
+    padding: 7px 8px; margin-bottom: 3px;
+    background: transparent; border: none; border-radius: 6px;
+    text-align: left; font-weight: 400;
+  }
+  .cand:hover:not(:disabled) { background: var(--fos-bg-hover); }
+  .cand-on {
+    background: color-mix(in srgb, var(--fos-link) 12%, var(--fos-card));
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--fos-link) 55%, transparent);
+  }
+  .cand .radio, .cand .swatch { margin-top: 3px; }
+  .cand-main { flex: 1 1 auto; min-width: 0; display: flex; flex-direction: column; gap: 2px; }
+  .cand-ref { font-size: 11.5px; font-weight: 600; letter-spacing: -0.015em; line-height: 1.3; }
+  .cand-evidence {
+    display: flex; align-items: center; gap: 7px; min-width: 0;
+    font-size: var(--fos-t-small); color: var(--fos-text-secondary);
+  }
+  .cand-hex { font-size: 1em; font-weight: 500; }
+  .cand-add {
+    font-size: 9.5px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--fos-warn);
+  }
+  .delta {
+    flex: 0 0 auto;
+    font-size: 10px; font-weight: 600; letter-spacing: 0.01em; line-height: 1.3;
+    font-variant-numeric: tabular-nums;
+    padding: 1px 5px; border-radius: 3px;
+    background: color-mix(in srgb, var(--fos-text) 8%, transparent);
+    color: var(--fos-text);
+  }
+  .delta-exact {
+    background: color-mix(in srgb, var(--fos-success) 16%, transparent);
+    color: var(--fos-success);
+  }
+
+  .radio {
+    width: 13px; height: 13px; border-radius: 50%; flex: 0 0 auto;
+    border: 1.5px solid var(--fos-text-secondary);
+  }
+  .cand-on .radio {
+    border-color: var(--fos-link);
+    box-shadow: inset 0 0 0 2.5px var(--fos-card);
+    background: var(--fos-link);
+  }
+  .cand .swatch { width: 14px; height: 14px; border-radius: 4px; }
+
+  button.card-select {
+    background: transparent; border-color: transparent;
+    color: var(--fos-text-secondary); padding: 0;
+    margin: 8px 0 2px; font-size: var(--fos-t-small); font-weight: 500;
+  }
+  button.card-select:hover:not(:disabled) {
+    background: transparent; color: var(--fos-link); text-decoration: underline;
+  }
+  .card-actions { display: flex; gap: 7px; margin-top: 10px; }
+  .card-actions > button { padding: 8px 12px; font-size: var(--fos-t-lead); }
+
+  /* A disabled primary is a broken button. This one is an instruction: pick
+     first, then it turns into Bind. Full contrast, dashed so it is not a commit. */
+  button.primary.is-waiting,
+  button.primary.is-waiting:disabled {
+    opacity: 1; cursor: default;
+    background: color-mix(in srgb, var(--fos-brand) 18%, var(--fos-card));
+    color: var(--fos-text);
+    border: 1px dashed color-mix(in srgb, var(--fos-brand) 70%, var(--fos-text-secondary));
+    font-weight: 600;
+  }
+
+  /* Bound. Same row, same place — the card became its own receipt. */
+  .card-done {
+    display: flex; align-items: center; gap: 8px; padding: 10px 11px;
+    background: transparent;
+    border-color: color-mix(in srgb, var(--fos-success) 45%, transparent);
+  }
+  .done-tick { color: var(--fos-success); flex: 0 0 auto; font-size: 13px; }
+  .done-token {
+    display: block; font-size: 12px; font-weight: 600; letter-spacing: -0.015em;
+    color: var(--fos-success);
+  }
+  .done-meta {
+    display: block; font-size: var(--fos-t-small); margin-top: 3px;
+    color: var(--fos-text-secondary);
+  }
+
+  .card-skipped {
+    display: flex; align-items: center; gap: 8px; padding: 9px 11px;
+    background: transparent; border-style: dashed; opacity: 0.65;
+  }
+  .card-skipped > .mono { font-size: var(--fos-t-small); font-weight: 500; }
+
+  .gain { font-variant-numeric: tabular-nums; color: var(--fos-success); font-weight: 500; }
+
+  /* --- Layout tab: still a plain bar and a plain list, not cards -------- */
+
+  .coverage .score { font-size: 22px; font-weight: 600; letter-spacing: -0.5px; }
+  .score { font-size: 18px; font-weight: 600; letter-spacing: -0.4px; }
+  .bar { height: 5px; border-radius: 3px; background: var(--fos-track); overflow: hidden; display: flex; }
+  .bar-bound { background: var(--fos-success); }
+  /* Dashed = one click away. Solid = already there. The distinction is the
+     whole message of the bar, so it is texture rather than another colour. */
+  .bar-ready {
+    background-image: repeating-linear-gradient(
+      135deg, var(--fos-success) 0 3px, transparent 3px 6px
+    );
+    background-color: color-mix(in srgb, var(--fos-success) 22%, transparent);
+  }
+  .batch { padding: 8px 14px; border-bottom: 1px solid var(--fos-border); }
+  .batch:hover { background: var(--fos-bg-secondary); }
+
+  .swatch { width: 12px; height: 12px; border-radius: 3px; border: 1px solid var(--fos-border); flex: 0 0 auto; }
+  .chip {
+    display: inline-flex; align-items: center; gap: 5px;
+    border: 1px solid var(--fos-border); border-radius: 999px;
+    padding: 2px 7px 2px 4px; background: transparent; cursor: pointer;
+  }
+  .chip:hover:not(:disabled) { background: var(--fos-bg-hover); }
+
+  .blocker { padding: 8px 12px; border-top: 1px solid var(--fos-border); }
+  .pill {
+    font-size: 9px; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase;
+    padding: 1px 5px; border-radius: 3px; background: var(--fos-bg-secondary); color: var(--fos-text-secondary);
+  }
+
+  .footer {
+    padding: 10px 14px; border-top: 1px solid var(--fos-border);
+    display: flex; gap: 8px; align-items: center; background: var(--fos-bg);
+    flex: 0 0 auto;
+  }
+
+  /* Down from 18px: a name is context on the status line, not the subject of
+     it, and at 16px the chip sits inside the line's own height. */
+  .person {
+    display: inline-flex; align-items: center; gap: 5px;
+    background: var(--fos-bg); border-radius: 999px;
+    padding: 2px 7px 2px 2px; flex: 0 0 auto; max-width: 96px;
+    line-height: 1;
+  }
+  .person-mine { box-shadow: inset 0 0 0 1px var(--fos-border); }
+  .person-bare { padding: 0; background: transparent; max-width: none; }
+  .person-initial {
+    width: 16px; height: 16px; border-radius: 999px;
+    color: #fff; font-size: 8px; font-weight: 700;
+    display: inline-flex; align-items: center; justify-content: center;
+    flex: 0 0 auto;
+  }
+  .person-name {
+    overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+    font-size: var(--fos-t-small); font-weight: 600;
+  }
+
+  /* Pinned to the top at a fixed 44px rather than centred in whatever height the
+     window happens to be. If a resize doesn't take, this reads as a compact bar
+     with empty space below it instead of a lone number floating in a void. */
+  .collapsed {
+    height: 44px;
+    flex: 0 0 44px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 8px;
+  }
+
+  .file-row {
+    width: 100%;
+    justify-content: flex-start;
+    padding: 6px 2px;
+    gap: 8px;
+  }
+
+  details > summary { cursor: pointer; list-style: none; }
+  details > summary::-webkit-details-marker { display: none; }
+</style>
+<div id="root">
+  <div class="section muted">Starting…</div>
+</div>
+<script>
+window.onerror = function (msg) {
+  var el = document.getElementById("root");
+  if (el) el.innerHTML = '<div class="section" style="color:var(--fos-danger)">UI failed to start: ' + String(msg) + "</div>";
+};
+/* __UI_BUNDLE__ */
+</script>

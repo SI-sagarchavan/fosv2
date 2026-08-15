@@ -16,7 +16,7 @@
  * reproducible instead of dependent on which file someone happens to pass.
  */
 
-import type { FrameIRDocument, FrameIRNode } from "@fanos/figma-ir-extractor/ir";
+import type { FrameIRDocument, FrameIRNode } from "@fanos/surface-canvas/ir";
 
 /**
  * @param doc   the source document

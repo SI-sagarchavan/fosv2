@@ -1,0 +1,9 @@
+{
+  "tickets": {
+    "heading": "THE BOWL IS CALLING",
+    "blurb": "Nothing beats The Hundred experience at the Utilita Bowl. Be there when Southern Brave take the field.",
+    "cta": "Get Tickets",
+    "plate": "asset.texture.tickets_plate",
+    "wordmark": "asset.logo.southern_brave"
+  }
+}
