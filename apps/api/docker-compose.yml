@@ -1,6 +1,18 @@
 services:
   postgres:
     image: postgres:16-alpine
+    # Electric reads the WAL through logical replication. The default
+    # `wal_level=replica` carries no row images, so shapes would come up empty
+    # with no error anywhere — the failure is silent, which is why it is set
+    # here rather than left to a runbook.
+    command:
+      - postgres
+      - -c
+      - wal_level=logical
+      - -c
+      - max_replication_slots=10
+      - -c
+      - max_wal_senders=10
     environment:
       POSTGRES_USER: fanos
       POSTGRES_PASSWORD: fanos
@@ -29,6 +41,25 @@ services:
       interval: 5s
       timeout: 3s
       retries: 10
+
+  # Postgres -> HTTP sync. Streams `runs` and `run_steps` to the browser so a
+  # client that reconnects resumes from its last offset instead of re-polling.
+  #
+  # Never exposed to browsers directly: it has no notion of our API keys or
+  # project scoping. apps/api proxies it — see modules/sync/.
+  electric:
+    image: electricsql/electric:latest
+    environment:
+      DATABASE_URL: postgres://fanos:fanos@postgres:5432/fanos
+      # Local only. In production this becomes ELECTRIC_SECRET and the proxy
+      # forwards it; the port stays off the public internet either way.
+      ELECTRIC_INSECURE: "true"
+    ports:
+      # 3010, because :3000 is surface-studio.
+      - "3010:3000"
+    depends_on:
+      postgres:
+        condition: service_healthy
 
 volumes:
   fanos-pg:

@@ -12,6 +12,7 @@
     "test": "pnpm -r run test",
     "typecheck": "pnpm -r run typecheck",
     "clean": "pnpm -r run clean",
+    "dev": "pnpm run --parallel /^dev:.*/",
     "dev:studio": "pnpm --filter @fanos/surface-studio dev",
     "dev:web": "pnpm --filter @fanos/web dev",
     "dev:api": "pnpm --filter @fanos/api dev",

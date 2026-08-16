@@ -13,12 +13,16 @@ import {
   FixedClock,
   MemoryArtifactRepo,
   MemoryBlobStore,
+  MemoryExportRepo,
   MemoryFidelityRepo,
+  MemoryFigmaFileDirectory,
   MemoryProjectRepo,
+  MemoryRunOwnership,
   MemoryRunRepo,
   MemorySurfaceRepo,
   RecordingAudit,
   RecordingQueue,
+  RecordingSyncGateway,
 } from "./repos.js";
 import { FakeToolchain } from "./toolchain.js";
 
@@ -34,6 +38,7 @@ export interface TestApp {
   clock: FixedClock;
   audit: RecordingAudit;
   queue: RecordingQueue;
+  syncGateway: RecordingSyncGateway;
   toolchain: Toolchain;
   repos: {
     projects: MemoryProjectRepo;
@@ -41,7 +46,9 @@ export interface TestApp {
     surfaces: MemorySurfaceRepo;
     runs: MemoryRunRepo;
     fidelity: MemoryFidelityRepo;
+    exports: MemoryExportRepo;
   };
+  figmaFiles: MemoryFigmaFileDirectory;
   blobs: MemoryBlobStore;
   /** Creates a project and returns its id — most tests start here. */
   seedProject(slug?: string): Promise<string>;
@@ -53,6 +60,7 @@ export function createTestApp(over: { toolchain?: Toolchain } = {}): TestApp {
   const audit = new RecordingAudit();
   const queue = new RecordingQueue();
   const blobs = new MemoryBlobStore();
+  const syncGateway = new RecordingSyncGateway();
   const toolchain = over.toolchain ?? new FakeToolchain();
 
   const repos = {
@@ -61,11 +69,24 @@ export function createTestApp(over: { toolchain?: Toolchain } = {}): TestApp {
     surfaces: new MemorySurfaceRepo(),
     runs: new MemoryRunRepo(),
     fidelity: new MemoryFidelityRepo(),
+    exports: new MemoryExportRepo(),
   };
+  const figmaFiles = new MemoryFigmaFileDirectory();
 
   const ctx = assemble({
     config,
-    adapters: { ...repos, blobs, queue, toolchain, audit, clock },
+    adapters: {
+      ...repos,
+      blobs,
+      queue,
+      toolchain,
+      audit,
+      clock,
+      syncGateway,
+      runOwnership: new MemoryRunOwnership(repos.runs),
+      exports: repos.exports,
+      figmaFiles,
+    },
   });
 
   return {
@@ -74,8 +95,10 @@ export function createTestApp(over: { toolchain?: Toolchain } = {}): TestApp {
     clock,
     audit,
     queue,
+    syncGateway,
     toolchain,
     repos,
+    figmaFiles,
     blobs,
     async seedProject(slug = "acme") {
       const project = await ctx.projects.create({ slug, name: "Acme" }, "tester");

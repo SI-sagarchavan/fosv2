@@ -19,6 +19,18 @@ import type {
   BlobStore,
   NewArtifact,
 } from "../../src/modules/artifacts/domain/ports.js";
+import type {
+  ExportPlate,
+  ExportStatus,
+  FigmaExport,
+  ListExportsQuery,
+} from "../../src/modules/exports/domain/export.js";
+import type {
+  ExportRepository,
+  FigmaFileDirectory,
+  NewExport,
+  NewPlate,
+} from "../../src/modules/exports/domain/ports.js";
 import type { FidelityReport } from "../../src/modules/fidelity/domain/gate.js";
 import type {
   FidelityRepository,
@@ -419,6 +431,113 @@ export class MemoryRunRepo implements RunRepository {
 
   private step(runId: string, seq: number): RunStep | undefined {
     return this.steps.find((s) => s.runId === runId && s.seq === seq);
+  }
+}
+
+export class MemoryExportRepo implements ExportRepository {
+  readonly rows: FigmaExport[] = [];
+  readonly plates: ExportPlate[] = [];
+
+  async create(input: NewExport, plates: readonly NewPlate[]) {
+    const clash = this.rows.find(
+      (r) => r.projectId === input.projectId && r.idempotencyKey === input.idempotencyKey,
+    );
+    if (clash) {
+      return { export: clash, plates: await this.platesFor(clash.id), created: false };
+    }
+
+    const row: FigmaExport = {
+      id: id("export"),
+      ...input,
+      status: "received",
+      promotedRunId: null,
+      surfaceId: null,
+      receivedAt: new Date("2026-01-01T00:00:00.000Z"),
+    };
+    this.rows.push(row);
+    // All-or-nothing, like the transaction in the Drizzle adapter.
+    for (const p of plates) this.plates.push({ id: id("plate"), exportId: row.id, ...p });
+
+    return { export: row, plates: await this.platesFor(row.id), created: true };
+  }
+
+  async findById(projectId: string, exportId: string): Promise<FigmaExport | null> {
+    return this.rows.find((r) => r.projectId === projectId && r.id === exportId) ?? null;
+  }
+
+  async platesFor(exportId: string): Promise<ExportPlate[]> {
+    return this.plates.filter((p) => p.exportId === exportId).sort((a, b) => a.seq - b.seq);
+  }
+
+  async list(projectId: string, query: ListExportsQuery): Promise<FigmaExport[]> {
+    return this.rows
+      .filter(
+        (r) =>
+          r.projectId === projectId &&
+          (!query.status || r.status === query.status) &&
+          (!query.rootNodeId || r.rootNodeId === query.rootNodeId),
+      )
+      .slice(0, query.limit);
+  }
+
+  async latestForFrame(projectId: string, rootNodeId: string): Promise<FigmaExport | null> {
+    const matches = this.rows.filter(
+      (r) => r.projectId === projectId && r.rootNodeId === rootNodeId,
+    );
+    return matches[matches.length - 1] ?? null;
+  }
+
+  async setStatus(
+    projectId: string,
+    exportId: string,
+    status: ExportStatus,
+    promotedRunId: string | null,
+  ): Promise<FigmaExport | null> {
+    const row = await this.findById(projectId, exportId);
+    if (!row) return null;
+    row.status = status;
+    row.promotedRunId = promotedRunId;
+    return row;
+  }
+}
+
+export class MemoryFigmaFileDirectory implements FigmaFileDirectory {
+  readonly map = new Map<string, string>();
+
+  async projectIdForFile(fileKey: string): Promise<string | null> {
+    return this.map.get(fileKey) ?? null;
+  }
+
+  async claim(projectId: string, fileKey: string): Promise<void> {
+    if (!this.map.has(fileKey)) this.map.set(fileKey, projectId);
+  }
+}
+
+/** Records the shapes it was asked for instead of calling Electric. */
+export class RecordingSyncGateway {
+  readonly requests: { table: string; where: string; params: Record<string, string> }[] = [];
+
+  async fetchShape(shape: {
+    table: string;
+    where: string;
+    params: Record<string, string>;
+  }): Promise<{ status: number; headers: Record<string, string>; body: Uint8Array }> {
+    this.requests.push({ table: shape.table, where: shape.where, params: shape.params });
+    return {
+      status: 200,
+      headers: { "electric-handle": "h1", "electric-offset": "0_0" },
+      body: new TextEncoder().encode("[]"),
+    };
+  }
+}
+
+/** Ownership backed by whatever the run repo happens to hold. */
+export class MemoryRunOwnership {
+  constructor(private readonly runs: MemoryRunRepo) {}
+
+  async belongsToProject(runId: string, projectId: string): Promise<boolean> {
+    const run = await this.runs.findById(runId);
+    return run?.projectId === projectId;
   }
 }
 

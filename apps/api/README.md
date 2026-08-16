@@ -184,7 +184,7 @@ artifact will fail identically on every attempt.
 ## Running it
 
 ```bash
-docker compose up -d          # postgres + redis
+docker compose up -d          # postgres + redis + electric
 cp .env.example .env
 pnpm build
 pnpm db:migrate
@@ -254,6 +254,40 @@ verdict. The verdict is what blocks publishing.
 `render` and `diff` runs are planned but not implemented: they need the
 Playwright harness in `@fanos/renderer` running out-of-process. `planFor` throws
 for them rather than silently succeeding.
+
+## Live progress, and why closing the tab is safe
+
+`GET /projects/:project/sync` streams `runs` and `run_steps` to the browser
+through ElectricSQL, so a client watching a run sees each step transition as it
+lands.
+
+The property people usually have to build for — "close the tab, come back, the
+work is still going and the progress is intact" — is not built here. It falls
+out of a decision made earlier: **the queue carries only a run id, and Postgres
+owns run state.** The worker never knew a client was watching, and every
+transition was already durable. All Electric adds is a read path that can
+resume.
+
+So the client holds no progress state and never asks what it missed. A fresh
+mount subscribes at `offset=-1`, gets the current state immediately, then goes
+live. A reconnect with a saved `handle` + `offset` gets only the deltas.
+
+**Electric is never exposed to a browser.** It serves whatever `where` clause it
+is handed and knows nothing about API keys or tenants, which makes that clause a
+security boundary. Clients therefore never supply one: they name a subject
+(`?run=<id>`), the service checks the run belongs to the project, and
+`shapeForRun` derives the scoping from ids the server already resolved. A run id
+guessed from another tenant 404s without Electric being called at all.
+
+Two things that fail silently if disturbed, both commented at the site:
+
+- `wal_level=logical` in docker-compose. The default `replica` carries no row
+  images, so shapes come up empty with no error anywhere.
+- `Access-Control-Expose-Headers` on the API. Without it the browser hides the
+  `electric-*` headers from JS, the client loses its cursor, and every reconnect
+  quietly degrades into a full refetch.
+
+`apps/web/app/runs/[project]/[run]` is the reference consumer.
 
 ## Where this goes next
 

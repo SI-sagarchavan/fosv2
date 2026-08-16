@@ -1,10 +1,21 @@
-import { useEffect, useState } from "react";
-import type { BoardExport } from "./types.js";
+import { useShape } from "@electric-sql/react";
+import type { ExportRow, PlateRow } from "./types.js";
 
-const POLL_MS = 2000;
+/**
+ * The board reads Postgres. Surface Studio stores nothing.
+ *
+ * `useShape` subscribes through this origin, which adds the service credential
+ * and forwards to the control plane. Reopening the tab resumes rather than
+ * refetches, and an export that landed while the board was closed is simply
+ * there — the same property the run view has, for the same reason.
+ */
+// Absolute: Electric's client resolves this with `new URL()`, which rejects a
+// bare path. Same origin, so the browser still never sees the API key.
+const SYNC_URL = `${window.location.origin}/v1/sync`;
+
 
 export function App() {
-  const rows = useExports();
+  const { rows, platesFor } = useBoard();
   const latest = rows[0] ?? null;
 
   return (
@@ -19,7 +30,7 @@ export function App() {
         </p>
       </header>
 
-      {latest ? <Plate row={latest} /> : <Empty />}
+      {latest ? <Plate row={latest} plates={platesFor(latest.id)} /> : <Empty />}
 
       {rows.length > 1 ? (
         <ol className="log">
@@ -27,7 +38,7 @@ export function App() {
             <li key={row.id}>
               <span className="log-name">{titleOf(row)}</span>
               <span className="log-meta">
-                {num(row.summary, "coveragePercent")}% · {when(row.receivedAt)}
+                {pct(row.coverage_percent)}% · {when(row.received_at)}
               </span>
             </li>
           ))}
@@ -49,10 +60,9 @@ function Empty() {
   );
 }
 
-function Plate({ row }: { row: BoardExport }) {
-  const layers = num(row.summary, "nodeCount");
-  const bound = num(row.summary, "coveragePercent");
-  const shots = row.screenshots;
+function Plate({ row, plates }: { row: ExportRow; plates: PlateRow[] }) {
+  const layers = Number(row.node_count);
+  const bound = pct(row.coverage_percent);
 
   return (
     <article className="plate">
@@ -60,29 +70,31 @@ function Plate({ row }: { row: BoardExport }) {
         <div>
           <h2>{titleOf(row)}</h2>
           <p className="plate-sub">
-            {row.page.fileName} · {row.page.pageName}
+            {row.file_name} · {row.page_name}
           </p>
         </div>
         <p className="score">
-          <span>{bound === null ? "—" : `${bound}%`}</span>
+          <span>{`${bound}%`}</span>
           <span className="score-label">bound</span>
         </p>
       </header>
 
       <p className="plate-stats">
-        {layers === null ? "—" : layers.toLocaleString()} layers
+        {layers.toLocaleString()} layers
         <span> · </span>
-        {shots.length} {shots.length === 1 ? "plate" : "plates"}
+        {plates.length} {plates.length === 1 ? "plate" : "plates"}
         <span> · </span>
-        {when(row.receivedAt)}
+        {when(row.received_at)}
       </p>
 
-      {shots.length > 0 ? (
+      {plates.length > 0 ? (
         <div className="shots">
-          {shots.map((shot) => (
-            <figure key={shot.nodeId}>
-              <img src={shot.src} alt={shot.name} />
-              <figcaption>{shot.name.replace(/-\d+-\d+(?=\.png$)/, "")}</figcaption>
+          {plates.map((plate) => (
+            <figure key={plate.id}>
+              {/* Immutable blob, fetched once and cached — not re-sent with
+                  every board update the way inline base64 was. */}
+              <img src={`/v1/blobs/${plate.artifact_id}`} alt={plate.name} />
+              <figcaption>{plate.name.replace(/-\d+-\d+(?=\.png$)/, "")}</figcaption>
             </figure>
           ))}
         </div>
@@ -91,45 +103,35 @@ function Plate({ row }: { row: BoardExport }) {
   );
 }
 
-function useExports(): BoardExport[] {
-  const [rows, setRows] = useState<BoardExport[]>([]);
+function useBoard(): { rows: ExportRow[]; platesFor: (id: string) => PlateRow[] } {
+  const exports = useShape<ExportRow>({ url: SYNC_URL, params: { table: "figma_exports" } });
+  const plates = useShape<PlateRow>({ url: SYNC_URL, params: { table: "figma_export_plates" } });
 
-  useEffect(() => {
-    let cancelled = false;
-    const pull = async () => {
-      try {
-        const res = await fetch("/v1/exports");
-        if (!res.ok) return;
-        const data = (await res.json()) as { exports?: BoardExport[] };
-        if (!cancelled) setRows(data.exports ?? []);
-      } catch {
-        /* board is the server — a miss is a blink, not a toast */
-      }
-    };
-    void pull();
-    const timer = setInterval(() => void pull(), POLL_MS);
-    return () => {
-      cancelled = true;
-      clearInterval(timer);
-    };
-  }, []);
+  const rows = [...(exports.data ?? [])].sort(
+    (a, b) => Date.parse(b.received_at) - Date.parse(a.received_at),
+  );
 
-  return rows;
+  const platesFor = (exportId: string) =>
+    (plates.data ?? [])
+      .filter((p) => p.export_id === exportId)
+      .sort((a, b) => Number(a.seq) - Number(b.seq));
+
+  return { rows, platesFor };
 }
 
-function titleOf(row: BoardExport): string {
-  return row.page.rootName || row.jsonName.replace(/\.ir\.json$/, "");
+function titleOf(row: ExportRow): string {
+  return row.root_name || row.root_node_id || "untitled frame";
 }
 
-function num(summary: Record<string, unknown>, key: string): number | null {
-  const value = summary[key];
-  return typeof value === "number" ? value : null;
+/** Coverage arrives as a string over the wire; one decimal is what Health shows. */
+function pct(value: string | number): number {
+  return Math.round(Number(value) * 10) / 10;
 }
 
-function when(at: number): string {
-  const delta = Date.now() - at;
+function when(iso: string): string {
+  const delta = Date.now() - Date.parse(iso);
   if (delta < 10_000) return "just now";
   if (delta < 60_000) return `${Math.round(delta / 1000)}s ago`;
   if (delta < 3_600_000) return `${Math.round(delta / 60_000)}m ago`;
-  return new Date(at).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
+  return new Date(iso).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" });
 }

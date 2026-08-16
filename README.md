@@ -47,11 +47,14 @@ Requires Node 22+ and pnpm 10.
 ## Common tasks
 
 ```bash
+pnpm dev         # studio :3000, web :3415, api :4000, and the worker
 pnpm build       # build every package
 pnpm test        # run every package's tests
 pnpm typecheck   # tsc --noEmit across the workspace
 pnpm clean       # drop build output
 ```
+
+Start one process with `pnpm dev:studio`, `pnpm dev:web`, `pnpm dev:api`, or `pnpm dev:worker`.
 
 Scope to one package with `pnpm --filter @fanos/surface-canvas <script>`.
 

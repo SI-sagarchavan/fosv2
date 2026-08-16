@@ -13,6 +13,7 @@
     "clean": "rm -rf .next"
   },
   "dependencies": {
+    "@electric-sql/react": "^1.0.55",
     "@fanos/dsl": "workspace:*",
     "@fanos/renderer": "workspace:*",
     "@fanos/tokens": "workspace:*",

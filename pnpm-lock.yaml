@@ -66,6 +66,9 @@ importers:
 
   apps/surface-studio:
     dependencies:
+      '@electric-sql/react':
+        specifier: ^1.0.55
+        version: 1.0.55(react@19.2.8)
       react:
         specifier: ^19.0.0
         version: 19.2.8
@@ -97,6 +100,9 @@ importers:
 
   apps/web:
     dependencies:
+      '@electric-sql/react':
+        specifier: ^1.0.55
+        version: 1.0.55(react@19.2.8)
       '@fanos/dsl':
         specifier: workspace:*
         version: link:../../packages/dsl
@@ -411,6 +417,18 @@ packages:
 
   '@drizzle-team/brocli@0.10.2':
     resolution: {integrity: sha512-z33Il7l5dKjUgGULTqBsQBQwckHh5AbIuxhdsIxDDiZAzBOrZO6q9ogcWC65kU382AfynTfgNumVcNIjuIua6w==}
+
+  '@electric-sql/client@1.5.26':
+    resolution: {integrity: sha512-tiEksNKSTqtetftz0wulFzGc7jTluCMmq1VWLR5UWmN8VWGAcsfqBSgeOUwWk0MLC7/dEjXqfsT8Blg1Yiyh0w==}
+    hasBin: true
+
+  '@electric-sql/react@1.0.55':
+    resolution: {integrity: sha512-+2IM5pAefpbwSqtsgTYPCA+D/VvCv+fo0dhpJIbuL23f6ChCrSlzgTpRw6hnBfreMb1yS5EfyzIKWd/qQB7Xaw==}
+    peerDependencies:
+      react: '>=18.3.1 <20.0.0'
+    peerDependenciesMeta:
+      react:
+        optional: true
 
   '@emnapi/runtime@1.11.3':
     resolution: {integrity: sha512-Xz4Tpyki7XyrpbUK1jR1AhdAdaXyhhY4lZ3neLodmhpuWfy2PAQN5B46sAiU4liOXGLkHypn/qU+jvfWSCYYLA==}
@@ -1469,6 +1487,9 @@ packages:
 
   '@jridgewell/trace-mapping@0.3.31':
     resolution: {integrity: sha512-zzNR+SdQSDJzc8joaeP8QQoCQr8NuYx2dIIytl1QeBEZHJ9uW6hebsrYgbz8hJwUQao3TWCMtmfV8Nu1twOLAw==}
+
+  '@microsoft/fetch-event-source@2.0.1':
+    resolution: {integrity: sha512-W6CLUJ2eBMw3Rec70qrsEW0jOm/3twwJv21mrmj2yORiaVmVYGS4sSS5yUwvQc1ZlDLYGPnClVWmUUMagKNsfA==}
 
   '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.4':
     resolution: {integrity: sha512-LCkGo6JDfaBhgST7UpPWgNgLINpcpabaHfyz5OBx75nUYxBsaEPxjnyNjWpeb/xBup/682QnBfRBy2/LvPutZQ==}
@@ -2551,6 +2572,11 @@ packages:
     peerDependencies:
       browserslist: '>= 4.21.0'
 
+  use-sync-external-store@1.6.0:
+    resolution: {integrity: sha512-Pp6GSwGP/NrPIrxVFAIkOQeyw8lFenOHijQWkUTrDvrF4ALqylP2C/KCkeS9dpUM3KvYRQhna5vt7IL95+ZQ9w==}
+    peerDependencies:
+      react: ^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+
   vite-node@2.1.9:
     resolution: {integrity: sha512-AM9aQ/IPrW/6ENLQg3AGY4K1N2TGZdR5e4gu/MmmR2xR3Ll1+dib+nook92g4TV3PXVyeyxdWwtaCAiUL0hMxA==}
     engines: {node: ^18.0.0 || >=20.0.0}
@@ -2783,6 +2809,19 @@ snapshots:
       '@babel/helper-validator-identifier': 7.29.7
 
   '@drizzle-team/brocli@0.10.2': {}
+
+  '@electric-sql/client@1.5.26':
+    dependencies:
+      '@microsoft/fetch-event-source': 2.0.1
+    optionalDependencies:
+      '@rollup/rollup-darwin-arm64': 4.62.4
+
+  '@electric-sql/react@1.0.55(react@19.2.8)':
+    dependencies:
+      '@electric-sql/client': 1.5.26
+      use-sync-external-store: 1.6.0(react@19.2.8)
+    optionalDependencies:
+      react: 19.2.8
 
   '@emnapi/runtime@1.11.3':
     dependencies:
@@ -3376,6 +3415,8 @@ snapshots:
     dependencies:
       '@jridgewell/resolve-uri': 3.1.2
       '@jridgewell/sourcemap-codec': 1.5.5
+
+  '@microsoft/fetch-event-source@2.0.1': {}
 
   '@msgpackr-extract/msgpackr-extract-darwin-arm64@3.0.4':
     optional: true
@@ -4417,6 +4458,10 @@ snapshots:
       browserslist: 4.28.8
       escalade: 3.2.0
       picocolors: 1.1.1
+
+  use-sync-external-store@1.6.0(react@19.2.8):
+    dependencies:
+      react: 19.2.8
 
   vite-node@2.1.9(@types/node@22.20.1):
     dependencies:

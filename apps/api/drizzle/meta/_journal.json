@@ -15,6 +15,13 @@
       "when": 1786799539629,
       "tag": "0001_friendly_morgan_stark",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1786852473648,
+      "tag": "0002_robust_swarm",
+      "breakpoints": true
     }
   ]
 }

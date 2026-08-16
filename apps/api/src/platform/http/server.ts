@@ -13,9 +13,12 @@ import { ZodError } from "zod";
 import type { AppContext } from "../../context.js";
 import { isAppError } from "../../kernel/errors.js";
 import { registerArtifactRoutes } from "../../modules/artifacts/adapters/routes.js";
+import { registerExportRoutes } from "../../modules/exports/adapters/routes.js";
 import { registerProjectRoutes } from "../../modules/projects/adapters/routes.js";
 import { registerRunRoutes } from "../../modules/runs/adapters/routes.js";
 import { registerSurfaceRoutes } from "../../modules/surfaces/adapters/routes.js";
+import { registerSyncRoutes } from "../../modules/sync/adapters/routes.js";
+import { PASSTHROUGH_HEADERS } from "../../modules/sync/domain/shape.js";
 
 declare module "fastify" {
   interface FastifyRequest {
@@ -33,7 +36,30 @@ export function buildServer(ctx: AppContext): FastifyInstance {
 
   app.decorateRequest("actor", "");
 
+  /**
+   * CORS, against an explicit allowlist.
+   *
+   * `Access-Control-Expose-Headers` is the load-bearing line: without it the
+   * browser hides the `electric-*` headers from JS, the client loses its
+   * cursor, and every reconnect silently degrades into a full refetch instead
+   * of resuming. It fails as a performance mystery rather than an error.
+   */
   app.addHook("onRequest", async (request, reply) => {
+    const origin = request.headers.origin;
+    if (origin && ctx.config.corsOrigins.has(origin)) {
+      void reply
+        .header("access-control-allow-origin", origin)
+        .header("vary", "origin")
+        .header("access-control-allow-headers", "authorization,x-api-key,content-type")
+        .header("access-control-allow-methods", "GET,POST,OPTIONS")
+        .header("access-control-expose-headers", PASSTHROUGH_HEADERS.join(","));
+    }
+
+    if (request.method === "OPTIONS") {
+      await reply.code(204).send();
+      return;
+    }
+
     if (isPublic(request)) {
       request.actor = "anonymous";
       return;
@@ -102,6 +128,8 @@ export function buildServer(ctx: AppContext): FastifyInstance {
       await registerArtifactRoutes(api, ctx);
       await registerSurfaceRoutes(api, ctx);
       await registerRunRoutes(api, ctx);
+      await registerSyncRoutes(api, ctx);
+      await registerExportRoutes(api, ctx);
     },
     { prefix: "/v1" },
   );

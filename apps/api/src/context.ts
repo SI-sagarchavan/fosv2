@@ -20,6 +20,12 @@ import { createFsBlobStore } from "./modules/artifacts/adapters/fs-blob-store.js
 import { ArtifactService } from "./modules/artifacts/app/artifact-service.js";
 import type { ArtifactRepository, BlobStore } from "./modules/artifacts/domain/ports.js";
 import { DrizzleAuditSink } from "./modules/audit/adapters/drizzle-audit-sink.js";
+import {
+  DrizzleExportRepository,
+  DrizzleFigmaFileDirectory,
+} from "./modules/exports/adapters/drizzle-export-repo.js";
+import { ExportService } from "./modules/exports/app/export-service.js";
+import type { ExportRepository, FigmaFileDirectory } from "./modules/exports/domain/ports.js";
 import { DrizzleFidelityRepository } from "./modules/fidelity/adapters/drizzle-fidelity-repo.js";
 import { FidelityService } from "./modules/fidelity/app/fidelity-service.js";
 import type { FidelityRepository } from "./modules/fidelity/domain/ports.js";
@@ -35,6 +41,10 @@ import { DrizzleRunRepository } from "./modules/runs/adapters/drizzle-run-repo.j
 import { createFanosToolchain } from "./modules/runs/adapters/fanos-toolchain.js";
 import { RunService } from "./modules/runs/app/run-service.js";
 import type { RunQueue, RunRepository, Toolchain } from "./modules/runs/domain/ports.js";
+import { createElectricGateway } from "./modules/sync/adapters/electric-gateway.js";
+import { DrizzleRunOwnership } from "./modules/sync/adapters/drizzle-run-ownership.js";
+import { SyncService } from "./modules/sync/app/sync-service.js";
+import type { RunOwnership, SyncGateway } from "./modules/sync/domain/ports.js";
 import { DrizzleSurfaceRepository } from "./modules/surfaces/adapters/drizzle-surface-repo.js";
 import { SurfaceService } from "./modules/surfaces/app/surface-service.js";
 import type { SurfaceRepository } from "./modules/surfaces/domain/ports.js";
@@ -65,6 +75,10 @@ export interface Adapters {
   toolchain: Toolchain;
   audit: AuditSink & { list: DrizzleAuditSink["list"] };
   clock: Clock;
+  syncGateway: SyncGateway;
+  runOwnership: RunOwnership;
+  exports: ExportRepository;
+  figmaFiles: FigmaFileDirectory & { claim: DrizzleFigmaFileDirectory["claim"] };
 }
 
 export interface AppContext {
@@ -75,6 +89,9 @@ export interface AppContext {
   surfaces: SurfaceService;
   fidelity: FidelityService;
   runs: RunService;
+  sync: SyncService;
+  exports: ExportService;
+  figmaFiles: Adapters["figmaFiles"];
   audit: Adapters["audit"];
   /** For the readiness probe only; no service reaches through this. */
   health: { ping: () => Promise<void> };
@@ -130,6 +147,18 @@ export function assemble(parts: {
     logger,
   });
 
+  const exportsService = new ExportService({
+    repo: adapters.exports,
+    files: adapters.figmaFiles,
+    artifacts,
+    audit: adapters.audit,
+  });
+
+  const sync = new SyncService({
+    gateway: adapters.syncGateway,
+    runs: adapters.runOwnership,
+  });
+
   return {
     config,
     logger,
@@ -138,6 +167,9 @@ export function assemble(parts: {
     surfaces,
     fidelity,
     runs,
+    sync,
+    exports: exportsService,
+    figmaFiles: adapters.figmaFiles,
     audit: adapters.audit,
     health: parts.health ?? { ping: async () => {} },
     close: parts.close ?? (async () => {}),
@@ -173,7 +205,7 @@ export function createContext(config: Config, logger: Logger = CONSOLE_LOGGER): 
 export function buildDrizzleAdapters(
   db: Db,
   queue: RunQueue,
-  config: Pick<Config, "BLOB_ROOT">,
+  config: Pick<Config, "BLOB_ROOT" | "ELECTRIC_URL">,
   logger: Logger,
 ): Adapters {
   return {
@@ -187,5 +219,9 @@ export function buildDrizzleAdapters(
     toolchain: createFanosToolchain(),
     audit: new DrizzleAuditSink(db, logger),
     clock: systemClock,
+    syncGateway: createElectricGateway(config.ELECTRIC_URL),
+    runOwnership: new DrizzleRunOwnership(db),
+    exports: new DrizzleExportRepository(db),
+    figmaFiles: new DrizzleFigmaFileDirectory(db),
   };
 }

@@ -120,6 +120,189 @@ export const artifacts = pgTable(
 );
 
 // ---------------------------------------------------------------------------
+// figma exports — the front door. A designer pressing "Send" is an event.
+//
+// The IR and the section screenshots are NOT stored here: they are artifacts,
+// content-addressed like everything else. What this records is the act — which
+// frame, from which file and page, at what health, by whom.
+//
+// That split is the whole point. Re-exporting an unchanged frame costs one
+// small row rather than another copy of a 130KB IR document, because the bytes
+// hash to an artifact that already exists. Exports are an append-only log;
+// artifacts are deduplicated content. Neither has to compromise for the other.
+// ---------------------------------------------------------------------------
+
+/**
+ * `received` is what the plugin creates. Promotion is what turns a frame into
+ * pipeline work, and is deliberately a separate act — see the note on
+ * `promotedRunId`.
+ */
+export const exportStatus = pgEnum("export_status", ["received", "promoted", "dismissed"]);
+
+/**
+ * Which Figma files belong to which tenant.
+ *
+ * The plugin has no idea projects exist — it knows a file key. Something has to
+ * turn one into the other, and putting it here means the ingest route resolves
+ * a tenant without the plugin, the designer, or Surface Studio being taught
+ * about tenancy.
+ */
+export const projectFigmaFiles = pgTable(
+  "project_figma_files",
+  {
+    projectId: uuid("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    fileKey: text("file_key").notNull(),
+    fileName: text("file_name"),
+    addedAt: timestamp("added_at", { withTimezone: true }).notNull().defaultNow(),
+  },
+  (t) => [
+    // A Figma file belongs to exactly one project. Two tenants claiming the
+    // same file is an ambiguity the ingest route could not resolve.
+    uniqueIndex("project_figma_files_file_key_key").on(t.fileKey),
+    index("project_figma_files_project_idx").on(t.projectId),
+  ],
+);
+
+export const figmaExports = pgTable(
+  "figma_exports",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    projectId: uuid("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+
+    // --- where it came from -------------------------------------------------
+    /** Null for an unsaved/local Figma file, which the plugin allows. */
+    fileKey: text("file_key"),
+    fileName: text("file_name").notNull(),
+    pageName: text("page_name").notNull(),
+    rootNodeId: text("root_node_id"),
+    rootName: text("root_name"),
+
+    /**
+     * The Frame IR itself, as an artifact.
+     *
+     * Cascade, not restrict. An export whose IR is gone records nothing —
+     * every number on the row describes bytes that no longer exist. Restrict
+     * also deadlocks the tenant cascade: dropping a project deletes its
+     * artifacts, and a protected reference from here stops the whole delete.
+     */
+    irArtifactId: uuid("ir_artifact_id")
+      .notNull()
+      .references(() => artifacts.id, { onDelete: "cascade" }),
+
+    // --- health, at the moment of export -----------------------------------
+    //
+    // Promoted out of `summary` because these are the columns anyone filters
+    // or sorts on. The rest of the summary stays in jsonb rather than growing
+    // a column per metric the plugin invents.
+    nodeCount: integer("node_count").notNull(),
+    boundCount: integer("bound_count").notNull(),
+    looseCount: integer("loose_count").notNull(),
+    /** 0-100, as the Health tab reports it. The ceiling on everything after. */
+    coveragePercent: real("coverage_percent").notNull(),
+    schemaValid: boolean("schema_valid").notNull(),
+    summary: jsonb("summary").notNull().default(sql`'{}'::jsonb`),
+
+    /**
+     * Structural and canonical signatures of the frame.
+     *
+     * These make "has this frame actually changed since last time" a cheap
+     * indexed comparison instead of diffing two IR blobs. A designer who
+     * re-exports after moving one label should not look like new work.
+     */
+    structuralSignature: text("structural_signature"),
+    canonicalSignature: text("canonical_signature"),
+
+    // --- lifecycle ----------------------------------------------------------
+    status: exportStatus("status").notNull().default("received"),
+    /**
+     * Set when someone turns this export into pipeline work. Null while it is
+     * only on the board.
+     *
+     * Nullable rather than implicit so both product shapes fit without a
+     * migration: forward-everything can promote on arrival, and a curated
+     * "send to pipeline" button can promote on click.
+     */
+    promotedRunId: uuid("promoted_run_id"),
+    /** Which surface this frame was decided to be. Set at promotion, not before. */
+    surfaceId: uuid("surface_id").references(() => surfaces.id, { onDelete: "set null" }),
+
+    /**
+     * Collapses a retried send into one event.
+     *
+     * Derived, not supplied: the plugin has no retry token, and a designer
+     * pressing Send twice on a flaky connection must not produce two rows
+     * claiming to be two exports. Built from the frame plus its Figma-side
+     * timestamp — the same frame cannot be exported twice in the same
+     * millisecond.
+     */
+    idempotencyKey: text("idempotency_key").notNull(),
+
+    /** Figma-side clock, from the plugin. */
+    exportedAt: timestamp("exported_at", { withTimezone: true }).notNull(),
+    receivedAt: timestamp("received_at", { withTimezone: true }).notNull().defaultNow(),
+    exportedBy: text("exported_by"),
+  },
+  (t) => [
+    uniqueIndex("figma_exports_project_idempotency_key").on(t.projectId, t.idempotencyKey),
+    index("figma_exports_project_received_idx").on(t.projectId, t.receivedAt),
+    // "show me the history of this one frame" — the query the board wants once
+    // it stops being a 20-item buffer.
+    index("figma_exports_frame_idx").on(t.projectId, t.rootNodeId, t.receivedAt),
+    index("figma_exports_status_idx").on(t.projectId, t.status, t.receivedAt),
+    index("figma_exports_ir_idx").on(t.irArtifactId),
+  ],
+);
+
+/**
+ * One section screenshot ("plate") per exported node.
+ *
+ * A table rather than a jsonb array because the pixel-diff gate needs to ask
+ * "what is the reference image for node 1:4745". That lookup is exactly the
+ * input C2 has been missing — the geometry check is skipped today because
+ * nothing supplies reference images, and they have been arriving in every
+ * export all along.
+ */
+export const figmaExportPlates = pgTable(
+  "figma_export_plates",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    exportId: uuid("export_id")
+      .notNull()
+      .references(() => figmaExports.id, { onDelete: "cascade" }),
+    /**
+     * Denormalised from the parent export, purely so this table can be synced.
+     *
+     * Electric filters one table with one `where` — it cannot join to reach the
+     * export's tenant. Without this column the board could not stream plates at
+     * all, or would have to stream every tenant's and filter client-side, which
+     * is not a filter but a leak. Same reasoning as `runs.project_id`.
+     */
+    projectId: uuid("project_id")
+      .notNull()
+      .references(() => projects.id, { onDelete: "cascade" }),
+    /** The PNG, content-addressed like everything else. Cascade for the same
+     * reason as the IR above: a plate row without its image is a dangling
+     * caption. */
+    artifactId: uuid("artifact_id")
+      .notNull()
+      .references(() => artifacts.id, { onDelete: "cascade" }),
+    /** The Figma node this plate is a picture of. */
+    nodeId: text("node_id").notNull(),
+    name: text("name").notNull(),
+    seq: integer("seq").notNull(),
+  },
+  (t) => [
+    uniqueIndex("figma_export_plates_export_node_key").on(t.exportId, t.nodeId),
+    index("figma_export_plates_node_idx").on(t.nodeId),
+    index("figma_export_plates_project_idx").on(t.projectId),
+  ],
+);
+
+// ---------------------------------------------------------------------------
 // surfaces + versions — the only mutable entity, and it mutates by appending.
 // ---------------------------------------------------------------------------
 
@@ -288,6 +471,33 @@ export const projectsRelations = relations(projects, ({ many }) => ({
   artifacts: many(artifacts),
   surfaces: many(surfaces),
   runs: many(runs),
+  figmaExports: many(figmaExports),
+  figmaFiles: many(projectFigmaFiles),
+}));
+
+export const projectFigmaFilesRelations = relations(projectFigmaFiles, ({ one }) => ({
+  project: one(projects, { fields: [projectFigmaFiles.projectId], references: [projects.id] }),
+}));
+
+export const figmaExportsRelations = relations(figmaExports, ({ one, many }) => ({
+  project: one(projects, { fields: [figmaExports.projectId], references: [projects.id] }),
+  irArtifact: one(artifacts, {
+    fields: [figmaExports.irArtifactId],
+    references: [artifacts.id],
+  }),
+  surface: one(surfaces, { fields: [figmaExports.surfaceId], references: [surfaces.id] }),
+  plates: many(figmaExportPlates),
+}));
+
+export const figmaExportPlatesRelations = relations(figmaExportPlates, ({ one }) => ({
+  export: one(figmaExports, {
+    fields: [figmaExportPlates.exportId],
+    references: [figmaExports.id],
+  }),
+  artifact: one(artifacts, {
+    fields: [figmaExportPlates.artifactId],
+    references: [artifacts.id],
+  }),
 }));
 
 export const artifactsRelations = relations(artifacts, ({ one }) => ({
@@ -343,6 +553,9 @@ export const fidelityReportsRelations = relations(fidelityReports, ({ one }) => 
  * architecture gate in `tests/architecture.test.ts` exists to catch.
  */
 export type ProjectRow = typeof projects.$inferSelect;
+export type ProjectFigmaFileRow = typeof projectFigmaFiles.$inferSelect;
+export type FigmaExportRow = typeof figmaExports.$inferSelect;
+export type FigmaExportPlateRow = typeof figmaExportPlates.$inferSelect;
 export type ArtifactRow = typeof artifacts.$inferSelect;
 export type SurfaceRow = typeof surfaces.$inferSelect;
 export type SurfaceVersionRow = typeof surfaceVersions.$inferSelect;
