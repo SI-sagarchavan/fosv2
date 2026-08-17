@@ -134,7 +134,36 @@ describe("ingest", () => {
 
     const kinds = app.repos.artifacts.rows.map((a) => a.kind).sort();
     expect(kinds).toEqual(["figma_ir", "screenshot"]);
+    expect(view.assets).toEqual([]);
     expect(app.audit.actions()).toContain("export.received");
+  });
+
+  it("stores marked background assets as blobs and lists them on the view", async () => {
+    const view = await app.ctx.exports.ingest(
+      command({
+        assets: [
+          {
+            name: "tickets_plate",
+            nodeId: "1:10",
+            targetNodeId: "1:2",
+            role: "background",
+            bytesBase64: "cGxhdGU=",
+          },
+        ],
+      }),
+      "sagar",
+    );
+
+    expect(view.assets).toEqual([
+      expect.objectContaining({
+        name: "tickets_plate",
+        nodeId: "1:10",
+        targetNodeId: "1:2",
+        role: "background",
+      }),
+    ]);
+    expect(view.summary.assetCount).toBe(1);
+    expect(app.repos.artifacts.rows.filter((a) => a.kind === "screenshot")).toHaveLength(2);
   });
 
   /** The property the whole schema is shaped around. */
@@ -175,7 +204,10 @@ describe("ingest", () => {
     expect(app.repos.exports.rows).toHaveLength(0);
   });
 
-  it("refuses an unsaved Figma file with a fixable message", async () => {
+  // The message points at the private plugin API, not at saving the file: a
+  // null key means the plugin could not read `figma.fileKey`, which saving does
+  // not change. Nothing is stored either way.
+  it("refuses an export with no file key and names the real cause", async () => {
     const local = command({
       page: {
         fileKey: null,
@@ -185,7 +217,11 @@ describe("ingest", () => {
         rootName: "D",
       },
     });
-    await expect(app.ctx.exports.ingest(local, "sagar")).rejects.toThrow(/save the file in Figma/);
+    await expect(app.ctx.exports.ingest(local, "sagar")).rejects.toThrow(
+      /enablePrivatePluginApi/,
+    );
+    expect(app.repos.artifacts.rows).toHaveLength(0);
+    expect(app.repos.exports.rows).toHaveLength(0);
   });
 
   it("rejects a malformed plate before storing any artifact", async () => {

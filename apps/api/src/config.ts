@@ -37,6 +37,42 @@ const Env = z.object({
   WORKER_CONCURRENCY: z.coerce.number().int().positive().default(4),
   /** Attempts per run, including the first. */
   RUN_MAX_ATTEMPTS: z.coerce.number().int().positive().default(3),
+
+  /**
+   * The geometry gate (C2): render each compiled tree headlessly and compare
+   * every node's box against the IR.
+   *
+   * On by default. It is the only check that can see a layout error — coverage
+   * checks confirm a node exists, not that it is the right size — and turning
+   * it off returns the gate to reporting `compared: 0`, which reads like a pass
+   * and is not one. Off is for environments with no chromium.
+   */
+  GEOMETRY_GATE: z.enum(["on", "off"]).default("on"),
+  /** Absolute path to the renderer CLI. Resolved from the package when unset. */
+  GEOMETRY_CLI_PATH: z.string().optional(),
+  /** A hung browser must not hold a run open. */
+  GEOMETRY_TIMEOUT_MS: z.coerce.number().int().positive().default(60_000),
+
+  /**
+   * How a marked background becomes a URL the renderer can fetch.
+   *
+   *   data-uri     inline the bytes into the surface set (default). The run is
+   *                self-contained, so a preview, the pixel harness and an
+   *                offline reader all paint without reaching this service.
+   *   artifact-url point at the artifact content endpoint. Small artifacts,
+   *                but the renderer must be able to reach and authenticate
+   *                against the API — Surface Studio proxies it for the board.
+   *   s3           object storage. Production; not implemented yet.
+   *
+   * There is deliberately no "fall back to a default image" mode. An asset that
+   * cannot be resolved is reported on the run and renders as nothing, because a
+   * background that renders as the WRONG picture is a bug that ships.
+   */
+  ASSET_PUBLISHER: z.enum(["data-uri", "artifact-url", "s3"]).default("data-uri"),
+  /** Origin the renderer reaches artifact content on, for `artifact-url`. */
+  ASSET_BASE_URL: z.string().url().default("http://localhost:3000"),
+  /** Per-asset ceiling on the base64 payload, for `data-uri`. */
+  ASSET_MAX_BYTES: z.coerce.number().int().positive().default(4 * 1024 * 1024),
 });
 
 export type Config = Readonly<

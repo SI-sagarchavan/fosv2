@@ -12,6 +12,7 @@
 import { compile } from "@fanos/compile";
 import { conform } from "@fanos/conform";
 import type { ConformIssue, ConformResult } from "@fanos/conform";
+import { analyze } from "@fanos/dsl";
 import type { FlatTree } from "@fanos/dsl";
 import { parseFrameIRDocument } from "@fanos/surface-canvas/ir";
 import type { FrameIRDocument, FrameIRNode } from "@fanos/surface-canvas/ir";
@@ -31,7 +32,7 @@ export function createFanosToolchain(): Toolchain {
   return {
     parseIr(json) {
       const doc = attempt(() => parseFrameIRDocument(json), "figma IR");
-      return { handle: doc, nodeCount: countNodes(doc.root) };
+      return { handle: doc, nodeCount: countNodes(doc.root), rootNodeId: doc.rootNodeId };
     },
 
     parseTheme(json) {
@@ -61,14 +62,55 @@ export function createFanosToolchain(): Toolchain {
           nodeId: n.nodeId ?? null,
           message: n.message,
         })),
-        // Only the names travel; the full surface specs stay in the compiler.
-        requiredSurfaces: result.requiredSurfaces.map((s) => describeSurface(s)),
+        // Name AND spec travel. Only the names used to, which left the pipeline
+        // unable to persist a surface set — every plate the compiler folded
+        // into a surface ref then resolved to nothing at render time.
+        requiredSurfaces: result.requiredSurfaces.map((s) => ({ name: s.name, spec: s.spec })),
+        metrics: metricsOf(result.tree),
+        // No URL. The compiler names the asset; resolving that name to
+        // something fetchable is the run's job, through `AssetPublisher` —
+        // which is what makes one tree render against a data URI in preview and
+        // an S3 object in production. This used to attach a hardcoded tenant
+        // URL to every asset, so every marked background rendered as the same
+        // borrowed texture.
+        requiredAssets: result.requiredAssets.map((a) => ({
+          name: a.name,
+          ref: a.ref,
+          role: a.role,
+          sourceId: a.sourceId,
+          targetId: a.targetId,
+        })),
       } satisfies CompileOutcome;
     },
 
-    conform({ tree, ir, theme }) {
-      return toOutcome(conform(tree as FlatTree, irOf(ir), { theme: themeOf(theme) }));
+    conform({ tree, ir, theme, boxes, rootSrc, tolerance }) {
+      return toOutcome(
+        conform(tree as FlatTree, irOf(ir), {
+          theme: themeOf(theme),
+          // Passing boxes is what switches C2 on. Without them `conform`
+          // reports `compared: 0` and every layout error goes unseen.
+          ...(boxes ? { boxes } : {}),
+          ...(rootSrc ? { rootSrc } : {}),
+          ...(tolerance !== undefined ? { geometry: { tolerance } } : {}),
+        }),
+      );
     },
+  };
+}
+
+/**
+ * The DSL already computes these and nothing read them.
+ *
+ * Surfaced so pixel debt is a number on every run rather than an occasional
+ * audit — a tree can be pixel-perfect against its frame and still be pinned
+ * solid, which renders correctly at exactly one width.
+ */
+function metricsOf(tree: FlatTree) {
+  const m = analyze(tree);
+  return {
+    rawValues: m.rawValueCount.total,
+    rawPositions: m.rawPositionCount,
+    tokenCoverage: m.tokenCoverage,
   };
 }
 
@@ -91,14 +133,6 @@ function toFinding(issue: ConformIssue): Finding {
     message: issue.message,
     nodeId: issue.nodeId ?? null,
   };
-}
-
-function describeSurface(surface: unknown): string {
-  if (typeof surface === "string") return surface;
-  const named = surface as { name?: unknown; ref?: unknown };
-  if (typeof named.name === "string") return named.name;
-  if (typeof named.ref === "string") return named.ref;
-  return JSON.stringify(surface);
 }
 
 function irOf(parsed: ParsedIr): FrameIRDocument {

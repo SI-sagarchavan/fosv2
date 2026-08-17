@@ -338,6 +338,7 @@ function Skipped({
   );
 }
 
+
 /** Hex keeps the hash quiet so the digits are what you read. Anything else is a name. */
 function ValueText({ value, className }: { value: string; className?: string }): JSX.Element {
   const hex = value.match(/^(#)([0-9a-fA-F]{3,8})(.*)$/);

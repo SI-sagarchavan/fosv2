@@ -11,16 +11,46 @@
  */
 
 export {
+  ASSET_NAME_RE,
+  ASSET_PLUGIN_KEY,
   IR_VERSION,
   IR_VERSIONS,
+  assetBindingSchema,
+  assetFitSchema,
+  assetRef,
+  fitFromScaleMode,
   frameIRDocumentSchema,
+  assetMappingSchema,
   frameIRNodeSchema,
+  isValidAssetName,
   parseFrameIRDocument,
   safeParseFrameIRDocument,
 } from "./schema.js";
 
+export {
+  COVER_TOLERANCE,
+  assetPlacement,
+  compositePlacement,
+  targetOptions,
+  unionBox,
+} from "./placement.js";
+export type { AssetPlacement, TargetOption } from "./placement.js";
+
+export { MAX_ICON_PX, countPaths, hasText, isVectorOnly } from "./artwork.js";
+
+export {
+  AUTO_APPLY_SCORE,
+  isConfident,
+  matchAssetToTargets,
+  normalizeFileName,
+} from "./match-asset.js";
+export type { TargetMatch, UploadedImage } from "./match-asset.js";
+
 export type {
   AspectBucket,
+  AssetBinding,
+  AssetFit,
+  AssetMapping,
   AutoResize,
   Effect,
   Fill,

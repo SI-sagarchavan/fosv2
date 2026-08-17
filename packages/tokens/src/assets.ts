@@ -23,6 +23,12 @@ export interface AssetContext {
   tenant: string;
   /** Optional cache-busting / release path segment. */
   version?: string;
+  /**
+   * Explicit URLs, keyed by `asset.texture.x` or the leaf `texture.x`.
+   * Wins over the CDN convention so a run can point a texture at S3 (or, for
+   * now, the tenant's production static host) without renaming files.
+   */
+  urls?: Record<string, string>;
 }
 
 /**
@@ -56,6 +62,8 @@ export function resolveAsset(ref: string, ctx: AssetContext): string {
   if (!parsed || parsed.category !== "asset") {
     throw new Error(`resolveAsset: expected an asset.* ref, got ${JSON.stringify(ref)}`);
   }
+  const explicit = ctx.urls?.[ref] ?? ctx.urls?.[parsed.leaf] ?? ctx.urls?.[`asset.${parsed.leaf}`];
+  if (explicit) return explicit;
   const parts = parsed.leaf.split(".").filter(Boolean);
   if (parts.length < 2) {
     throw new Error(

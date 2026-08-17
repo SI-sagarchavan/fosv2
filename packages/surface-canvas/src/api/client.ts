@@ -10,7 +10,14 @@
  *
  * PURE.
  */
-import type { ApiFetch, ApiResult, StudioEvent, StudioExport } from "./types.js";
+import type {
+  ApiFetch,
+  ApiResult,
+  PreviewRequest,
+  PreviewResponse,
+  StudioEvent,
+  StudioExport,
+} from "./types.js";
 
 export const API_TIMEOUT_MS = 4000;
 /** IR + PNGs are a real upload. A 4s hang-up would drop a finished walk. */
@@ -18,12 +25,21 @@ export const EXPORT_TIMEOUT_MS = 60_000;
 export const EVENTS_PATH = "/v1/events";
 export const HEALTH_PATH = "/v1/health";
 export const EXPORTS_PATH = "/v1/exports";
+export const PREVIEW_PATH = "/v1/preview";
+/**
+ * A preview is a compile AND a render of a whole page. Slower than an event,
+ * far quicker than an export — and a designer is watching it, so it must give
+ * up while they are still waiting rather than after they have moved on.
+ */
+export const PREVIEW_TIMEOUT_MS = 20_000;
 
 export interface ApiClient {
   readonly origin: string;
   ping(): Promise<ApiResult>;
   postEvent(event: StudioEvent): Promise<ApiResult>;
   postExport(body: StudioExport): Promise<ApiResult>;
+  /** Compile + render a frame without persisting anything. */
+  previewCompile(body: PreviewRequest): Promise<ApiResult<PreviewResponse>>;
 }
 
 export function createApiClient(options: {
@@ -70,6 +86,10 @@ export function createApiClient(options: {
     ping: () => request("GET", HEALTH_PATH),
     postEvent: (event) => request("POST", EVENTS_PATH, event),
     postExport: (body) => request("POST", EXPORTS_PATH, body, EXPORT_TIMEOUT_MS),
+    previewCompile: (body) =>
+      request("POST", PREVIEW_PATH, body, PREVIEW_TIMEOUT_MS) as Promise<
+        ApiResult<PreviewResponse>
+      >,
   };
 }
 
@@ -102,15 +122,38 @@ async function readData(response: { json(): Promise<unknown>; text(): Promise<st
   }
 }
 
+/**
+ * Two error shapes reach here, and both have to be legible.
+ *
+ *   - Surface Studio's own:  { message }
+ *   - the control plane's:   { error: { code, message, details } }
+ *
+ * Only the first was read, so every relayed API error collapsed to the
+ * `422 Unprocessable Entity` fallback and the designer lost the one sentence
+ * that said what to do — e.g. an unmapped Figma file naming the fix.
+ */
 async function readMessage(response: {
   json(): Promise<unknown>;
   text(): Promise<string>;
 }): Promise<string> {
   const data = await readData(response);
-  if (data && typeof data === "object" && "message" in data && typeof data.message === "string") {
-    return data.message;
+  const direct = messageIn(data);
+  if (direct) return direct;
+
+  if (data && typeof data === "object" && "error" in data) {
+    const nested = messageIn((data as { error: unknown }).error);
+    if (nested) return nested;
   }
+
   if (typeof data === "string" && data.trim()) return data.trim();
+  return "";
+}
+
+function messageIn(value: unknown): string {
+  if (value && typeof value === "object" && "message" in value) {
+    const message = (value as { message: unknown }).message;
+    if (typeof message === "string" && message.trim()) return message.trim();
+  }
   return "";
 }
 

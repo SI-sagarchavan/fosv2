@@ -41,7 +41,13 @@ export interface Metrics {
   syntheticNodeCount: number;
   /** Q4 — Custom nodes, which are opaque to every downstream consumer. */
   customNodeCount: number;
-  /** Q5 — tokenised / (tokenised + raw.total). 1 when there is nothing to measure. */
+  /**
+   * Q5 — tokenised / (tokenised + raw), over values that COULD be a token.
+   *
+   * Excludes `place.offset`: a coordinate has no token to bind to, so counting
+   * it would cap the ratio below 1 forever. See the note in `analyze`.
+   * 1 when there is nothing to measure.
+   */
   tokenCoverage: number;
   /** Q6 */
   maxDepth: number;
@@ -116,7 +122,30 @@ export function analyze(tree: FlatTree): Metrics {
     });
   }
 
-  const denominator = tokenisedValueCount + rawValueCount.total;
+  /**
+   * Position is excluded from the ratio, and counted on its own instead.
+   *
+   * A coordinate is not tokenisable. There is no design token for "this sits
+   * 568px from the left", in this system or in Figma — `place.offset` exists
+   * precisely because a node had to be pinned somewhere. Leaving it in the
+   * denominator makes 1.0 unreachable for any tree containing a single
+   * absolutely-positioned node, which turns the metric into a measure of how
+   * many Overlays a design has rather than how well it is tokenised.
+   *
+   * On the fixtures page that gap was the whole story: 954 of 1496 raws were
+   * coordinates, dragging a genuinely 51% tree down to a reported 27% and
+   * making the design system look broken when Figma's own binding report said
+   * 80.7%.
+   *
+   * Position debt is real, and it is worse than token debt — it is just a
+   * different problem with a different owner. `rawPositionCount` reports it
+   * undiluted, because averaging the two hides both.
+   *
+   * Icon and box sizes stay IN: a size CAN be a space token, so a raw one is
+   * debt the tree could actually pay off.
+   */
+  const tokenisableRaws = rawValueCount.total - rawPositionCount;
+  const denominator = tokenisedValueCount + tokenisableRaws;
   const depthMap = depths(tree);
 
   return {

@@ -8,7 +8,7 @@
  */
 import { loadConfig, type Config } from "../../src/config.js";
 import { assemble, type AppContext } from "../../src/context.js";
-import type { Toolchain } from "../../src/modules/runs/domain/ports.js";
+import type { GeometryMeasurer, Toolchain } from "../../src/modules/runs/domain/ports.js";
 import {
   FixedClock,
   MemoryArtifactRepo,
@@ -24,7 +24,7 @@ import {
   RecordingQueue,
   RecordingSyncGateway,
 } from "./repos.js";
-import { FakeToolchain } from "./toolchain.js";
+import { fakeMeasurer, FakeToolchain } from "./toolchain.js";
 
 const TEST_CONFIG = {
   NODE_ENV: "test",
@@ -54,7 +54,9 @@ export interface TestApp {
   seedProject(slug?: string): Promise<string>;
 }
 
-export function createTestApp(over: { toolchain?: Toolchain } = {}): TestApp {
+export function createTestApp(
+  over: { toolchain?: Toolchain; measurer?: GeometryMeasurer } = {},
+): TestApp {
   const config = loadConfig({ ...TEST_CONFIG });
   const clock = new FixedClock();
   const audit = new RecordingAudit();
@@ -80,6 +82,7 @@ export function createTestApp(over: { toolchain?: Toolchain } = {}): TestApp {
       blobs,
       queue,
       toolchain,
+      measurer: over.measurer ?? fakeMeasurer(),
       audit,
       clock,
       syncGateway,

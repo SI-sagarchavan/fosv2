@@ -1,12 +1,107 @@
 # @fanos/surface-canvas
 
-**FanOS Surface Canvas** — the Figma plugin. Three tabs:
+**FanOS Surface Canvas** — the Figma plugin. Four tabs:
 
-| Tab        | What it does                                                                              |
-| ---------- | ----------------------------------------------------------------------------------------- |
-| **Health** | Measures token binding coverage, ranks the loose values into batches, and fixes them in bulk. |
-| **Layout** | The sizing contract: hug pinned text so bound copy can grow the box.                      |
-| **Export** | Walks a frame into Frame IR + section PNGs and **sends** them to Surface Studio. The ZIP is the local escape hatch. |
+| Tab         | What it does                                                                              |
+| ----------- | ----------------------------------------------------------------------------------------- |
+| **Health**  | Measures token binding coverage, ranks the loose values into batches, and fixes them in bulk. |
+| **Assets**  | Drop an image exported from Figma; it is matched to the region it came from, named, and bound to the element it paints. |
+| **Preview** | Compiles the frame and renders it, through the real pipeline. |
+| **Export** | Walks a frame into Frame IR + section PNGs and **sends** them to Surface Studio, uploaded assets included. The ZIP is the local escape hatch. |
+
+### The Preview tab
+
+Compiles the frame and shows the result, before any export exists. **Compile &
+preview** walks the frame, reads the uploaded assets, and POSTs IR + theme +
+bytes to Surface Studio, which runs the real
+`@fanos/compile` and the real `@fanos/renderer` and hands back a page. ~110ms
+for a 950-layer frame. Beside the picture: node counts, unresolved glyphs,
+vectors that became plain boxes, and any asset ref with no bytes behind it.
+
+It has its own tab rather than sitting under Assets: "what does this compile
+to" is a question about the whole frame, not about the images in it.
+
+It runs on the **board**, not in the plugin, and that is a constraint rather
+than a preference:
+
+```
+@fanos/compile  →  @fanos/surface-canvas/ir     (already true)
+@fanos/surface-canvas  →  @fanos/compile        (would close a cycle)
+```
+
+`pnpm -r build` resolves packages topologically and a cycle has no valid order.
+Surface Studio already sits downstream of both and already owns the renderer,
+so it is the one place the real compiler and the real renderer can meet — which
+also means the preview is produced by exactly the code a run uses and cannot
+flatter the result. A preview that can lie is worse than no preview.
+
+Nothing is persisted: no project, no artifacts, no run. Only the board has to
+be up (`pnpm dev`).
+
+### Drop an image in; it finds where it belongs
+
+The designer exports a region from Figma the ordinary way and drops the file
+into the Assets tab. That act already carries almost everything needed to place
+it — Figma names the export after the layer, and its pixel size is that layer's
+box times the export scale — so the panel infers the target rather than asking.
+
+| Signal | Weight |
+| ------ | ------ |
+| Filename matches a layer name | strong |
+| Pixel size matches a box at 0.5x / 1x / 2x / 3x / 4x, **both axes at the same scale** | strong |
+| Same proportions, any size | weak — never enough on its own |
+
+Both strong signals together applies silently. Anything less asks, showing the
+ranked candidates and *why* each scored. Two candidates that tie also ask: a
+repeated component means the matcher cannot tell them apart, and picking one at
+random paints a real picture onto an arbitrary element. A background on the
+wrong element is harder to notice, and harder to diagnose, than one that was
+never placed.
+
+The bytes go into the **Figma document** via `figma.createImage`, so only a hash
+lives in pluginData — a 3MB header would not fit there — and the file survives
+reopening. At export they come straight back out with `getImageByHash`: no
+re-render, no flatten, no document mutation.
+
+### What the compiler does with it
+
+An element with a background photo has already had its decoration drawn, so the
+compiler **absorbs** it: the gradient plate, the texture and the cutout are all
+in the image, and emitting them again paints them on top of the picture that
+contains them. **Text is never absorbed, at any depth** — baking a headline into
+a bitmap freezes copy the CMS is supposed to change.
+
+### Replaced: marking layers
+
+This supersedes a feature that asked the designer to MARK Figma layers in the
+panel — tick the four layers of a header, order them, and have the plugin
+flatten them itself. It was the wrong shape twice over: it asked them to
+re-describe, inside a panel, a composition Figma already understood, and it
+re-implemented an exporter Figma already ships — one that honours export
+settings, scale, effects and clipping, which ours did not.
+
+Bindings written by it are dropped on parse. They name Figma layers and have no
+uploaded bytes behind them, so there is nothing to migrate; a corpus row from
+IR 1.3.0–1.5.0 still parses, with an empty asset list.
+
+### Text that cannot grow
+
+There was a **Layout** tab whose whole job was the sizing contract. It is gone —
+one check does not need a workspace — but the check it carried is not, because
+it catches a failure that is invisible in Figma: a text layer with auto-resize
+off is a fixed box, so the moment `{headline}` is longer than the string the
+designer typed, the copy clips. The design string always fits; real data does
+not. Health now shows one line and one bulk fix, and is silent when nothing is
+pinned.
+
+### Re-pointing an asset
+
+If the match is wrong, the target is changed from a list of the element's
+**ancestors** — never from the Figma selection. Selection was tried and was the
+wrong mechanism: the offer was built from whatever happened to be selected, so
+it appeared and vanished as the designer clicked around, and clicking the image
+itself removed it. Ancestors are stable and always present. Correcting a match
+records it as `manual`, because a guess someone has fixed is no longer a guess.
 
 This package was `@fanos/figma-ir-extractor` through v0.1. It is renamed because
 it stopped being one tool: extraction is now one capability among several that a
@@ -60,7 +155,8 @@ sandbox-only types. Those tests run in plain node.
 src/
   main.ts          sandbox entry: session, dispatch, debounce, incremental re-lint
   traverse.ts      Figma nodes -> Frame IR                          (figma-aware)
-  export.ts        the Export tab: IR + screenshots                 (figma-aware)
+  export.ts        the Export tab: IR + screenshots + asset bytes   (figma-aware)
+  assets.ts        marks: name, bind, fit, placement                PURE
   reconcile.ts     token <-> Figma variable/style map               (figma-aware)
   fix.ts           apply proposals, undo checkpointing              (figma-aware)
   heatmap.ts       overlay lifecycle                                (figma-aware)
@@ -77,6 +173,10 @@ src/
     index.ts       the `./health` library entry                     PURE
   rules/           one file per rule, B1-B3 / F1-F7 / W1            PURE
   match/           color (ΔE), number (scale), type (quadruple)     PURE
+  ir/
+    schema.ts      Zod schema + inferred types (source of truth)    PURE
+    placement.ts   does a mark cover its target, or sit inside it   PURE
+    signature.ts   strict + canonical signatures                    PURE
   ui/              React 19 panel
 ```
 

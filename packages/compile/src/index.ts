@@ -5,8 +5,17 @@
  */
 
 export { compile } from "./compile.js";
-export type { CompileNote, CompileOptions, CompileResult } from "./compile.js";
-export { classify, flowChildren, hasAbsoluteChild, isFillPlate, isIconGroup, isRule } from "./classify.js";
+export type { CompileNote, CompileOptions, CompileResult, RequiredAsset } from "./compile.js";
+export {
+  classify,
+  flowChildren,
+  hasAbsoluteChild,
+  isDecorativeVector,
+  isFillPlate,
+  isIconGroup,
+  isRule,
+  paintsAsSurface,
+} from "./classify.js";
 export type { DslType } from "./classify.js";
 export { IdAllocator, isMeaningful, slug } from "./ids.js";
 export { canonicalRef, candidates, paintRef } from "./refs.js";

@@ -38,6 +38,7 @@ export const artifactKind = pgEnum("artifact_kind", [
   "figma_ir",
   "token_set",
   "dsl_tree",
+  "surface_set",
   "render_png",
   "conform_report",
   "diff_report",

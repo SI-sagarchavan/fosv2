@@ -1,0 +1,1 @@
+ALTER TYPE "public"."artifact_kind" ADD VALUE 'surface_set' BEFORE 'render_png';

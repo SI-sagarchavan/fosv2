@@ -135,6 +135,21 @@ export class ArtifactService {
     return (await this.require(projectId, ref)).digest;
   }
 
+  /**
+   * Raw bytes plus the stored media type.
+   *
+   * Distinct from `download`, which also returns the artifact view for the HTTP
+   * route's headers. A consumer turning a PNG into a `data:` URI needs exactly
+   * these two things and nothing else.
+   */
+  async readBytes(
+    projectId: string,
+    ref: string,
+  ): Promise<{ bytes: Uint8Array; mediaType: string }> {
+    const { artifact, bytes } = await this.download(projectId, ref);
+    return { bytes, mediaType: artifact.mediaType };
+  }
+
   async readJson<T = unknown>(projectId: string, ref: string): Promise<T> {
     const { artifact, bytes } = await this.download(projectId, ref);
     try {

@@ -153,6 +153,38 @@ describe("buildExportBody", () => {
       nodeId: "1:3",
       bytesBase64: bytesToBase64(new Uint8Array([0x89, 0x50])),
     });
+    expect(body.assets).toEqual([]);
+  });
+
+  it("encodes marked background assets next to the plates", () => {
+    const body = buildExportBody({
+      page: event.page,
+      at: 9,
+      jsonName: "Home-1-2.ir.json",
+      json: "{}",
+      summary: {},
+      screenshots: [],
+      assets: [
+        {
+          name: "tickets_plate",
+          nodeId: "1:10",
+          targetNodeId: "1:2",
+          role: "background",
+          bytes: new Uint8Array([0x89, 0x50]),
+          source: "original",
+        },
+      ],
+    });
+    expect(body.assets).toEqual([
+      {
+        name: "tickets_plate",
+        nodeId: "1:10",
+        targetNodeId: "1:2",
+        role: "background",
+        source: "original",
+        bytesBase64: bytesToBase64(new Uint8Array([0x89, 0x50])),
+      },
+    ]);
   });
 
   it("keeps ir null when the JSON is broken rather than throwing", () => {

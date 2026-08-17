@@ -12,9 +12,11 @@ import type { Clock } from "../../../kernel/clock.js";
 import { AppError, isPermanent, serialiseError } from "../../../kernel/errors.js";
 import type {
   ArtifactAccess,
+  AssetPublisher,
   RunQueue,
   RunRepository,
   Toolchain,
+  GeometryMeasurer,
 } from "../domain/ports.js";
 import {
   shouldGiveUp,
@@ -50,6 +52,9 @@ export interface RunServiceDeps {
   artifacts: ArtifactAccess;
   surfaces: SurfaceAccess;
   toolchain: Toolchain;
+  measurer: GeometryMeasurer;
+  /** Resolves `asset.texture.*` to a URL the renderer can fetch. */
+  assets: AssetPublisher;
   gate: GateWriter;
   audit: AuditSink;
   clock: Clock;
@@ -182,6 +187,8 @@ export class RunService {
       actor: claimed.requestedBy ?? "system",
       artifacts: this.deps.artifacts,
       toolchain: this.deps.toolchain,
+      measurer: this.deps.measurer,
+      assets: this.deps.assets,
       versions: this.deps.surfaces,
       gate: this.deps.gate,
       scratch,

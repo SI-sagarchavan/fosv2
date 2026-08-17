@@ -1,0 +1,256 @@
+{
+  "page": {
+    "title": "Fixtures & Results",
+    "breadcrumb": "Home",
+    "filterLabel": "FILTER",
+    "calendarLabel": "ADD TO CALENDAR",
+    "emptyMessage": "No fixtures match this filter."
+  },
+  "filters": [
+    { "id": "all", "label": "All", "selected": true },
+    { "id": "men", "label": "MEN", "selected": false },
+    { "id": "women", "label": "WOMEN", "selected": false }
+  ],
+  "fixtures": [
+    {
+      "id": "2026-07-18-msgw-sbw",
+      "dayLabel": "SATURDAY, 18 JULY",
+      "startsAt": "2026-07-18T19:30:00Z",
+      "startTime": "19:30",
+      "competition": "WOMEN",
+      "status": "completed",
+      "isLive": false,
+      "isCompleted": true,
+      "isUpcoming": false,
+      "statusLabel": "COMPLETED",
+      "venue": "Utilita Bowl, Southampton",
+      "showVenue": false,
+      "home": {
+        "code": "MSGW",
+        "name": "Manchester Super Giants Women",
+        "logo": "asset.logo.manchester_super_giants",
+        "score": "166/5",
+        "scoreLabel": "166/5",
+        "hasScore": true,
+        "isWinner": false
+      },
+      "away": {
+        "code": "SBW",
+        "name": "Southern Brave Women",
+        "logo": "asset.logo.southern_brave",
+        "score": "172/3",
+        "scoreLabel": "172/3",
+        "hasScore": true,
+        "isWinner": true
+      },
+      "result": "Southern Brave Women beat Manchester Super Giants Women by 6 runs",
+      "showResult": true,
+      "countdown": null,
+      "showCountdown": false,
+      "actions": {
+        "matchCentre": { "label": "MATCH CENTRE", "href": "/match/2026-07-18-msgw-sbw", "show": true },
+        "tickets": { "label": "GET TICKETS", "href": null, "show": false }
+      }
+    },
+    {
+      "id": "2026-07-19-msgw-sbw",
+      "dayLabel": "SUNDAY, 19 JULY",
+      "startsAt": "2026-07-19T19:30:00Z",
+      "startTime": "19:30",
+      "competition": "WOMEN",
+      "status": "completed",
+      "isLive": false,
+      "isCompleted": true,
+      "isUpcoming": false,
+      "statusLabel": "COMPLETED",
+      "venue": "Utilita Bowl, Southampton",
+      "showVenue": false,
+      "home": {
+        "code": "MSGW",
+        "name": "Manchester Super Giants Women",
+        "logo": "asset.logo.manchester_super_giants",
+        "score": "166/5",
+        "scoreLabel": "166/5",
+        "hasScore": true,
+        "isWinner": false
+      },
+      "away": {
+        "code": "SBW",
+        "name": "Southern Brave Women",
+        "logo": "asset.logo.southern_brave",
+        "score": "172/3",
+        "scoreLabel": "172/3",
+        "hasScore": true,
+        "isWinner": true
+      },
+      "result": "Southern Brave Women beat Manchester Super Giants Women by 6 runs",
+      "showResult": true,
+      "countdown": null,
+      "showCountdown": false,
+      "actions": {
+        "matchCentre": { "label": "MATCH CENTRE", "href": "/match/2026-07-19-msgw-sbw", "show": true },
+        "tickets": { "label": "GET TICKETS", "href": null, "show": false }
+      }
+    },
+    {
+      "id": "2026-07-20-msgw-sbw",
+      "dayLabel": "MONDAY, 20 JULY",
+      "startsAt": "2026-07-20T19:30:00Z",
+      "startTime": "19:30",
+      "competition": "WOMEN",
+      "status": "completed",
+      "isLive": false,
+      "isCompleted": true,
+      "isUpcoming": false,
+      "statusLabel": "COMPLETED",
+      "venue": "Utilita Bowl, Southampton",
+      "showVenue": false,
+      "home": {
+        "code": "MSGW",
+        "name": "Manchester Super Giants Women",
+        "logo": "asset.logo.manchester_super_giants",
+        "score": "166/5",
+        "scoreLabel": "166/5",
+        "hasScore": true,
+        "isWinner": false
+      },
+      "away": {
+        "code": "SBW",
+        "name": "Southern Brave Women",
+        "logo": "asset.logo.southern_brave",
+        "score": "172/3",
+        "scoreLabel": "172/3",
+        "hasScore": true,
+        "isWinner": true
+      },
+      "result": "Southern Brave Women beat Manchester Super Giants Women by 6 runs",
+      "showResult": true,
+      "countdown": null,
+      "showCountdown": false,
+      "actions": {
+        "matchCentre": { "label": "MATCH CENTRE", "href": "/match/2026-07-20-msgw-sbw", "show": true },
+        "tickets": { "label": "GET TICKETS", "href": null, "show": false }
+      }
+    },
+    {
+      "id": "2026-07-21-msgw-sbw",
+      "dayLabel": "TUESDAY, 21 JULY",
+      "startsAt": "2026-07-21T19:30:00Z",
+      "startTime": "19:30",
+      "competition": "WOMEN",
+      "status": "live",
+      "isLive": true,
+      "isCompleted": false,
+      "isUpcoming": false,
+      "statusLabel": "LIVE",
+      "venue": "Utilita Bowl, Southampton",
+      "showVenue": true,
+      "home": {
+        "code": "MSGW",
+        "name": "Manchester Super Giants Women",
+        "logo": "asset.logo.manchester_super_giants",
+        "score": "166/5",
+        "scoreLabel": "166/5",
+        "hasScore": true,
+        "isWinner": false
+      },
+      "away": {
+        "code": "SBW",
+        "name": "Southern Brave Women",
+        "logo": "asset.logo.southern_brave",
+        "score": null,
+        "scoreLabel": "Yet to Bat",
+        "hasScore": false,
+        "isWinner": false
+      },
+      "result": null,
+      "showResult": false,
+      "countdown": null,
+      "showCountdown": false,
+      "actions": {
+        "matchCentre": { "label": "MATCH CENTRE", "href": "/match/2026-07-21-msgw-sbw", "show": true },
+        "tickets": { "label": "GET TICKETS", "href": null, "show": false }
+      }
+    },
+    {
+      "id": "2026-07-22-bphw-sbw",
+      "dayLabel": "WEDNESDAY, 22 JULY",
+      "startsAt": "2026-07-22T19:30:00Z",
+      "startTime": "19:30",
+      "competition": "WOMEN",
+      "status": "upcoming",
+      "isLive": false,
+      "isCompleted": false,
+      "isUpcoming": true,
+      "statusLabel": "UPCOMING",
+      "venue": "Utilita Bowl, Southampton",
+      "showVenue": true,
+      "home": {
+        "code": "BPHW",
+        "name": "Birmingham Phoenix Women",
+        "logo": "asset.logo.birmingham_phoenix",
+        "score": null,
+        "scoreLabel": null,
+        "hasScore": false,
+        "isWinner": false
+      },
+      "away": {
+        "code": "SBW",
+        "name": "Southern Brave Women",
+        "logo": "asset.logo.southern_brave",
+        "score": null,
+        "scoreLabel": null,
+        "hasScore": false,
+        "isWinner": false
+      },
+      "result": null,
+      "showResult": false,
+      "countdown": { "days": "24", "hours": "12", "mins": "33", "secs": "10" },
+      "showCountdown": true,
+      "actions": {
+        "matchCentre": { "label": "MATCH CENTRE", "href": "/match/2026-07-22-bphw-sbw", "show": true },
+        "tickets": { "label": "GET TICKETS", "href": "/tickets/2026-07-22", "show": true }
+      }
+    },
+    {
+      "id": "2026-07-23-bphw-sbw",
+      "dayLabel": "THURSDAY, 23 JULY",
+      "startsAt": "2026-07-23T19:30:00Z",
+      "startTime": "19:30",
+      "competition": "WOMEN",
+      "status": "upcoming",
+      "isLive": false,
+      "isCompleted": false,
+      "isUpcoming": true,
+      "statusLabel": "UPCOMING",
+      "venue": "Utilita Bowl, Southampton",
+      "showVenue": true,
+      "home": {
+        "code": "BPHW",
+        "name": "Birmingham Phoenix Women",
+        "logo": "asset.logo.birmingham_phoenix",
+        "score": null,
+        "scoreLabel": null,
+        "hasScore": false,
+        "isWinner": false
+      },
+      "away": {
+        "code": "SBW",
+        "name": "Southern Brave Women",
+        "logo": "asset.logo.southern_brave",
+        "score": null,
+        "scoreLabel": null,
+        "hasScore": false,
+        "isWinner": false
+      },
+      "result": null,
+      "showResult": false,
+      "countdown": { "days": "24", "hours": "12", "mins": "33", "secs": "10" },
+      "showCountdown": true,
+      "actions": {
+        "matchCentre": { "label": "MATCH CENTRE", "href": "/match/2026-07-23-bphw-sbw", "show": true },
+        "tickets": { "label": "GET TICKETS", "href": "/tickets/2026-07-23", "show": true }
+      }
+    }
+  ]
+}

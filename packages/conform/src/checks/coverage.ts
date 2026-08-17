@@ -122,6 +122,24 @@ export function checkCoverage(tree: FlatTree, ix: IrIndex, rootSrc: string): Cov
       continue;
     }
 
+    /**
+     * Vector interior. A glyph is one slot, not its paths.
+     *
+     * A team badge arrives as nine overlapping VECTORs; the tree carries one
+     * node for it and fills that node from the icon library or the API. Asking
+     * the tree to account for each path individually is asking it to redraw the
+     * logo, which is the opposite of what a slot is for — and it fails loudest
+     * on exactly the artwork the design system already owns.
+     *
+     * Narrow on purpose: the node itself must be a VECTOR, and some ancestor
+     * must already be represented. An unclaimed subtree still reports missing,
+     * so a whole logo dropped on the floor is still an error.
+     */
+    if (node.type === "VECTOR" && ancestors.some((a) => claimed.has(a))) {
+      counts.absorbed += 1;
+      continue;
+    }
+
     counts.missing += 1;
     const owner = ancestors.find((a) => claimed.has(a));
     const where = owner ? `${claimed.get(owner)} (${owner})` : undefined;

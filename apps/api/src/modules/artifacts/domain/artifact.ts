@@ -12,6 +12,12 @@ export const ARTIFACT_KINDS = [
   "figma_ir",
   "token_set",
   "dsl_tree",
+  /**
+   * The surfaces a compiled tree needs, merged over whatever the theme already
+   * authored. Separate from `token_set` because it is per-run output, not
+   * tenant input: the compiler derives it from one frame.
+   */
+  "surface_set",
   "render_png",
   "conform_report",
   "diff_report",
@@ -37,6 +43,7 @@ export const DEFAULT_MEDIA_TYPE: Record<ArtifactKind, string> = {
   figma_ir: "application/json",
   token_set: "application/json",
   dsl_tree: "application/json",
+  surface_set: "application/json",
   render_png: "image/png",
   conform_report: "application/json",
   diff_report: "application/json",

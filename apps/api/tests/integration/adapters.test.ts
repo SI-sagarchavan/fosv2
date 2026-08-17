@@ -45,6 +45,7 @@ const PIPELINE_INPUT = {
   surfaceKey: "player-card",
   irArtifact: "a".repeat(64),
   themeArtifact: "b".repeat(64),
+  assets: [],
 };
 
 async function newSurface(key = "player-card") {

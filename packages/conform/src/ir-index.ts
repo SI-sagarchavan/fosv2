@@ -51,12 +51,26 @@ export function isDescendantOf(ix: IrIndex, id: string, ancestor: string): boole
 }
 
 /**
- * Position relative to `root`, by summing `relBbox` up the ancestry.
+ * Position relative to `root`, as the difference of two absolute boxes.
  *
- * `geometry.bbox` is absolute to the PAGE, which is useless for comparing a
- * component that was exported on its own — the same card sits at y=768 in one
- * export and y=0 in another. Accumulating `relBbox` gives a frame-local origin
- * that is stable across exports.
+ * `geometry.bbox` on its own is useless here — it is absolute to the PAGE, so
+ * the same card sits at y=768 in one export and y=0 in another. The DIFFERENCE
+ * between two of them is not: it is frame-local and identical in both exports,
+ * which is the property this needs.
+ *
+ * This used to sum `relBbox` up the ancestry, and that has two faults the
+ * subtraction does not:
+ *
+ *   1. `relBbox` is the node's box BEFORE rotation, so a quarter-turned node
+ *      contributes its unrotated origin. On the fixtures page that reported a
+ *      552px x-error on hairlines that were exactly where they belonged, and a
+ *      747px one further in.
+ *   2. Summing accumulates. Every ancestor's rounding lands in the total, so
+ *      depth alone produced drift.
+ *
+ * `bbox` comes from `absoluteBoundingBox`, which is axis-aligned and already
+ * post-rotation — the on-screen extent, which is exactly what a rendered DOM
+ * box is compared against.
  *
  * Returns undefined when `id` is not inside `root`.
  */
@@ -65,18 +79,15 @@ export function offsetWithin(
   id: string,
   root: string,
 ): { x: number; y: number } | undefined {
-  let x = 0;
-  let y = 0;
-  let cur: string | undefined = id;
-  while (cur !== undefined) {
-    if (cur === root) return { x, y };
-    const node = ix.byId.get(cur);
-    if (!node) return undefined;
-    x += node.geometry.relBbox.x;
-    y += node.geometry.relBbox.y;
-    cur = ix.parentOf.get(cur);
-  }
-  return undefined;
+  const rootNode = ix.byId.get(root);
+  const node = ix.byId.get(id);
+  if (!rootNode || !node) return undefined;
+  if (id !== root && !isDescendantOf(ix, id, root)) return undefined;
+
+  return {
+    x: node.geometry.bbox.x - rootNode.geometry.bbox.x,
+    y: node.geometry.bbox.y - rootNode.geometry.bbox.y,
+  };
 }
 
 /**

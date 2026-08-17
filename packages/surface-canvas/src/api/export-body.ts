@@ -16,6 +16,14 @@ export function buildExportBody(input: {
   json: string;
   summary: Record<string, unknown>;
   screenshots: ReadonlyArray<{ name: string; nodeId: string; bytes: Uint8Array }>;
+  assets?: ReadonlyArray<{
+    name: string;
+    nodeId: string;
+    targetNodeId: string;
+    role: "background";
+    bytes: Uint8Array;
+    source: "original" | "rendered";
+  }>;
 }): StudioExport {
   let ir: unknown = null;
   try {
@@ -34,6 +42,14 @@ export function buildExportBody(input: {
       name: shot.name,
       nodeId: shot.nodeId,
       bytesBase64: bytesToBase64(shot.bytes),
+    })),
+    assets: (input.assets ?? []).map((asset) => ({
+      name: asset.name,
+      nodeId: asset.nodeId,
+      targetNodeId: asset.targetNodeId,
+      role: asset.role,
+      source: asset.source,
+      bytesBase64: bytesToBase64(asset.bytes),
     })),
   };
 }

@@ -151,6 +151,10 @@ describe("reduce", () => {
       count: 1,
       name: "Hero",
       id: "1:99",
+      nodeId: "1:99",
+      hasImage: false,
+      parentId: "1:1",
+      parentName: "Home",
     });
     expect(selected).toMatchObject({ selectionCount: 1, selectionName: "Hero", selectionId: "1:99" });
   });
@@ -163,6 +167,10 @@ describe("reduce", () => {
       count: 1,
       name: "Headline",
       id: null,
+      nodeId: "1:12",
+      hasImage: false,
+      parentId: "1:99",
+      parentName: "Hero",
     });
     expect(selected.selectionId).toBeNull();
   });
@@ -191,6 +199,7 @@ describe("reduce", () => {
       jsonName: "a.ir.json",
       json: "{}",
       screenshots: [],
+      assets: [],
       summary: { nodeCount: 2 },
       publish: { kind: "sent", origin: "http://localhost:3000" },
     });
@@ -204,5 +213,152 @@ describe("panel sizes", () => {
   it("matches the two states the spec calls for", () => {
     expect(PANEL_SIZES.expanded).toEqual({ width: 448, height: 720 });
     expect(PANEL_SIZES.collapsed).toEqual({ width: 280, height: 44 });
+  });
+});
+
+/**
+ * A dropped image the matcher could not place.
+ *
+ * Held rather than discarded: the bytes are already in the Figma document, so
+ * the only thing missing is the target. Throwing the upload away would make the
+ * designer drag the file in again to answer one question.
+ */
+describe("an unmapped upload", () => {
+  const unmapped = {
+    type: "asset-unmapped" as const,
+    fileName: "mystery.png",
+    imageHash: "hash-a",
+    width: 800,
+    height: 245,
+    candidates: [
+      { id: "1:2", name: "Top Header", width: 1366, height: 418, score: 25, reasons: ["same proportions"] },
+    ],
+  };
+
+  it("keeps the upload and its candidates until answered", () => {
+    const s = reduce(initialState, unmapped);
+    expect(s.unmapped).toMatchObject({ fileName: "mystery.png", imageHash: "hash-a" });
+    expect(s.unmapped?.candidates).toHaveLength(1);
+  });
+
+  it("can be dismissed without placing anything", () => {
+    const s = reduce(reduce(initialState, unmapped), { type: "dismiss-unmapped" });
+    expect(s.unmapped).toBeNull();
+  });
+
+  /** Answering the question is what closes it, not a separate acknowledgement. */
+  it("clears once that image lands as an asset", () => {
+    let s = reduce(initialState, unmapped);
+    s = reduce(s, {
+      type: "assets",
+      bindings: [
+        {
+          role: "background",
+          name: "mystery",
+          imageHash: "hash-a",
+          fileName: "mystery.png",
+          width: 800,
+          height: 245,
+          targetId: "1:2",
+          targetName: "Top Header",
+          mapping: "manual",
+        },
+      ],
+      placements: {},
+      targets: {},
+    });
+    expect(s.unmapped).toBeNull();
+  });
+
+  it("leaves an unrelated prompt alone when a different image lands", () => {
+    let s = reduce(initialState, unmapped);
+    s = reduce(s, {
+      type: "assets",
+      bindings: [
+        {
+          role: "background",
+          name: "other",
+          imageHash: "hash-b",
+          fileName: "other.png",
+          width: 10,
+          height: 10,
+          targetId: "1:3",
+          targetName: "Body",
+          mapping: "auto",
+        },
+      ],
+      placements: {},
+      targets: {},
+    });
+    expect(s.unmapped?.imageHash).toBe("hash-a");
+  });
+});
+
+/**
+ * The compile preview.
+ *
+ * The panel could always describe a frame and never show it, so every mistake
+ * was found after an export, a run and a gate — several services from the
+ * person who could fix it. The state is here so the loading, failed and stale
+ * paths are testable without a board.
+ */
+describe("the compile preview", () => {
+  const summary = {
+    nodes: 394,
+    byType: { Stack: 201, Text: 116 },
+    irNodes: 952,
+    absorbed: 558,
+    notes: { "unknown-icon": 46 },
+    examples: [{ kind: "unknown-icon", message: "icon \"teams\" from layer name" }],
+    requiredAssets: ["asset.texture.top_header"],
+    unresolvedAssets: [],
+    requiredSurfaces: ["top_header"],
+  };
+
+  it("shows progress while the board is working", () => {
+    const s = reduce(initialState, { type: "preview-progress", message: "Compiling…" });
+    expect(s.previewProgress).toBe("Compiling…");
+  });
+
+  it("keeps the html, its width and the summary together", () => {
+    const s = reduce(initialState, {
+      type: "preview-done",
+      html: "<!DOCTYPE html><body>x</body>",
+      width: 1366,
+      summary,
+      error: null,
+    });
+    expect(s.previewHtml).toContain("DOCTYPE");
+    expect(s.previewWidth).toBe(1366);
+    expect(s.previewSummary?.nodes).toBe(394);
+    expect(s.previewProgress).toBe("");
+    expect(s.previewError).toBeNull();
+  });
+
+  /**
+   * A failure has to REPLACE the picture, not sit under it. A stale preview
+   * beside a fresh error reads as "this still works", which is the opposite of
+   * what happened.
+   */
+  it("clears the picture when a later run fails", () => {
+    let s = reduce(initialState, {
+      type: "preview-done",
+      html: "<!DOCTYPE html><body>x</body>",
+      width: 1366,
+      summary,
+      error: null,
+    });
+    s = reduce(s, {
+      type: "preview-done",
+      html: null,
+      width: 0,
+      summary: null,
+      error: "Surface Studio is not running",
+    });
+
+    expect(s.previewHtml).toBeNull();
+    expect(s.previewSummary).toBeNull();
+    expect(s.previewError).toBe("Surface Studio is not running");
+    expect(s.previewProgress).toBe("");
   });
 });

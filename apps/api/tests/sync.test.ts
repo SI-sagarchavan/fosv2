@@ -140,6 +140,7 @@ describe("SyncService", () => {
           surfaceKey: "news-page",
           irArtifact: ir.digest,
           themeArtifact: theme.digest,
+          assets: [],
         },
       },
       "tester",

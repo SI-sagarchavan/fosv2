@@ -223,6 +223,7 @@ export function node(spec: NodeSpec = {}): FrameIRNode {
     geometry: {
       bbox: { x: 0, y: 0, w, h },
       relBbox: { x: 0, y: 0, w, h },
+      rotation: 0,
       aspect: h > 0 ? w / h : 0,
       aspectBucket: "landscape",
     },
@@ -253,6 +254,7 @@ export function document(root: FrameIRNode, overrides: Partial<FrameIRDocument> 
     irVersion: IR_VERSION,
     breakpointHint: root.geometry.bbox.w,
     root,
+    assets: [],
     ...overrides,
   };
 }

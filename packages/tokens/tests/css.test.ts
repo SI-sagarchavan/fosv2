@@ -191,11 +191,58 @@ describe("surfaces", () => {
     expect(base).toContain("box-shadow: var(--fos-shadow-md);");
   });
 
+  /**
+   * A repeating pattern is laid out from an origin. Centring one shifts the
+   * whole grid by half a tile, so the seams land somewhere the designer never
+   * drew them — and Figma tiles from the top-left. Only reachable on a mixed
+   * surface: an all-tile surface emits no `background-size` at all and inherits
+   * the `0% 0%` default.
+   */
+  it("anchors a tile at 0 0 while a cover layer beside it stays centred", () => {
+    const { css } = emitCss(makeTheme(), {
+      surfaces: makeSurfaces({
+        assets: { "texture.stripes": "/stripes.png", "texture.grid": "/grid.png" },
+        surfaces: {
+          header: {
+            layers: [
+              { type: "image", ref: "asset.texture.stripes", fit: "cover" },
+              { type: "image", ref: "asset.texture.grid", fit: "repeat" },
+            ],
+          },
+        },
+      }),
+    });
+
+    const rule = css.slice(css.indexOf(".fos-surface-header"));
+    // Layers reverse on the way out, so the tile is emitted first.
+    expect(rule).toContain("background-position: 0 0, center;");
+    expect(rule).toContain("background-repeat: repeat, no-repeat;");
+  });
+
   it("omits position: relative when nothing needs a containing block", () => {
     const { css } = emitCss(makeTheme(), {
       surfaces: makeSurfaces({ plain: { radius: "radius.xl", shadow: "shadow.md" } }),
     });
     expect(css.slice(css.indexOf(".fos-surface-plain"))).not.toContain("position: relative");
+  });
+
+  it("emits an https image layer ref as a background url", () => {
+    const { css } = emitCss(makeTheme(), {
+      surfaces: makeSurfaces({
+        header: {
+          layers: [
+            {
+              type: "image",
+              ref: "https://www.southernbrave.com/static-assets/images/misc/d-listing-pattern.png",
+              fit: "cover",
+            },
+          ],
+        },
+      }),
+    });
+    expect(css).toContain(
+      'url("https://www.southernbrave.com/static-assets/images/misc/d-listing-pattern.png")',
+    );
   });
 
   it("warns that CSS cannot apply opacity to a background-image layer", () => {

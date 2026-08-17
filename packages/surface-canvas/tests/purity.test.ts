@@ -17,6 +17,7 @@ const PURE_FILES = [
   "src/ir/schema.ts",
   "src/ir/signature.ts",
   "src/ir/index.ts",
+  "src/assets.ts",
   "src/ui/state.ts",
   "src/ui/rows.ts",
 ];

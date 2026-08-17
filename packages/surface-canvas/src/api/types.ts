@@ -59,4 +59,57 @@ export interface StudioExport {
   ir: unknown;
   summary: Record<string, unknown>;
   screenshots: Array<{ name: string; nodeId: string; bytesBase64: string }>;
+  /**
+   * Static background images the designer marked, with the node they should
+   * paint. Separate from screenshots: those are section plates for the pixel
+   * gate, these are files the compiler and the agent consume.
+   */
+  assets: Array<{
+    name: string;
+    nodeId: string;
+    targetNodeId: string;
+    role: "background";
+    /**
+     * `original` — the bytes the designer placed, out of Figma's image store.
+     * `rendered` — the node re-exported as a PNG because the original was
+     * unreachable, which bakes in opacity, effects and the on-canvas scale.
+     * Worth recording: a render is a lossy stand-in for a file that ships.
+     */
+    source: "original" | "rendered";
+    bytesBase64: string;
+  }>;
+}
+
+/**
+ * A compile preview request.
+ *
+ * Everything by value — the IR, the raw theme, the marked bytes — because the
+ * point is answering "what will this look like?" before an export exists. The
+ * board needs no project and no control plane to answer it.
+ */
+export interface PreviewRequest {
+  ir: unknown;
+  theme: unknown;
+  assets: Array<{ name: string; bytesBase64: string }>;
+  width?: number;
+}
+
+/** What the compiler and the renderer between them had to say. */
+export interface PreviewSummary {
+  nodes: number;
+  byType: Record<string, number>;
+  irNodes: number;
+  absorbed: number;
+  notes: Record<string, number>;
+  examples: Array<{ kind: string; message: string }>;
+  requiredAssets: string[];
+  unresolvedAssets: string[];
+  requiredSurfaces: string[];
+}
+
+export interface PreviewResponse {
+  /** A complete HTML document. The panel shows it in a nested iframe. */
+  html: string;
+  width: number;
+  summary: PreviewSummary;
 }

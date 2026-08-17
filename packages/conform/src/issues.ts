@@ -53,7 +53,15 @@ export interface ConformSummary {
     missing: number;
   };
   /** Nodes compared by C2, and the worst delta seen. */
-  geometry: { compared: number; skipped: number; worstDelta: number };
+  geometry: {
+    compared: number;
+    skipped: number;
+    /** Content the frame does not own — icon library, API-provided art. */
+    exempt: number;
+    worstDelta: number;
+    /** Sum of each failing node's worst axis delta. Tracks progress; the count does not. */
+    totalDelta: number;
+  };
   nodeCount: number;
   waived: number;
 }

@@ -37,10 +37,26 @@ import {
   createRedisConnection,
   type BullQueueHandle,
 } from "./modules/runs/adapters/bullmq-queue.js";
+import {
+  ArtifactUrlAssetPublisher,
+  DataUriAssetPublisher,
+  S3AssetPublisher,
+} from "./modules/runs/adapters/asset-publishers.js";
 import { DrizzleRunRepository } from "./modules/runs/adapters/drizzle-run-repo.js";
 import { createFanosToolchain } from "./modules/runs/adapters/fanos-toolchain.js";
+import {
+  createDisabledMeasurer,
+  createFosRenderMeasurer,
+} from "./modules/runs/adapters/fos-render-measurer.js";
 import { RunService } from "./modules/runs/app/run-service.js";
-import type { RunQueue, RunRepository, Toolchain } from "./modules/runs/domain/ports.js";
+import type {
+  ArtifactAccess,
+  AssetPublisher,
+  GeometryMeasurer,
+  RunQueue,
+  RunRepository,
+  Toolchain,
+} from "./modules/runs/domain/ports.js";
 import { createElectricGateway } from "./modules/sync/adapters/electric-gateway.js";
 import { DrizzleRunOwnership } from "./modules/sync/adapters/drizzle-run-ownership.js";
 import { SyncService } from "./modules/sync/app/sync-service.js";
@@ -73,6 +89,13 @@ export interface Adapters {
   blobs: BlobStore;
   queue: RunQueue;
   toolchain: Toolchain;
+  measurer: GeometryMeasurer;
+  /**
+   * Optional: the default reads artifact bytes, and the artifact service is
+   * assembled inside `createAppContext`. Tests override it to keep a run from
+   * touching the blob store at all.
+   */
+  assets?: AssetPublisher;
   audit: AuditSink & { list: DrizzleAuditSink["list"] };
   clock: Clock;
   syncGateway: SyncGateway;
@@ -140,6 +163,10 @@ export function assemble(parts: {
     artifacts,
     surfaces,
     toolchain: adapters.toolchain,
+    measurer: adapters.measurer,
+    // Built here rather than in `buildDrizzleAdapters` because it reads
+    // artifact bytes, and `ArtifactService` is assembled in this function.
+    assets: adapters.assets ?? createAssetPublisher(config, artifacts),
     gate: fidelity,
     audit: adapters.audit,
     clock: adapters.clock,
@@ -202,10 +229,42 @@ export function createContext(config: Config, logger: Logger = CONSOLE_LOGGER): 
   });
 }
 
+/**
+ * The asset publisher the config asks for.
+ *
+ * `data-uri` is the default because it is the only one that makes a run's
+ * output self-contained: the surface set carries the bytes, so a preview
+ * iframe, the Playwright harness and an offline reader all paint the page
+ * without reaching this service or holding a credential. `artifact-url` trades
+ * that for small artifacts once there is somewhere reachable to serve them
+ * from, and `s3` is the production answer when object storage exists.
+ *
+ * Notably absent: a mode that substitutes a default image for an asset it
+ * cannot find. That was the previous behaviour, and it meant an unresolved
+ * background rendered as a real — but wrong — picture, which nobody notices
+ * until it is in front of a customer.
+ */
+export function createAssetPublisher(
+  config: Pick<Config, "ASSET_PUBLISHER" | "ASSET_BASE_URL" | "ASSET_MAX_BYTES">,
+  artifacts: ArtifactAccess,
+): AssetPublisher {
+  switch (config.ASSET_PUBLISHER) {
+    case "artifact-url":
+      return new ArtifactUrlAssetPublisher(config.ASSET_BASE_URL);
+    case "s3":
+      return new S3AssetPublisher(artifacts, { bucket: "", cdnBase: "", region: "" });
+    default:
+      return new DataUriAssetPublisher(artifacts, config.ASSET_MAX_BYTES);
+  }
+}
+
 export function buildDrizzleAdapters(
   db: Db,
   queue: RunQueue,
-  config: Pick<Config, "BLOB_ROOT" | "ELECTRIC_URL">,
+  config: Pick<
+    Config,
+    "BLOB_ROOT" | "ELECTRIC_URL" | "GEOMETRY_GATE" | "GEOMETRY_CLI_PATH" | "GEOMETRY_TIMEOUT_MS"
+  >,
   logger: Logger,
 ): Adapters {
   return {
@@ -217,6 +276,13 @@ export function buildDrizzleAdapters(
     blobs: createFsBlobStore(config.BLOB_ROOT),
     queue,
     toolchain: createFanosToolchain(),
+    measurer:
+      config.GEOMETRY_GATE === "off"
+        ? createDisabledMeasurer()
+        : createFosRenderMeasurer({
+            ...(config.GEOMETRY_CLI_PATH ? { cliPath: config.GEOMETRY_CLI_PATH } : {}),
+            timeoutMs: config.GEOMETRY_TIMEOUT_MS,
+          }),
     audit: new DrizzleAuditSink(db, logger),
     clock: systemClock,
     syncGateway: createElectricGateway(config.ELECTRIC_URL),

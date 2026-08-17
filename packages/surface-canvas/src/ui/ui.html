@@ -434,7 +434,7 @@
 
   .gain { font-variant-numeric: tabular-nums; color: var(--fos-success); font-weight: 500; }
 
-  /* --- Layout tab: still a plain bar and a plain list, not cards -------- */
+  /* --- sizing bar: a plain bar, not a card ------------------------------ */
 
   .coverage .score { font-size: 22px; font-weight: 600; letter-spacing: -0.5px; }
   .score { font-size: 18px; font-weight: 600; letter-spacing: -0.4px; }
@@ -509,6 +509,160 @@
     justify-content: flex-start;
     padding: 6px 2px;
     gap: 8px;
+  }
+
+  /* --- Assets tab ------------------------------------------------------- */
+
+  /* How many images this frame ships. On the tab itself because it is the one
+     number that decides whether the tab is worth opening. */
+  .tab-count {
+    display: inline-block;
+    margin-left: 5px;
+    padding: 0 5px;
+    border-radius: 8px;
+    background: var(--fos-border);
+    color: var(--fos-text-secondary);
+    font-size: 10px;
+    font-weight: 600;
+    vertical-align: 1px;
+  }
+  .tab[aria-selected="true"] .tab-count { background: var(--fos-text); color: var(--fos-bg); }
+
+  .asset-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--fos-border);
+  }
+  .asset-row:last-child { border-bottom: none; }
+
+  /* Fixed box, so rows do not reflow as thumbnails land one at a time. The
+     checkerboard reads through a transparent PNG, which is most of them. */
+  .thumb {
+    flex: 0 0 auto;
+    width: 48px;
+    height: 48px;
+    padding: 0;
+    border-radius: 3px;
+    overflow: hidden;
+    background-color: var(--fos-surface-2, rgba(128, 128, 128, 0.12));
+    background-image:
+      linear-gradient(45deg, rgba(128, 128, 128, 0.22) 25%, transparent 25%),
+      linear-gradient(-45deg, rgba(128, 128, 128, 0.22) 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, rgba(128, 128, 128, 0.22) 75%),
+      linear-gradient(-45deg, transparent 75%, rgba(128, 128, 128, 0.22) 75%);
+    background-size: 10px 10px;
+    background-position: 0 0, 0 5px, 5px -5px, -5px 0;
+  }
+  .thumb img { width: 100%; height: 100%; object-fit: contain; display: block; }
+  .thumb-empty { display: block; width: 100%; height: 100%; }
+
+  /* The layers a composite flattens. Indented under the asset they belong to,
+     because they are its parts and not siblings of it. */
+  .members {
+    margin: 6px 0 0;
+    padding-left: 8px;
+    border-left: 2px solid var(--fos-border);
+  }
+  .member { display: flex; align-items: center; gap: 6px; padding: 2px 0; }
+  .member-index {
+    flex: 0 0 auto;
+    width: 14px;
+    text-align: right;
+    font-size: 10px;
+    color: var(--fos-text-secondary);
+    font-variant-numeric: tabular-nums;
+  }
+  .member-thumb {
+    flex: 0 0 auto;
+    width: 18px;
+    height: 18px;
+    border-radius: 2px;
+    object-fit: contain;
+    background: rgba(128, 128, 128, 0.15);
+  }
+
+  /* --- compiled preview ------------------------------------------------- */
+
+  /* The page is scaled, not reflowed: a 1366px design squeezed into a 420px
+     iframe answers a question nobody asked while hiding the one that was. */
+  .preview-frame-wrap {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    border: 1px solid var(--fos-border);
+    border-radius: 4px;
+    background: #ffffff;
+  }
+  .preview-frame {
+    position: absolute;
+    top: 0;
+    left: 0;
+    border: 0;
+    transform-origin: top left;
+    pointer-events: none;
+  }
+
+  .note-line {
+    font-size: var(--fos-t-small);
+    line-height: 1.5;
+    padding: 2px 0;
+    border-top: 1px solid var(--fos-border);
+  }
+
+  /* --- drop zone --------------------------------------------------------- */
+
+  .dropzone {
+    display: block;
+    padding: 18px 14px;
+    border: 1.5px dashed var(--fos-border);
+    border-radius: 6px;
+    text-align: center;
+    cursor: pointer;
+    background: rgba(128, 128, 128, 0.04);
+  }
+  .dropzone:hover { background: rgba(128, 128, 128, 0.09); }
+  /* The whole panel is a small target, so the hover state has to be obvious
+     enough to find while dragging a file with the cursor half off-screen. */
+  .dropzone.over {
+    border-color: var(--fos-brand);
+    border-style: solid;
+    background: rgba(128, 128, 128, 0.14);
+  }
+  .dropzone input[type="file"] { display: none; }
+  .dropzone-title { font-weight: 600; }
+
+  /* An unplaced image is a question, and it should read as one rather than as
+     another row in a list. */
+  .unmapped { background: rgba(128, 128, 128, 0.07); }
+  .candidate {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1px;
+    width: 100%;
+    text-align: left;
+    margin-bottom: 4px;
+  }
+
+  .target-picker {
+    margin-top: 6px;
+    padding: 4px;
+    border: 1px solid var(--fos-border);
+    border-radius: 4px;
+  }
+
+  .name-field {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 2px 6px;
+    border: 1px solid var(--fos-text);
+    border-radius: 3px;
+    background: var(--fos-bg);
+    color: var(--fos-text);
+    font: inherit;
+    font-weight: 600;
   }
 
   details > summary { cursor: pointer; list-style: none; }

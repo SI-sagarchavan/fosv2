@@ -51,7 +51,40 @@ export interface GeometryResult {
   issues: ConformIssue[];
   compared: number;
   skipped: number;
+  /** Nodes whose content comes from outside the frame. See `isExternallyProvided`. */
+  exempt: number;
   worstDelta: number;
+  /**
+   * Sum of every failing node's worst axis delta, in px.
+   *
+   * The number to watch, because the error COUNT barely moves. Fixing the
+   * rotated-position bug removed 8,365px of error and changed the count by
+   * zero; a 262px container collapse and a 2px rounding difference each count
+   * as exactly one error. Magnitude is what tracks progress.
+   */
+  totalDelta: number;
+}
+
+/**
+ * Is this node's content the frame's to dictate?
+ *
+ * An `Icon` names a glyph in the icon library. What Figma holds is the
+ * designer's drawing of that glyph — a different artefact, drawn at whatever
+ * aspect suited the canvas, often several vector paths deep. Holding the
+ * library's rendering to that drawing's bounding box is comparing two things
+ * that were never meant to be the same object: it fails on every icon in every
+ * design, and the only way to "pass" is to stop using the library.
+ *
+ * Team badges are the same argument one step further out — those arrive from
+ * the API per fixture, so the frame's placeholder says nothing about the real
+ * one.
+ *
+ * The SLOT is still checked. The parent that positions the icon is compared
+ * like any other node, so an icon in the wrong place, or a row that is the
+ * wrong height, still fails. Only the glyph's own box is out of scope.
+ */
+function isExternallyProvided(type: string): boolean {
+  return type === "Icon";
 }
 
 export function checkGeometry(
@@ -67,7 +100,9 @@ export function checkGeometry(
   const issues: ConformIssue[] = [];
   let compared = 0;
   let skipped = 0;
+  let exempt = 0;
   let worstDelta = 0;
+  let totalDelta = 0;
 
   for (const node of tree.nodes) {
     // Synthetic nodes have no Figma box; Repeater is a fragment with no box at
@@ -75,6 +110,12 @@ export function checkGeometry(
     // are covered by C1's `repeated` bucket instead.
     if (isSynthetic(node.src)) {
       skipped += 1;
+      continue;
+    }
+    // Counted, not hidden. "419 icons exempt" is a fact a reader can argue
+    // with; silently comparing nothing is what this gate exists to prevent.
+    if (isExternallyProvided(node.type)) {
+      exempt += 1;
       continue;
     }
     const ir = ix.byId.get(node.src);
@@ -91,38 +132,51 @@ export function checkGeometry(
 
     compared += 1;
     const got = { x: box.x / scale, y: box.y / scale, w: box.w / scale, h: box.h / scale };
+
+    /**
+     * `relBbox` is the node's box BEFORE rotation, so a quarter-turned node
+     * expects its axes transposed. `geometry.rotation` now records this, which
+     * turns what used to be a guess (below) into a correction: the expectation
+     * is fixed up and the node is still compared, rather than skipped.
+     */
+    const turned = isQuarterTurn(ir.geometry.rotation);
     const want = {
       x: origin.x,
       y: origin.y,
-      w: ir.geometry.relBbox.w,
-      h: ir.geometry.relBbox.h,
+      w: turned ? ir.geometry.relBbox.h : ir.geometry.relBbox.w,
+      h: turned ? ir.geometry.relBbox.w : ir.geometry.relBbox.h,
     };
 
     /**
-     * Rotated nodes report their UNROTATED box.
+     * Legacy fallback for IR captured before `geometry.rotation` existed, where
+     * rotation defaults to 0 and the transposition above cannot be detected.
+     * Recognising the swap by shape keeps those documents from reporting a
+     * 248px "error" on a node that is pixel-correct.
      *
-     * The IR has no rotation field, so a 248px horizontal rule turned 90 degrees
-     * arrives as `w: 1, h: 248`, and the newsletter's vertical divider as
-     * `w: 110, h: 0`. Comparing those to the rendered box produces a 248px
-     * "error" on a node that is pixel-correct.
-     *
-     * Recognising the swap keeps the check honest without a waiver on every
-     * rotated node in every design. It is reported as info rather than dropped,
-     * because the right fix is upstream: the extractor should record rotation.
+     * Documents that carry rotation never reach this: they were corrected
+     * above, and are compared rather than skipped.
      */
-    const swapped =
-      Math.abs(got.w - want.h) <= tolerance && Math.abs(got.h - want.w) <= tolerance;
-    if (swapped && Math.abs(want.w - want.h) > tolerance) {
-      continue;
+    if (!turned) {
+      const swapped =
+        Math.abs(got.w - want.h) <= tolerance && Math.abs(got.h - want.w) <= tolerance;
+      if (swapped && Math.abs(want.w - want.h) > tolerance) {
+        continue;
+      }
     }
 
     const deltas: string[] = [];
+    let nodeWorst = 0;
     for (const k of ["x", "y", "w", "h"] as const) {
       const d = Math.abs(got[k] - want[k]);
       if (d > worstDelta) worstDelta = d;
+      if (d > nodeWorst) nodeWorst = d;
       if (d > tolerance) deltas.push(`${k} ${got[k].toFixed(1)} vs ${want[k].toFixed(1)} (${d > 0 ? "+" : ""}${(got[k] - want[k]).toFixed(1)})`);
     }
     if (deltas.length === 0) continue;
+
+    // One node contributes once, by its worst axis — otherwise a node that is
+    // off on all four axes would count four times and dominate the total.
+    totalDelta += nodeWorst;
 
     issues.push({
       code: "C2",
@@ -133,5 +187,14 @@ export function checkGeometry(
     });
   }
 
-  return { issues, compared, skipped, worstDelta };
+  return { issues, compared, skipped, exempt, worstDelta, totalDelta: Math.round(totalDelta) };
+}
+
+/**
+ * Within half a degree of ±90 — the only rotation with a rectangular layout
+ * box. Instance transforms drift, so this is a tolerance, not equality.
+ */
+function isQuarterTurn(rotation: number | undefined): boolean {
+  if (typeof rotation !== "number" || !Number.isFinite(rotation)) return false;
+  return Math.abs(Math.abs(((rotation % 180) + 180) % 180) - 90) < 0.5;
 }

@@ -7,6 +7,9 @@
  * Everything crossing the boundary is structured-clonable: no Maps, no
  * functions, no class instances. `LintReport` was designed for that.
  */
+import type { AssetPlacement, TargetMatch, TargetOption } from "./assets.js";
+import type { AssetBinding, AssetFit } from "./ir/schema.js";
+import type { PreviewSummary } from "./api/types.js";
 import type { ActivityActor, ActivityEntry } from "./health/activity.js";
 import type { LintReport } from "./health/types.js";
 import type { ReconciliationReport } from "./health/reconcile-report.js";
@@ -15,7 +18,7 @@ import type { ThemeChoice } from "./themes.js";
 export type { ActivityActor, ActivityEntry };
 
 export type PanelState = "expanded" | "collapsed";
-export type Tab = "health" | "layout" | "export";
+export type Tab = "health" | "assets" | "preview" | "export";
 
 export const PANEL_SIZES: Record<PanelState, { width: number; height: number }> = {
   expanded: { width: 448, height: 720 },
@@ -77,6 +80,58 @@ export type UiMessage =
   | { type: "dismiss-undo" }
   | { type: "toggle-heatmap"; on: boolean }
   | { type: "set-panel-state"; state: PanelState }
+  /**
+   * An image the designer exported from Figma and dropped in.
+   *
+   * The bytes are registered with the Figma document and the region they came
+   * from is inferred from the filename and the pixel size — see
+   * `ir/match-asset.ts`. `targetId` is only set when the designer is answering
+   * a question the matcher could not.
+   */
+  | {
+      type: "upload-asset";
+      fileName: string;
+      bytes: Uint8Array;
+      width: number;
+      height: number;
+      targetId?: string;
+    }
+  /**
+   * Place an image already registered with the document.
+   *
+   * The answer to the "which element is this?" prompt. The bytes went in when
+   * the file was dropped, so answering must not re-upload them — passing empty
+   * bytes back through `upload-asset` would ask Figma to create a second image
+   * from nothing.
+   */
+  | {
+      type: "place-asset";
+      imageHash: string;
+      fileName: string;
+      width: number;
+      height: number;
+      targetId: string;
+    }
+  /** Point an existing asset at a different element. */
+  | { type: "retarget-asset"; key: string; targetId: string }
+  | { type: "remove-asset"; key: string }
+  /**
+   * Rename the asset. This is `asset.texture.<name>` — a token the compiler
+   * emits and a run persists a URL against — so the sandbox validates it and
+   * refuses a collision rather than writing it through.
+   */
+  | { type: "rename-asset"; key: string; name: string }
+  /** Override how the bitmap fills its box. */
+  | { type: "set-asset-fit"; key: string; fit: AssetFit }
+  /**
+   * Compile the checked frame and render it, via Surface Studio.
+   *
+   * On demand, never on every edit: it walks the frame, exports the marked
+   * assets and round-trips a whole page. What it buys is the answer the panel
+   * could not previously give at all — what this frame actually looks like once
+   * compiled — without an export, a run and a gate in between.
+   */
+  | { type: "preview-compile" }
   /** Walk the frame and keep the result for a local ZIP. The escape hatch. */
   | { type: "export-ir" }
   /**
@@ -132,19 +187,72 @@ export type PluginMessage =
    */
   | { type: "panel-state"; state: PanelState }
   | { type: "heatmap"; on: boolean; nodes: number }
-  | { type: "selection"; count: number; name: string | null; id: string | null }
+  | {
+      type: "selection";
+      count: number;
+      name: string | null;
+      id: string | null;
+      /** Any single selected node — image layers included. */
+      nodeId: string | null;
+      hasImage: boolean;
+      parentId: string | null;
+      parentName: string | null;
+    }
+  | {
+      type: "assets";
+      bindings: AssetBinding[];
+      /** Keyed by image hash. Where each asset lands inside what it paints. */
+      placements: Record<string, AssetPlacement>;
+      /** Keyed by image hash. The elements each asset could be re-pointed at. */
+      targets: Record<string, TargetOption[]>;
+    }
+  /**
+   * A dropped image the matcher could not place with confidence.
+   *
+   * Carries the candidates rather than picking one. A background painted onto
+   * the wrong element is harder to notice, and harder to diagnose, than one
+   * that was never placed — so an uncertain match asks instead of guessing.
+   * The bytes are already in the document; only the target is outstanding.
+   */
+  | {
+      type: "asset-unmapped";
+      fileName: string;
+      imageHash: string;
+      width: number;
+      height: number;
+      candidates: TargetMatch[];
+    }
   | { type: "export-progress"; message: string }
   | {
       type: "export-done";
       jsonName: string;
       json: string;
       screenshots: Array<{ name: string; nodeId: string; bytes: Uint8Array }>;
+      assets: Array<{
+        name: string;
+        nodeId: string;
+        targetNodeId: string;
+        role: "background";
+        bytes: Uint8Array;
+        /** `rendered` means the original bitmap was unreachable — see export.ts. */
+        source: "original" | "rendered";
+      }>;
       summary: Record<string, unknown>;
       /**
        * How the walk left the building. `local` is the ZIP-only escape hatch.
        * A failed publish still carries the files so Save ZIP is the way out.
        */
       publish: ExportPublish;
+    }
+  | { type: "preview-progress"; message: string }
+  | {
+      type: "preview-done";
+      /** A complete HTML document, or null when the compile failed. */
+      html: string | null;
+      width: number;
+      summary: PreviewSummary | null;
+      /** Why there are no pixels. Null on success. */
+      error: string | null;
     }
   | { type: "error"; message: string };
 

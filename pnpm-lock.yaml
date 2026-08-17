@@ -23,6 +23,9 @@ importers:
       '@fanos/dsl':
         specifier: workspace:*
         version: link:../../packages/dsl
+      '@fanos/renderer':
+        specifier: workspace:*
+        version: link:../../packages/renderer
       '@fanos/surface-canvas':
         specifier: workspace:*
         version: link:../../packages/surface-canvas
@@ -69,6 +72,21 @@ importers:
       '@electric-sql/react':
         specifier: ^1.0.55
         version: 1.0.55(react@19.2.8)
+      '@fanos/compile':
+        specifier: workspace:*
+        version: link:../../packages/compile
+      '@fanos/dsl':
+        specifier: workspace:*
+        version: link:../../packages/dsl
+      '@fanos/renderer':
+        specifier: workspace:*
+        version: link:../../packages/renderer
+      '@fanos/surface-canvas':
+        specifier: workspace:*
+        version: link:../../packages/surface-canvas
+      '@fanos/tokens':
+        specifier: workspace:*
+        version: link:../../packages/tokens
       react:
         specifier: ^19.0.0
         version: 19.2.8

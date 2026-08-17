@@ -20,7 +20,16 @@ export interface CoverageCounts {
 export interface GeometryCounts {
   compared: number;
   skipped: number;
+  /** Nodes whose content the frame does not own — icon library, API art. */
+  exempt: number;
   worstDelta: number;
+  /**
+   * Sum of each failing node's worst axis delta, in px.
+   *
+   * Recorded because the error count does not move when the tree gets better:
+   * a 262px collapse and a 2px rounding difference are one error each.
+   */
+  totalDelta: number;
 }
 
 export interface Finding {

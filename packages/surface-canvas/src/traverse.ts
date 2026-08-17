@@ -77,6 +77,7 @@ export async function traverseToDocument(
       irVersion: IR_VERSION,
       breakpointHint: walk.root.geometry.bbox.w,
       root: walk.root,
+      assets: [],
     },
     walk,
   };
@@ -247,6 +248,7 @@ function errorNode(node: SceneNode, depth: number, message: string): FrameIRNode
     geometry: {
       bbox: { x: 0, y: 0, w: 0, h: 0 },
       relBbox: { x: 0, y: 0, w: 0, h: 0 },
+      rotation: 0,
       aspect: 0,
       aspectBucket: "square",
     },
@@ -323,7 +325,18 @@ function extractGeometry(node: SceneNode) {
   };
   const aspect = h > 0 ? round(w / h, 4) : 0;
 
-  return { bbox, relBbox, aspect, aspectBucket: bucketAspect(aspect) };
+  // Figma reports degrees counter-clockwise. Normalised into (-180, 180] so a
+  // consumer can test for a quarter turn without repeating the modulo dance.
+  const rotation = "rotation" in node ? normalizeRotation(node.rotation) : 0;
+
+  return { bbox, relBbox, rotation, aspect, aspectBucket: bucketAspect(aspect) };
+}
+
+/** Fold any angle into (-180, 180]. Figma stays in range, but instances drift. */
+export function normalizeRotation(degrees: number): number {
+  if (!Number.isFinite(degrees)) return 0;
+  const wrapped = ((degrees % 360) + 540) % 360 - 180;
+  return round(wrapped === -180 ? 180 : wrapped, 2);
 }
 
 export function bucketAspect(aspect: number): AspectBucket {

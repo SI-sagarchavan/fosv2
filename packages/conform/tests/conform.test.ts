@@ -253,3 +253,215 @@ describe("sliceIr", () => {
     expect(sliceIr(ir("photos-page"), "1:5093")).toBeUndefined();
   });
 });
+
+/**
+ * Position comes from the difference of two absolute boxes, not from summing
+ * `relBbox` up the ancestry.
+ *
+ * `relBbox` is the pre-rotation box, so a quarter-turned node contributed its
+ * unrotated origin and C2 reported a 552px x-error on hairlines that were
+ * exactly where they belonged. Summing also accumulated every ancestor's
+ * rounding, so depth alone produced drift.
+ */
+describe("C2 — frame-local position", () => {
+  /**
+   * A rule laid flat: `bbox` (post-rotation, on screen) says it starts at
+   * x=16, `relBbox` (pre-rotation) says x=568. Only one of those is where the
+   * browser will draw it.
+   */
+  const rotatedDoc = (): FrameIRDocument =>
+    parseFrameIRDocument({
+      fileKey: "t",
+      fileName: "t",
+      pageName: "p",
+      rootNodeId: "1:1",
+      extractedAt: "2026-01-01T00:00:00.000Z",
+      irVersion: "1.2.0",
+      breakpointHint: 552,
+      root: {
+        id: "1:1",
+        name: "Root",
+        type: "FRAME",
+        layout: {
+          mode: "vertical",
+          gap: { value: 0, unbound: false },
+          padding: {
+            top: { value: 0, unbound: false },
+            right: { value: 0, unbound: false },
+            bottom: { value: 0, unbound: false },
+            left: { value: 0, unbound: false },
+          },
+          align: "MIN",
+          justify: "MIN",
+          wrap: false,
+          sizing: { w: "fixed", h: "hug" },
+          positioning: "auto",
+        },
+        geometry: {
+          bbox: { x: 100, y: 200, w: 552, h: 100 },
+          relBbox: { x: 0, y: 0, w: 552, h: 100 },
+          rotation: 0,
+          aspect: 5.52,
+          aspectBucket: "ultrawide",
+        },
+        fill: null,
+        stroke: null,
+        radius: null,
+        effects: [],
+        opacity: 1,
+        clipsContent: false,
+        structuralSignature: "root",
+        canonicalSignature: "root",
+        repeatedSiblings: 1,
+        depth: 0,
+        childCount: 1,
+        children: [
+          {
+            id: "1:2",
+            name: "Rule",
+            type: "VECTOR",
+            layout: {
+              mode: "none",
+              gap: { value: 0, unbound: false },
+              padding: {
+                top: { value: 0, unbound: false },
+                right: { value: 0, unbound: false },
+                bottom: { value: 0, unbound: false },
+                left: { value: 0, unbound: false },
+              },
+              align: "MIN",
+              justify: "MIN",
+              wrap: false,
+              sizing: { w: "fill", h: "fixed" },
+              positioning: "auto",
+            },
+            geometry: {
+              // on screen: 16px from the frame's left edge, 552 wide, 1 tall
+              bbox: { x: 116, y: 240, w: 552, h: 1 },
+              // pre-rotation: a 1x552 vertical rule sitting at x=568
+              relBbox: { x: 568, y: 40, w: 1, h: 552 },
+              rotation: 90,
+              aspect: 552,
+              aspectBucket: "ultrawide",
+            },
+            fill: { unbound: false, tokenRef: "border/main/disable" },
+            stroke: null,
+            radius: null,
+            effects: [],
+            opacity: 1,
+            clipsContent: false,
+            structuralSignature: "rule",
+            canonicalSignature: "rule",
+            repeatedSiblings: 1,
+            depth: 1,
+            childCount: 0,
+            children: [],
+          },
+        ],
+      },
+    });
+
+  const treeFor = (): FlatTree =>
+    flatTreeSchema.parse({
+      schemaVersion: "1.0.0",
+      nodes: [
+        {
+          id: "root",
+          parent: null,
+          idx: 0,
+          type: "Stack",
+          src: "1:1",
+          props: { size: { w: { raw: 552, _unbound: true }, h: "auto" } },
+        },
+        {
+          id: "rule",
+          parent: "root",
+          idx: 0,
+          type: "Divider",
+          src: "1:2",
+          props: { orientation: "horizontal" },
+        },
+      ],
+    });
+
+  it("compares against where the node actually lands, not its unrotated origin", () => {
+    const doc = rotatedDoc();
+    // Exactly the on-screen box, frame-local: bbox minus the root's bbox.
+    const boxes = [
+      { id: "root", x: 0, y: 0, w: 552, h: 100 },
+      { id: "rule", x: 16, y: 40, w: 552, h: 1 },
+    ];
+    const r = conform(treeFor(), doc, { theme, boxes, rootSrc: "1:1", only: ["C2"] });
+    expect(r.errors).toEqual([]);
+  });
+
+  it("still fires when a rotated node is genuinely misplaced", () => {
+    const doc = rotatedDoc();
+    const boxes = [
+      { id: "root", x: 0, y: 0, w: 552, h: 100 },
+      { id: "rule", x: 60, y: 40, w: 552, h: 1 },
+    ];
+    const r = conform(treeFor(), doc, { theme, boxes, rootSrc: "1:1", only: ["C2"] });
+    expect(r.errors).toHaveLength(1);
+    expect(r.errors[0]!.message).toContain("x ");
+  });
+});
+
+/**
+ * The count is the number that does NOT move.
+ *
+ * Fixing the rotated-position bug removed 8,365px of error across this page and
+ * changed the error count by zero — a 262px container collapse and a 2px
+ * rounding difference each count as exactly one. Magnitude is what tracks work.
+ */
+describe("C2 — drift magnitude", () => {
+  const boxesFor = (t: FlatTree, doc: FrameIRDocument) => {
+    const index = new Map<string, { x: number; y: number; w: number; h: number }>();
+    const walk = (n: FrameIRDocument["root"], x: number, y: number): void => {
+      const abs = { x: x + n.geometry.relBbox.x, y: y + n.geometry.relBbox.y };
+      index.set(n.id, { ...abs, w: n.geometry.relBbox.w, h: n.geometry.relBbox.h });
+      for (const c of n.children ?? []) walk(c, abs.x, abs.y);
+    };
+    walk(doc.root, -doc.root.geometry.relBbox.x, -doc.root.geometry.relBbox.y);
+    return t.nodes.filter((n) => index.has(n.src)).map((n) => ({ id: n.id, ...index.get(n.src)! }));
+  };
+
+  it("is zero when everything matches", () => {
+    const t = tree("newsletter-signup");
+    const doc = ir("newsletter-signup");
+    const r = conform(t, doc, { theme, boxes: boxesFor(t, doc), only: ["C2"] });
+    expect(r.summary.geometry.totalDelta).toBe(0);
+  });
+
+  it("counts a node once, by its worst axis", () => {
+    const t = tree("newsletter-signup");
+    const doc = ir("newsletter-signup");
+    // Off on all four axes; the worst is 40, so it must contribute 40, not 100.
+    const boxes = boxesFor(t, doc).map((b) =>
+      b.id === "field" ? { x: b.x + 10, y: b.y + 20, w: b.w + 30, h: b.h + 40, id: b.id } : b,
+    );
+    const r = conform(t, doc, { theme, boxes, only: ["C2"] });
+    expect(r.errors).toHaveLength(1);
+    expect(r.summary.geometry.totalDelta).toBe(40);
+  });
+
+  /** Two nodes each 20px out is worse than one, and the total has to say so. */
+  it("separates two small errors from one large one, which the count cannot", () => {
+    const t = tree("newsletter-signup");
+    const doc = ir("newsletter-signup");
+    const ids = boxesFor(t, doc).slice(0, 2).map((b) => b.id);
+
+    const spread = boxesFor(t, doc).map((b) =>
+      ids.includes(b.id) ? { ...b, h: b.h + 20 } : b,
+    );
+    const concentrated = boxesFor(t, doc).map((b) =>
+      b.id === ids[0] ? { ...b, h: b.h + 200 } : b,
+    );
+
+    const a = conform(t, doc, { theme, boxes: spread, only: ["C2"] });
+    const c = conform(t, doc, { theme, boxes: concentrated, only: ["C2"] });
+
+    expect(a.errors.length).toBeGreaterThan(c.errors.length);
+    expect(a.summary.geometry.totalDelta).toBeLessThan(c.summary.geometry.totalDelta);
+  });
+});

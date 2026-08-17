@@ -17,10 +17,11 @@ import { useState } from "react";
 import { isFixProposal } from "../health/types.js";
 import type { Tab } from "../protocol.js";
 import { send } from "./main.js";
+import { AssetsTab } from "./Assets.js";
+import { PreviewPanel } from "./Preview.js";
 import { Coverage } from "./Coverage.js";
 import { ExportTab } from "./Export.js";
 import { FixQueue } from "./FixQueue.js";
-import { LayoutTab } from "./Layout.js";
 import { Header } from "./Header.js";
 import { Reconciliation } from "./Reconciliation.js";
 import { StatusLine } from "./StatusLine.js";
@@ -61,10 +62,20 @@ export function App({
         </button>
         <button
           className="tab"
-          aria-selected={tab === "layout"}
-          onClick={() => setTab("layout")}
+          aria-selected={tab === "assets"}
+          onClick={() => setTab("assets")}
         >
-          Layout
+          Assets
+          {state.assets.length > 0 ? (
+            <span className="tab-count">{state.assets.length}</span>
+          ) : null}
+        </button>
+        <button
+          className="tab"
+          aria-selected={tab === "preview"}
+          onClick={() => setTab("preview")}
+        >
+          Preview
         </button>
         <button
           className="tab"
@@ -84,8 +95,12 @@ export function App({
       <div className="tab-body">
         {tab === "health" ? (
           <HealthTab state={state} dispatch={dispatch} />
-        ) : tab === "layout" ? (
-          <LayoutTab state={state} />
+        ) : tab === "assets" ? (
+          <AssetsTab state={state} dispatch={dispatch} />
+        ) : tab === "preview" ? (
+          <div className="scroll">
+            <PreviewPanel state={state} />
+          </div>
         ) : (
           <ExportTab state={state} />
         )}
@@ -113,6 +128,7 @@ function HealthTab({
         <Coverage state={state} />
         <StatusLine state={state} />
         <FixQueue state={state} dispatch={dispatch} />
+        <PinnedText state={state} />
         <Reconciliation reconciliation={state.reconciliation} />
       </div>
 
@@ -128,6 +144,42 @@ function HealthTab({
         <Autofix state={state} />
       </div>
     </>
+  );
+}
+
+/**
+ * Text that cannot grow.
+ *
+ * The one thing the Layout tab was carrying that is worth keeping. A text layer
+ * with auto-resize off is a fixed box: the moment `{headline}` is longer than
+ * the string the designer typed, the copy clips. That is invisible in Figma —
+ * the design string always fits — and only shows up once real data arrives.
+ *
+ * One line and one button rather than a tab, because it is a check, not a
+ * workspace. Silent when there is nothing pinned, which on a healthy frame is
+ * most of the time.
+ */
+function PinnedText({ state }: { state: StudioState }): JSX.Element | null {
+  const pinned = state.report?.sizing?.pinnedText ?? [];
+  if (pinned.length === 0) return null;
+
+  return (
+    <div className="section">
+      <div className="row">
+        <span className="grow" style={{ color: "var(--fos-warn)" }}>
+          {pinned.length} {pinned.length === 1 ? "text layer is" : "text layers are"} pinned —
+          longer copy will clip
+        </span>
+        <button
+          className="outline"
+          disabled={state.busy}
+          onClick={() => send({ type: "hug-text" })}
+          title="Sets text auto-resize to height. Width stays. One undo reverts all of it."
+        >
+          Hug {pinned.length}
+        </button>
+      </div>
+    </div>
   );
 }
 

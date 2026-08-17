@@ -40,8 +40,8 @@ export const GRADIENT_NO_FIX: NoFix = {
 
 export const IMAGE_NO_FIX: NoFix = {
   kind: "none",
-  reason: "An image fill is content, not a token. There is nothing to bind.",
-  hint: "Leave it. Images are resolved from data at generation time, not from the theme.",
+  reason: "An image fill is not a token. Mark it as a background if it is a static texture; leave it if it is a content photo.",
+  hint: "Use as background if this is a plate or pattern (like the listing texture). A content photo stays a data binding.",
 };
 
 export const MIXED_NO_FIX: NoFix = {

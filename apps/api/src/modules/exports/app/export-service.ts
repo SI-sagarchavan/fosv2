@@ -57,6 +57,10 @@ export class ExportService {
       ...shot,
       bytes: decodeBase64(shot.bytesBase64, shot.name),
     }));
+    const assetBytes = command.assets.map((asset) => ({
+      ...asset,
+      bytes: decodeBase64(asset.bytesBase64, asset.name),
+    }));
 
     const ir = await this.deps.artifacts.store(projectId, {
       kind: "figma_ir",
@@ -82,7 +86,40 @@ export class ExportService {
       plates.push({ artifactId: stored.id, nodeId: shot.nodeId, name: shot.name, seq });
     }
 
+    const backgroundAssets: Array<{
+      name: string;
+      nodeId: string;
+      targetNodeId: string;
+      role: "background";
+      artifactId: string;
+    }> = [];
+    for (const asset of assetBytes) {
+      const stored = await this.deps.artifacts.store(projectId, {
+        kind: "screenshot",
+        bytes: asset.bytes,
+        mediaType: "image/png",
+        meta: {
+          kind: "background",
+          name: asset.name,
+          nodeId: asset.nodeId,
+          targetNodeId: asset.targetNodeId,
+          // Provenance travels with the bytes. A flattened composite is always
+          // a render, and a render is a lossy stand-in for a source file.
+          ...(asset.source ? { source: asset.source } : {}),
+        },
+        actor,
+      });
+      backgroundAssets.push({
+        name: asset.name,
+        nodeId: asset.nodeId,
+        targetNodeId: asset.targetNodeId,
+        role: "background",
+        artifactId: stored.id,
+      });
+    }
+
     const health = healthOf(command.summary);
+    const summary = { ...command.summary, assetCount: backgroundAssets.length, backgroundAssets };
 
     const result = await this.deps.repo.create(
       {
@@ -94,7 +131,7 @@ export class ExportService {
         rootName: command.page.rootName,
         irArtifactId: ir.id,
         health,
-        summary: command.summary,
+        summary,
         structuralSignature: command.structuralSignature ?? null,
         canonicalSignature: command.canonicalSignature ?? null,
         idempotencyKey,
@@ -116,6 +153,7 @@ export class ExportService {
           rootNodeId: command.page.rootNodeId,
           coveragePercent: health.coveragePercent,
           plates: plates.length,
+          assets: backgroundAssets.length,
           irDigest: ir.digest,
         },
       });
@@ -177,9 +215,16 @@ export class ExportService {
    * project that actually wanted it.
    */
   private async resolveProject(fileKey: string | null): Promise<string> {
+    // A null key almost never means an unsaved file. `figma.fileKey` is gated
+    // behind the private plugin API, so a development plugin — or any plugin on
+    // a non-Organization plan — reads `undefined` no matter how saved the file
+    // is. Telling the designer to save it sends them after the wrong thing.
     if (!fileKey) {
       throw AppError.unprocessable(
-        "this Figma file has no file key — save the file in Figma, then export again",
+        "this export carries no Figma file key, so it has no tenant to land in — " +
+          'the plugin needs "enablePrivatePluginApi" in its manifest and a private ' +
+          "plugin on an Organization plan for figma.fileKey to be readable",
+        { fix: "see packages/surface-canvas/README.md — Claiming a file" },
       );
     }
 

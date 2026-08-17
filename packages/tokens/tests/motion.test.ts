@@ -98,6 +98,18 @@ describe("resolveAsset", () => {
     );
   });
 
+  it("prefers an explicit URL over the CDN convention", () => {
+    expect(
+      resolveAsset("asset.texture.d_listing_pattern", {
+        ...LOCAL_ASSET_CONTEXT,
+        urls: {
+          "texture.d_listing_pattern":
+            "https://www.southernbrave.com/static-assets/images/misc/d-listing-pattern.png",
+        },
+      }),
+    ).toBe("https://www.southernbrave.com/static-assets/images/misc/d-listing-pattern.png");
+  });
+
   it("pluralises the kind segment", () => {
     expect(
       resolveAsset("asset.silhouette.player", { cdnBase: "/public", tenant: "local" }),

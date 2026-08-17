@@ -5,7 +5,7 @@
  *
  * Geometry.relBbox is a photograph of one instance. layout.sizing is the
  * contract that survives `{headline}` and a Repeater. This report is what
- * Studio shows on the Layout tab so a designer can make that contract true
+ * Studio reports in Health so a designer can make that contract true
  * before compile emits `auto` / `full` / a pinned px.
  *
  * Pinned TEXT (autoResize NONE) is the one we can name a consequence for:

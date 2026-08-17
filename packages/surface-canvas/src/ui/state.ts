@@ -12,6 +12,9 @@
  * cannot live in a component that unmounts with it — and keeping them here means
  * the whole interaction is testable without a DOM, same as the messages.
  */
+import type { AssetPlacement, TargetMatch, TargetOption } from "../assets.js";
+import type { AssetBinding } from "../ir/schema.js";
+import type { PreviewSummary } from "../api/types.js";
 import type { LintReport } from "../health/types.js";
 import type { ReconciliationReport } from "../health/reconcile-report.js";
 import type {
@@ -28,6 +31,14 @@ export interface ExportPayload {
   jsonName: string;
   json: string;
   screenshots: Array<{ name: string; nodeId: string; bytes: Uint8Array }>;
+  assets: Array<{
+    name: string;
+    nodeId: string;
+    targetNodeId: string;
+    role: "background";
+    bytes: Uint8Array;
+    source: "original" | "rendered";
+  }>;
   summary: Record<string, unknown>;
 }
 
@@ -64,7 +75,9 @@ export type PanelAction =
   | { type: "open-batch"; batchId: string | null }
   | { type: "pick-candidate"; batchId: string; tokenRef: string }
   | { type: "skip-batch"; batchId: string }
-  | { type: "unskip-batch"; batchId: string };
+  | { type: "unskip-batch"; batchId: string }
+  /** Dismiss the "which element is this?" prompt without placing the image. */
+  | { type: "dismiss-unmapped" };
 
 export type PanelInput = PluginMessage | PanelAction;
 
@@ -104,6 +117,28 @@ export interface StudioState {
   selectionName: string | null;
   /** Set only when a single CONTAINER is selected — i.e. something checkable. */
   selectionId: string | null;
+  selectionNodeId: string | null;
+  selectionHasImage: boolean;
+  selectionParentId: string | null;
+  selectionParentName: string | null;
+  assets: AssetBinding[];
+  /**
+   * Where each mark lands inside the node it paints, keyed by `sourceId`.
+   *
+   * Computed in the sandbox by the same function the compiler uses, so the
+   * panel's "does not cover its target" warning and the tree the compiler emits
+   * are two readings of one number rather than two independent guesses.
+   */
+  placements: Record<string, AssetPlacement>;
+  /**
+   * The frames each mark could be bound to, keyed by `sourceId`.
+   *
+   * Replaces reading the canvas selection to build a target offer. The old way
+   * meant the offer appeared and vanished as the designer clicked around, and
+   * clicking the marked image itself — the obvious move while deciding where it
+   * belongs — removed the offer entirely.
+   */
+  targets: Record<string, TargetOption[]>;
   exportProgress: string;
   exportResult: ExportPayload | null;
   /** How the last walk was delivered. Null until the first export-done. */
@@ -120,6 +155,36 @@ export interface StudioState {
   skipped: string[];
   /** Binds that landed this session, each anchored where its row was. */
   resolved: ResolvedRow[];
+
+  /**
+   * A dropped image the matcher could not place, waiting on a decision.
+   *
+   * Held rather than discarded: the bytes are already in the document, so the
+   * only thing missing is the target, and throwing the upload away would make
+   * the designer drag the file in again to answer one question.
+   */
+  unmapped: {
+    fileName: string;
+    imageHash: string;
+    width: number;
+    height: number;
+    candidates: TargetMatch[];
+  } | null;
+
+  /**
+   * The last compile preview: real pixels from the real compiler.
+   *
+   * Held rather than re-fetched on every render because it costs a walk, an
+   * asset export and a round trip. It is deliberately allowed to go stale — a
+   * preview labelled with when it was taken is more useful than one that
+   * silently re-runs while you are reading it.
+   */
+  previewHtml: string | null;
+  /** The width the page was laid out at, so the iframe can scale it honestly. */
+  previewWidth: number;
+  previewSummary: PreviewSummary | null;
+  previewError: string | null;
+  previewProgress: string;
 }
 
 export const initialState: StudioState = {
@@ -143,6 +208,13 @@ export const initialState: StudioState = {
   selectionCount: 0,
   selectionName: null,
   selectionId: null,
+  selectionNodeId: null,
+  selectionHasImage: false,
+  selectionParentId: null,
+  selectionParentName: null,
+  assets: [],
+  placements: {},
+  targets: {},
   exportProgress: "",
   exportResult: null,
   exportPublish: null,
@@ -152,6 +224,12 @@ export const initialState: StudioState = {
   picks: {},
   skipped: [],
   resolved: [],
+  unmapped: null,
+  previewHtml: null,
+  previewWidth: 0,
+  previewSummary: null,
+  previewError: null,
+  previewProgress: "",
 };
 
 export function reduce(state: StudioState, message: PanelInput): StudioState {
@@ -177,6 +255,34 @@ export function reduce(state: StudioState, message: PanelInput): StudioState {
 
     case "unskip-batch":
       return { ...state, skipped: state.skipped.filter((id) => id !== message.batchId) };
+
+    case "asset-unmapped":
+      return {
+        ...state,
+        unmapped: {
+          fileName: message.fileName,
+          imageHash: message.imageHash,
+          width: message.width,
+          height: message.height,
+          candidates: message.candidates,
+        },
+      };
+
+    case "dismiss-unmapped":
+      return { ...state, unmapped: null };
+
+    case "preview-progress":
+      return { ...state, previewProgress: message.message };
+
+    case "preview-done":
+      return {
+        ...state,
+        previewProgress: "",
+        previewHtml: message.html,
+        previewWidth: message.width,
+        previewSummary: message.summary,
+        previewError: message.error,
+      };
 
     case "boot":
       return {
@@ -260,6 +366,24 @@ export function reduce(state: StudioState, message: PanelInput): StudioState {
         selectionCount: message.count,
         selectionName: message.name,
         selectionId: message.id,
+        selectionNodeId: message.nodeId,
+        selectionHasImage: message.hasImage,
+        selectionParentId: message.parentId,
+        selectionParentName: message.parentName,
+      };
+
+    case "assets":
+      return {
+        ...state,
+        assets: message.bindings,
+        placements: message.placements,
+        targets: message.targets,
+        // An asset landing answers the outstanding question. Leaving the prompt
+        // up would ask again about an image that is now placed.
+        unmapped:
+          state.unmapped && message.bindings.some((b) => b.imageHash === state.unmapped!.imageHash)
+            ? null
+            : state.unmapped,
       };
 
     case "export-progress":
@@ -273,6 +397,7 @@ export function reduce(state: StudioState, message: PanelInput): StudioState {
           jsonName: message.jsonName,
           json: message.json,
           screenshots: message.screenshots,
+          assets: message.assets,
           summary: message.summary,
         },
         exportPublish: message.publish,

@@ -31,7 +31,7 @@ function outcome(over: {
     errors: Array.from({ length: over.errors ?? 0 }, (_, i) => finding("error", i)),
     warnings: Array.from({ length: over.warnings ?? 0 }, (_, i) => finding("warning", i)),
     coverage: { paints: 10, direct: 10, absorbed: 0, repeated: 0, missing: 0, ...over.coverage },
-    geometry: { compared: 0, skipped: 0, worstDelta: 0 },
+    geometry: { compared: 0, skipped: 0, exempt: 0, worstDelta: 0, totalDelta: 0 },
     nodeCount: 12,
     waived: 0,
   };

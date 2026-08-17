@@ -2,7 +2,7 @@
   "name": "@fanos/surface-studio",
   "version": "0.0.0",
   "private": true,
-  "description": "Surface Studio — the page board. Listens for sends from the Figma plugin.",
+  "description": "Surface Studio \u2014 the page board. Listens for sends from the Figma plugin.",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -14,6 +14,11 @@
   },
   "dependencies": {
     "@electric-sql/react": "^1.0.55",
+    "@fanos/compile": "workspace:*",
+    "@fanos/dsl": "workspace:*",
+    "@fanos/renderer": "workspace:*",
+    "@fanos/surface-canvas": "workspace:*",
+    "@fanos/tokens": "workspace:*",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "zod": "^3.25.76"

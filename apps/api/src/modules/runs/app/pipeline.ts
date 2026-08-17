@@ -15,9 +15,12 @@ import { canonicalJson } from "../../../kernel/hash.js";
 import type { ConformOutcome } from "../../fidelity/domain/gate.js";
 import type {
   ArtifactAccess,
+  AssetPublisher,
   CompileOutcome,
+  GeometryMeasurer,
   ParsedIr,
   ParsedTheme,
+  PublishedAsset,
   Toolchain,
 } from "../domain/ports.js";
 import type { PipelineInput, RunKind } from "../domain/run.js";
@@ -55,6 +58,9 @@ export interface StepContext {
   actor: string;
   artifacts: ArtifactAccess;
   toolchain: Toolchain;
+  measurer: GeometryMeasurer;
+  /** Turns a marked background into a URL the renderer can fetch. */
+  assets: AssetPublisher;
   versions: VersionWriter;
   gate: GateWriter;
   scratch: Scratch;
@@ -66,6 +72,18 @@ export interface Scratch {
   surfaceSet?: unknown;
   compiled?: CompileOutcome;
   dslArtifactId?: string;
+  /** The merged surface set the tree's `surface.*` refs resolve against. */
+  surfaceSetArtifactId?: string;
+  /** The same set by value — the measurer renders with it, not with its id. */
+  surfaces?: unknown;
+  /**
+   * The theme as STORED, not as parsed. The renderer CLI loads a theme file and
+   * normalizes it itself; handing it an already-normalized handle fails schema
+   * validation with an unhelpful "Required".
+   */
+  themeJson?: unknown;
+  /** The IR node the root came from. C2 compares boxes frame-locally. */
+  rootSrc?: string;
   surfaceVersionId?: string;
   surfaceVersionNumber?: number;
 }
@@ -95,6 +113,8 @@ const loadInputs: PipelineStep = {
 
     ctx.scratch.ir = ctx.toolchain.parseIr(irJson);
     ctx.scratch.theme = ctx.toolchain.parseTheme(themeJson);
+    ctx.scratch.rootSrc = ctx.scratch.ir.rootNodeId;
+    ctx.scratch.themeJson = themeJson;
 
     if (ctx.input.surfacesArtifact) {
       ctx.scratch.surfaceSet = await ctx.artifacts.readJson(
@@ -140,6 +160,55 @@ const compile: PipelineStep = {
     });
     ctx.scratch.dslArtifactId = stored.id;
 
+    /**
+     * Resolve every marked background to a real URL before the surface set is
+     * written.
+     *
+     * This is the step that used to not exist. The compiler emits
+     * `asset.texture.x` and the run is the only place that knows which artifact
+     * holds those bytes — so with no resolution here, the pipeline wrote one
+     * hardcoded tenant URL against every asset in every project and the
+     * renderer faithfully painted it.
+     *
+     * `input.assets` is the join, carried by value on the run. An asset with no
+     * artifact behind it stays UNRESOLVED and is reported; nothing substitutes
+     * a stand-in, because a background that renders as the wrong picture is
+     * worse than one that renders as nothing.
+     */
+    const required = compiled.requiredAssets ?? [];
+    // `?? []` for runs queued before this field existed. Their stored input has
+    // no `assets` key, and a re-run of one should report every ref unresolved
+    // rather than throw.
+    const byName = new Map((ctx.input.assets ?? []).map((a) => [a.name, a.artifactId]));
+    const { published, unresolved } = await ctx.assets.publish(
+      ctx.projectId,
+      required.map((asset) => {
+        const artifactId = byName.get(asset.name);
+        return { name: asset.name, ref: asset.ref, ...(artifactId ? { artifactId } : {}) };
+      }),
+    );
+
+    // A tree without its surfaces is not renderable. The compiler folds a
+    // plate's fills into a surface ref rather than inlining them, so the refs
+    // it emits must resolve somewhere or every background silently disappears
+    // and the page renders as floating text. Persisting the merged set here is
+    // what makes the run's output self-contained.
+    const surfaces = mergeSurfaces(surfaceSet, compiled.requiredSurfaces, published);
+    ctx.scratch.surfaces = surfaces;
+    const surfacesStored = await ctx.artifacts.store(ctx.projectId, {
+      kind: "surface_set",
+      bytes: new TextEncoder().encode(canonicalJson(surfaces)),
+      meta: {
+        authored: Object.keys(surfaces.surfaces).length - compiled.requiredSurfaces.length,
+        derived: compiled.requiredSurfaces.length,
+        assets: published.length,
+        unresolvedAssets: unresolved.length,
+        surfaceKey: ctx.input.surfaceKey,
+      },
+      actor: ctx.actor,
+    });
+    ctx.scratch.surfaceSetArtifactId = surfacesStored.id;
+
     return {
       outputArtifactId: stored.id,
       detail: {
@@ -149,11 +218,90 @@ const compile: PipelineStep = {
         // even when the gate passes.
         notes: compiled.notes.slice(0, NOTE_LIMIT),
         truncatedNotes: Math.max(0, compiled.notes.length - NOTE_LIMIT),
-        requiredSurfaces: compiled.requiredSurfaces,
+        // Names only in the trace — the specs can be large, and they are in the
+        // artifact for anything that needs to render them.
+        requiredSurfaces: compiled.requiredSurfaces.map((s) => s.name),
+        requiredAssets: required.map((a) => a.ref),
+        /**
+         * Named, not counted. An asset the run could not resolve renders as
+         * nothing, and "3 backgrounds missing" sends someone hunting through a
+         * tree — the refs say which marks to go and look at.
+         */
+        unresolvedAssets: unresolved,
+        surfaceSetArtifact: surfacesStored.id,
+        // Pixel debt, on every run and beside the fidelity numbers rather than
+        // behind them. A tree can match its frame exactly and still be pinned
+        // solid — correct at one width, wrong at every other — so drift alone
+        // is a number that can be bought by making the tree less responsive.
+        metrics: compiled.metrics,
       },
     };
   },
 };
+
+/**
+ * The width the tree was laid out at, from its root node.
+ *
+ * The compiler writes the root's width as a raw pixel value because the root
+ * defines the frame — there is nothing outside it to hug or fill against — so
+ * this is exactly the width the IR's boxes were measured at.
+ */
+function rootWidthOf(tree: unknown): number | null {
+  const nodes = (tree as { nodes?: unknown }).nodes;
+  if (!Array.isArray(nodes)) return null;
+
+  const root = nodes.find((n) => (n as { parent?: unknown }).parent === null);
+  const w = (root as { props?: { size?: { w?: unknown } } } | undefined)?.props?.size?.w;
+
+  if (typeof w === "number" && w > 0) return Math.round(w);
+  if (w && typeof w === "object" && "raw" in w) {
+    const raw = Number((w as { raw: unknown }).raw);
+    if (Number.isFinite(raw) && raw > 0) return Math.round(raw);
+  }
+  return null;
+}
+
+/**
+ * The theme's authored surfaces, with the compiler's derived ones layered on.
+ *
+ * Derived wins on a name clash: it was produced from this frame, and a stale
+ * authored entry of the same name would render the wrong plate.
+ *
+ * `assets` maps each `asset.*` ref to the URL the publisher resolved. A ref
+ * with no entry is simply absent, and `emitCss` renders that layer as `none` —
+ * which is the correct outcome for a background nobody can find. It used to
+ * fall back to a hardcoded tenant URL, so every unresolved asset on every
+ * project rendered as the same borrowed texture.
+ *
+ * The RESOLVED url wins over an authored one. The authored map is tenant
+ * configuration; the published one was produced from the bytes this very run
+ * ingested, and when they disagree the run's own bytes are the truth.
+ */
+function mergeSurfaces(
+  base: unknown,
+  derived: readonly { name: string; spec: unknown }[],
+  published: readonly PublishedAsset[] = [],
+): { assets: Record<string, unknown>; surfaces: Record<string, unknown> } {
+  const source = (base ?? {}) as {
+    assets?: Record<string, unknown>;
+    surfaces?: Record<string, unknown>;
+  };
+
+  const mergedAssets: Record<string, unknown> = { ...(source.assets ?? {}) };
+  for (const asset of published) {
+    // Bare key the token registry looks up: `asset.texture.x` -> `texture.x`.
+    const leaf = asset.ref.startsWith("asset.") ? asset.ref.slice("asset.".length) : asset.ref;
+    mergedAssets[leaf] = asset.url;
+  }
+
+  return {
+    assets: mergedAssets,
+    surfaces: {
+      ...(source.surfaces ?? {}),
+      ...Object.fromEntries(derived.map((s) => [s.name, s.spec])),
+    },
+  };
+}
 
 const NOTE_LIMIT = 50;
 
@@ -198,15 +346,50 @@ const conform: PipelineStep = {
     if (!ir || !theme || !compiled) throw AppError.internal("conform ran before compile");
     if (!surfaceVersionId) throw AppError.internal("conform ran before version");
 
-    const outcome = ctx.toolchain.conform({ tree: compiled.tree, ir, theme });
+    /**
+     * Measure before judging.
+     *
+     * C2 compares every node's rendered box against the IR, and it is the only
+     * check that can see a layout error. Coverage checks ask "is this node
+     * represented"; a 552x552 grey square where a 552x1 rule belongs is
+     * represented, correctly themed, and completely wrong. Without boxes this
+     * gate passed that page for weeks.
+     */
+    const width = rootWidthOf(compiled.tree);
+    const measured = await ctx.measurer.measure({
+      tree: compiled.tree,
+      theme: ctx.scratch.themeJson,
+      ...(ctx.scratch.surfaces !== undefined ? { surfaces: ctx.scratch.surfaces } : {}),
+      // The frame's own width. The CLI otherwise defaults to a 534px card, and
+      // every box in a 1170px page would then disagree with the IR by design.
+      ...(width !== null ? { width } : {}),
+    });
+
+    const outcome = ctx.toolchain.conform({
+      tree: compiled.tree,
+      ir,
+      theme,
+      ...(measured.measured ? { boxes: measured.boxes } : {}),
+      rootSrc: ctx.scratch.rootSrc ?? "",
+    });
 
     const stored = await ctx.artifacts.store(ctx.projectId, {
       kind: "conform_report",
-      bytes: new TextEncoder().encode(canonicalJson(outcome)),
+      bytes: new TextEncoder().encode(
+        canonicalJson({
+          ...outcome,
+          // Travels with the report: a reader must be able to tell "no geometry
+          // errors" from "no geometry checked".
+          measurement: measured.measured
+            ? { measured: true, boxes: measured.boxes.length }
+            : { measured: false, reason: measured.reason },
+        }),
+      ),
       meta: {
         ok: outcome.ok,
         errors: outcome.errors.length,
         warnings: outcome.warnings.length,
+        geometryMeasured: measured.measured,
       },
       actor: ctx.actor,
     });
@@ -226,7 +409,13 @@ const conform: PipelineStep = {
         warnings: outcome.warnings.length,
         waived: outcome.waived,
         coverage: outcome.coverage,
-        geometry: outcome.geometry,
+        // `measured` is deliberately adjacent to the numbers it qualifies.
+        // `compared: 0` on its own reads as "nothing wrong".
+        geometry: {
+          ...outcome.geometry,
+          measured: measured.measured,
+          ...(measured.measured ? {} : { reason: measured.reason }),
+        },
       },
     };
   },

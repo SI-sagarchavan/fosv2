@@ -198,9 +198,12 @@ function layerImage(
       return formatGradient(gradient, layer.opacity / 100);
     }
     case "image": {
-      const parsed = parseRef(layer.ref);
       let url: string | undefined;
-      if (parsed && assets) {
+      if (/^https?:\/\//.test(layer.ref)) {
+        url = layer.ref;
+      }
+      const parsed = url ? undefined : parseRef(layer.ref);
+      if (!url && parsed && assets) {
         try {
           url = resolveAsset(layer.ref, assets);
         } catch {
@@ -236,6 +239,20 @@ function layerSize(layer: SurfaceLayer): string {
 function layerRepeat(layer: SurfaceLayer): string {
   if (layer.type !== "image") return "no-repeat";
   return layer.fit === "repeat" ? "repeat" : "no-repeat";
+}
+
+/**
+ * Where the layer's origin sits.
+ *
+ * `center` for a layer that fills the box, which is what cover and contain
+ * mean. A TILE is different: a repeating pattern is laid out from an origin,
+ * and centring one shifts the whole grid by half a tile so the seams land in
+ * different places than the designer drew them. Figma tiles from the top-left,
+ * and so does `0 0`.
+ */
+function layerPosition(layer: SurfaceLayer): string {
+  if (layer.type === "image" && layer.fit === "repeat") return "0 0";
+  return "center";
 }
 
 function borderShorthand(border: SurfaceBorder): string {
@@ -277,7 +294,7 @@ function emitSurface(
     const sizes = layers.map(layerSize);
     if (sizes.some((s) => s !== "auto")) {
       body.push(`background-size: ${sizes.join(", ")};`);
-      body.push(`background-position: ${layers.map(() => "center").join(", ")};`);
+      body.push(`background-position: ${layers.map(layerPosition).join(", ")};`);
     }
     const repeats = layers.map(layerRepeat);
     if (repeats.some((r) => r !== "no-repeat") || sizes.some((s) => s !== "auto")) {

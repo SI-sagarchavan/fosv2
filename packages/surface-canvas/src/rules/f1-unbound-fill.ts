@@ -20,7 +20,7 @@ export const unboundFill = paintRule({
       case "gradient":
         return "A hardcoded gradient can't be re-themed or re-used. It needs a surface recipe authored before anything can bind to it.";
       case "image":
-        return "An image fill is content, not a token — it stays outside the theme and outside the score you can move.";
+        return "An image fill is not a token — mark it as a background if it is a static texture, or leave it if it is a content photo.";
       case "mixed":
         return "More than one fill on one layer reads as no value at all, so nothing downstream can resolve this colour.";
       default:

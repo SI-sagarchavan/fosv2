@@ -19,6 +19,10 @@ export function ExportTab({ state }: { state: StudioState }): JSX.Element {
     return [
       { name: result.jsonName, data: encodeUtf8(result.json) },
       ...result.screenshots.map((shot) => ({ name: shot.name, data: toBytes(shot.bytes) })),
+      ...result.assets.map((asset) => ({
+        name: `assets/${asset.name}-${asset.nodeId.replace(/:/g, "-")}.png`,
+        data: toBytes(asset.bytes),
+      })),
     ];
   }, [result]);
 
@@ -36,8 +40,11 @@ export function ExportTab({ state }: { state: StudioState }): JSX.Element {
       <div className="section">
         <div style={{ fontWeight: 600 }}>Send “{frame}”</div>
         <div className="muted" style={{ margin: "4px 0 10px" }}>
-          Surface Studio gets the IR and section PNGs. The ZIP is for testing.
+          Surface Studio gets the IR, section PNGs, and the images marked on the
+          Assets tab.
         </div>
+
+        <BackgroundAssets state={state} />
 
         <button
           className="primary"
@@ -82,6 +89,12 @@ export function ExportTab({ state }: { state: StudioState }): JSX.Element {
                 {num("coveragePercent")}% bound
                 <span className="muted"> · </span>
                 {num("screenshotCount")} {num("screenshotCount") === 1 ? "PNG" : "PNGs"}
+                {num("assetCount") > 0 ? (
+                  <>
+                    <span className="muted"> · </span>
+                    {num("assetCount")} {num("assetCount") === 1 ? "asset" : "assets"}
+                  </>
+                ) : null}
               </span>
               <span className="muted">{(num("durationMs") / 1000).toFixed(1)}s</span>
             </div>
@@ -146,6 +159,35 @@ function PublishLine({ publish }: { publish: ExportPublish }): JSX.Element {
   return (
     <div className="muted" style={{ marginTop: 10 }}>
       Local only. Nothing was posted.
+    </div>
+  );
+}
+
+/**
+ * What the send will carry, not a second place to manage it.
+ *
+ * Assets are added and named on the Assets tab. This is the pre-flight line:
+ * how many images are going, and whether any of them will surprise you.
+ */
+function BackgroundAssets({ state }: { state: StudioState }): JSX.Element | null {
+  const assets = state.assets;
+  if (assets.length === 0) return null;
+
+  const placed = assets.filter((a) => state.placements[a.imageHash]?.covers === false);
+
+  return (
+    <div style={{ margin: "0 0 14px" }}>
+      <div className="truncate">
+        {assets.length} background {assets.length === 1 ? "image" : "images"}
+        <span className="muted"> · {assets.map((a) => a.name).join(", ")}</span>
+      </div>
+      {placed.length > 0 ? (
+        <div className="muted" style={{ marginTop: 2 }}>
+          {placed.length} {placed.length === 1 ? "does" : "do"} not cover{" "}
+          {placed.length === 1 ? "its" : "their"} target — {placed.length === 1 ? "it" : "they"} will
+          be placed at a position, not full-bleed.
+        </div>
+      ) : null}
     </div>
   );
 }

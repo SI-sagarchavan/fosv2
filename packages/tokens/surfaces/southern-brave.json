@@ -7,7 +7,9 @@
     "decor.wave": "/assets/decors/wave.png",
     "logo.birmingham_phoenix": "/assets/logos/birmingham_phoenix.png",
     "logo.southern_brave": "/assets/logos/southern_brave.png",
-    "texture.tickets_plate": "/assets/textures/tickets_plate.png"
+    "texture.tickets_plate": "/assets/textures/tickets_plate.png",
+    "texture.d_listing_pattern": "https://www.southernbrave.com/static-assets/images/misc/d-listing-pattern.png",
+    "texture.listing_pattern": "https://www.southernbrave.com/static-assets/images/misc/d-listing-pattern.png"
   },
   "surfaces": {
     "card_player": {

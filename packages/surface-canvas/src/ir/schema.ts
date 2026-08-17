@@ -12,6 +12,39 @@ import { z } from "zod";
  * `inset`) so F6 can value-match a shadow token. 1.1.0 documents still parse;
  * those fields are simply absent and F6 cannot propose.
  *
+ * 1.3.0 — adds `assets` on the document and `background` on a node. A designer
+ * marks a static image in Surface Canvas and binds it to the UI element it
+ * should paint. Older documents still parse: the list is empty and no node
+ * carries a background.
+ *
+ * 1.4.0 — adds `fit` to a binding. Figma's `scaleMode` was being read at compile
+ * time and flattened to `cover` for everything that was not `FIT`, which turned
+ * a tiled pattern into one stretched copy of itself. The designer's choice now
+ * travels with the mark instead of being re-guessed downstream. Absent on 1.3.0
+ * documents, where the compiler falls back to the source node's `image.fit`.
+ *
+ * 1.5.0 — a binding took `sources`, a LIST of the Figma layers making up one
+ * background. Superseded by 1.6.0; see below.
+ *
+ * 1.6.0 — an asset is an UPLOADED IMAGE, not a set of marked layers.
+ *
+ * Marking layers was the wrong shape for the problem. It asked the designer to
+ * re-describe, inside a panel, a composition Figma already understood — and it
+ * asked the plugin to re-flatten what Figma's own exporter flattens correctly,
+ * with export settings, scale and effects honoured. A designer exports the
+ * region the normal way and drops the file in; the only thing left to work out
+ * is which region it came from, and that is a matching problem rather than an
+ * authoring one.
+ *
+ * So a binding now carries `imageHash` — the bytes live in the Figma document
+ * via `figma.createImage`, so they survive reopening the file — plus the
+ * filename and natural size that the mapping was inferred from.
+ *
+ * Bindings in an older shape are DROPPED on parse rather than failing the
+ * document: they name Figma layers, and there are no uploaded bytes behind
+ * them to recover. A corpus row from 1.3.0–1.5.0 still parses, with an empty
+ * asset list.
+ *
  * A consumer must know which of these a corpus row was produced with, so the
  * version is part of every document.
  *
@@ -19,8 +52,121 @@ import { z } from "zod";
  * in 1.0.0. Should that ever change, it is a version bump, not a silent one —
  * a corpus row's node set must be inferable from its `irVersion` alone.
  */
-export const IR_VERSION = "1.2.0" as const;
-export const IR_VERSIONS = ["1.1.0", "1.2.0"] as const;
+export const IR_VERSION = "1.6.0" as const;
+export const IR_VERSIONS = ["1.1.0", "1.2.0", "1.3.0", "1.4.0", "1.5.0", "1.6.0"] as const;
+
+/** pluginData key on the export root. The list of bindings lives on the frame. */
+export const ASSET_PLUGIN_KEY = "fanos/assets";
+
+/**
+ * How the bitmap fills the box it paints.
+ *
+ * Named after the CSS/DSL vocabulary rather than Figma's `scaleMode`, because
+ * this is what the compiler emits and what the renderer honours. The mapping
+ * from Figma happens once, at the point of marking — see {@link fitFromScaleMode}.
+ */
+export const assetFitSchema = z.enum(["cover", "contain", "repeat", "none"]);
+export type AssetFit = z.infer<typeof assetFitSchema>;
+
+/**
+ * Figma's `scaleMode` -> our fit.
+ *
+ * `CROP` collapses to `cover` deliberately: the crop rectangle the designer
+ * dragged is not in the IR, so `cover` is the closest honest approximation and
+ * pretending otherwise would invent a box. `TILE` is the one that used to be
+ * lost — it is a repeating pattern, and rendering it as `cover` stretches a
+ * single copy across the whole element.
+ */
+export function fitFromScaleMode(scaleMode: string | undefined): AssetFit {
+  switch (scaleMode) {
+    case "FIT":
+      return "contain";
+    case "TILE":
+      return "repeat";
+    case "CROP":
+    case "FILL":
+      return "cover";
+    default:
+      return "cover";
+  }
+}
+
+/** How the target was decided. */
+export const assetMappingSchema = z.enum(["auto", "manual"]);
+export type AssetMapping = z.infer<typeof assetMappingSchema>;
+
+/**
+ * An image the designer exported from Figma and dropped into the panel, bound
+ * to the element it should paint.
+ *
+ * Distinct from a content Image (`src` is a CMS binding). This is a file that
+ * ships with the template. The compiler turns `name` into `asset.texture.<name>`.
+ *
+ * The bytes are NOT in here. They live in the Figma document, registered with
+ * `figma.createImage`, and `imageHash` is how to get them back. That is what
+ * lets a 3MB header survive a reload: pluginData holds a hash, not a payload,
+ * and there is no size ceiling to run into.
+ */
+export const assetBindingSchema = z.object({
+  role: z.literal("background"),
+  name: z.string().min(1),
+  /** Figma image store handle. `figma.getImageByHash(hash).getBytesAsync()`. */
+  imageHash: z.string().min(1),
+  /** What the designer dropped. Kept because it is what the mapping read. */
+  fileName: z.string(),
+  /** Natural pixel size of the upload — not the target's box. */
+  width: z.number().int().positive(),
+  height: z.number().int().positive(),
+  targetId: z.string().min(1),
+  targetName: z.string(),
+  fit: assetFitSchema.optional(),
+  /**
+   * Whether the target was inferred or chosen.
+   *
+   * Recorded because an auto-mapping is a guess with a confidence, and a
+   * designer who later finds the wrong region painted needs to know whether
+   * they picked it or the matcher did.
+   */
+  mapping: assetMappingSchema.default("auto"),
+});
+export type AssetBinding = z.infer<typeof assetBindingSchema>;
+
+/**
+ * A valid asset name: lowercase, digits, underscores.
+ *
+ * The name becomes half of a token ref, so it is design-system identity rather
+ * than a label — `asset.texture.Top Header!` is not addressable. Enforced here
+ * so the plugin, the compiler and the token registry cannot disagree about what
+ * is nameable.
+ */
+export const ASSET_NAME_RE = /^[a-z0-9]+(?:_[a-z0-9]+)*$/;
+
+export function isValidAssetName(name: string): boolean {
+  return ASSET_NAME_RE.test(name);
+}
+
+/**
+ * A binding field that drops anything in an older shape instead of failing.
+ *
+ * `assets` is not the only place a stale binding hides: 1.3.0-1.5.0 documents
+ * also stamped one onto every target node, and a strict field there rejects the
+ * whole document — so a corpus row saved before the redesign could not be read
+ * at all. The list and the stamps have to be equally forgiving, or the
+ * tolerance is decorative.
+ */
+const tolerantBinding = z
+  .unknown()
+  .optional()
+  .transform((value) => {
+    if (value === undefined) return undefined;
+    const parsed = assetBindingSchema.safeParse(value);
+    return parsed.success ? parsed.data : undefined;
+  });
+
+/** `tickets_plate` -> `asset.texture.tickets_plate`. */
+export function assetRef(name: string): string {
+  return `asset.texture.${name}`;
+}
 
 export const nodeTypeSchema = z.enum([
   "FRAME",
@@ -103,6 +249,21 @@ export type Layout = z.infer<typeof layoutSchema>;
 export const geometrySchema = z.object({
   bbox: rectSchema,
   relBbox: rectSchema,
+  /**
+   * Degrees counter-clockwise, as Figma reports it. 0 for an upright node.
+   *
+   * This is the fact that reconciles the two boxes. `bbox` comes from
+   * `absoluteBoundingBox` — the axis-aligned extent AFTER rotation — while
+   * `relBbox` carries `node.width/height`, the node's own dimensions BEFORE
+   * it. For a quarter-turned node the two are transposed, and without this
+   * field nothing downstream can tell that from a genuinely tall, narrow box.
+   * A 552x1 rule rotated flat then compiles as a 552x552 square.
+   *
+   * Defaulted rather than required so IR captured before this existed still
+   * parses; those documents simply assert no rotation, which is what they
+   * always meant.
+   */
+  rotation: z.number().default(0),
   aspect: z.number(),
   aspectBucket: aspectBucketSchema,
 });
@@ -187,6 +348,14 @@ export interface FrameIRNode {
 
   text?: TextInfo;
   image?: ImageInfo;
+  /**
+   * The marked background that should paint this node.
+   *
+   * Present on the TARGET. Every layer the asset is made of carries the same
+   * binding on {@link FrameIRNode.asset}. The document-level `assets` list is
+   * the source of truth; these stamps are so a walker does not have to join.
+   */
+  background?: AssetBinding;
 
   /** Derived during traversal — never read back from Figma. */
   structuralSignature: string;
@@ -202,7 +371,15 @@ export interface FrameIRNode {
   children: FrameIRNode[];
 }
 
-export const frameIRNodeSchema: z.ZodType<FrameIRNode> = z.lazy(() =>
+/**
+ * Input is `unknown`, not `FrameIRNode`.
+ *
+ * `geometry.rotation` carries a default, so what this accepts is no longer the
+ * same shape it produces — a document written before that field existed is
+ * valid input and gains `rotation: 0` on the way out. The parse input is
+ * untrusted JSON in every real call site anyway.
+ */
+export const frameIRNodeSchema: z.ZodType<FrameIRNode, z.ZodTypeDef, unknown> = z.lazy(() =>
   z.object({
     id: z.string(),
     name: z.string(),
@@ -221,6 +398,7 @@ export const frameIRNodeSchema: z.ZodType<FrameIRNode> = z.lazy(() =>
 
     text: textSchema.optional(),
     image: imageSchema.optional(),
+    background: tolerantBinding,
 
     structuralSignature: z.string(),
     canonicalSignature: z.string(),
@@ -243,6 +421,25 @@ export const frameIRDocumentSchema = z.object({
   irVersion: z.enum(IR_VERSIONS),
   breakpointHint: z.number(),
   root: frameIRNodeSchema,
+  /**
+   * Uploaded background assets for this frame. Empty on documents from before
+   * 1.3.0, and on frames where nothing has been dropped in.
+   *
+   * Entries that do not match the current shape are DROPPED rather than
+   * failing the document. 1.3.0-1.5.0 bindings name Figma layers and have no
+   * uploaded bytes behind them, so there is nothing to migrate — and a corpus
+   * row from before the redesign must still parse, or every downstream tool
+   * loses its history to a feature change.
+   */
+  assets: z
+    .array(z.unknown())
+    .default([])
+    .transform((items) =>
+      items.flatMap((item) => {
+        const parsed = assetBindingSchema.safeParse(item);
+        return parsed.success ? [parsed.data] : [];
+      }),
+    ),
 });
 export type FrameIRDocument = z.infer<typeof frameIRDocumentSchema>;
 

@@ -26,7 +26,12 @@ export function formatReport(result: ConformResult, label = "tree"): string {
   );
   if (g.compared > 0) {
     lines.push(
-      `  geometry ${g.compared} compared, ${g.skipped} skipped, worst delta ${g.worstDelta.toFixed(2)}px`,
+      `  geometry ${g.compared} compared, ${g.skipped} skipped, ` +
+        `${g.exempt} exempt (icon library / API art)`,
+      // Magnitude first: the count treats a 262px collapse and a 2px rounding
+      // difference alike, so it is the number that does NOT move when this
+      // gets better.
+      `  drift    ${g.totalDelta}px total, worst ${g.worstDelta.toFixed(2)}px`,
     );
   }
   if (result.summary.waived > 0) {

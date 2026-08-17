@@ -5,6 +5,8 @@
  * function so the Health tab can share the traversal. It is still the thing that
  * feeds the corpus; Health is what makes the corpus worth having.
  */
+import { applyAssetBindings, parseBindings } from "./assets.js";
+import { ASSET_PLUGIN_KEY, type AssetBinding } from "./ir/schema";
 import { safeParseFrameIRDocument, type FrameIRDocument } from "./ir/schema";
 import { coverageFromSlots } from "./health/coverage.js";
 import { enumerateSlots } from "./health/slots.js";
@@ -25,9 +27,29 @@ const EXPORT_SCALE = 2;
 
 export type Screenshot = { name: string; nodeId: string; bytes: Uint8Array };
 
+export type ExportedAsset = {
+  name: string;
+  nodeId: string;
+  targetNodeId: string;
+  role: "background";
+  bytes: Uint8Array;
+  /**
+   * `original` means these are the bytes the designer placed, straight out of
+   * Figma's image store. `rendered` means the node was re-exported as a PNG
+   * because the original was unreachable, which bakes in opacity, effects and
+   * the node's on-canvas scale.
+   *
+   * Recorded because the two are not interchangeable downstream: an original is
+   * what you want in object storage, and a render is a lossy stand-in worth
+   * saying so about rather than shipping silently.
+   */
+  source: "original" | "rendered";
+};
+
 export type ExportSummary = {
   nodeCount: number;
   screenshotCount: number;
+  assetCount: number;
   skippedInvisible: number;
   extractionErrors: number;
   /**
@@ -52,6 +74,7 @@ export interface ExportResult {
   jsonName: string;
   json: string;
   screenshots: Screenshot[];
+  assets: ExportedAsset[];
   summary: ExportSummary;
 }
 
@@ -64,17 +87,23 @@ export async function runExport(
 
   onProgress("Walking node tree…", 0);
   const { document, walk } = await traverseToDocument(rootNode, caches, onProgress);
+  const bindings = parseBindings(rootNode.getPluginData(ASSET_PLUGIN_KEY));
+  const stamped = applyAssetBindings(document, bindings);
 
   onProgress("Validating IR…", walk.nodeCount);
-  const parsed = safeParseFrameIRDocument(document);
+  const parsed = safeParseFrameIRDocument(stamped);
 
   onProgress("Exporting screenshots…", walk.nodeCount);
   const shots = await exportSectionCandidates(rootNode, onProgress);
+
+  onProgress("Exporting background assets…", walk.nodeCount);
+  const assets = await exportMarkedAssets(stamped.assets, onProgress);
 
   const coverage = coverageFromSlots(enumerateSlots(walk.root));
   const summary: ExportSummary = {
     nodeCount: walk.nodeCount,
     screenshotCount: shots.images.length,
+    assetCount: assets.length,
     skippedInvisible: walk.skippedInvisible,
     extractionErrors: walk.extractionErrors,
     boundCount: coverage.bound,
@@ -90,12 +119,13 @@ export async function runExport(
   };
 
   return {
-    jsonName: fileNameFor(document),
+    jsonName: fileNameFor(stamped),
     // Compact, not pretty-printed. At depth 18 a 2-space indent tripled the
     // file for no benefit — nobody reads a 6 MB IR document by eye, and
     // `jq .` restores it on demand.
-    json: JSON.stringify(document),
+    json: JSON.stringify(parsed.success ? parsed.data : stamped),
     screenshots: shots.images,
+    assets,
     summary,
   };
 }
@@ -165,3 +195,56 @@ async function exportSectionCandidates(
 
   return { images, truncated, candidates: candidates.length };
 }
+
+/**
+ * The uploaded bitmaps, read straight back out of the Figma document.
+ *
+ * No rendering, no flattening, no cloning. The designer exported the region
+ * with Figma's own exporter — which honours export settings, scale and effects
+ * — and `figma.createImage` put those exact bytes in the document. This hands
+ * the same bytes on.
+ *
+ * That replaced a version of this function that re-rendered marked layers and,
+ * for a multi-layer background, cloned them into a throwaway off-canvas frame
+ * to flatten. It worked, but it re-implemented an exporter Figma already ships,
+ * and it mutated the document to produce a picture.
+ */
+async function exportMarkedAssets(
+  bindings: readonly AssetBinding[],
+  onProgress: ProgressFn,
+): Promise<ExportedAsset[]> {
+  const assets: ExportedAsset[] = [];
+  for (let i = 0; i < bindings.length; i++) {
+    const binding = bindings[i]!;
+    onProgress(`Reading background assets… ${i + 1}/${bindings.length}`, 0);
+
+    const image = figma.getImageByHash(binding.imageHash);
+    if (!image) {
+      // The document no longer holds those bytes. Loud, because the run would
+      // otherwise resolve this asset to nothing and the page would render
+      // without a background nobody removed.
+      console.log(
+        `[fanos-studio] image ${binding.imageHash} for "${binding.name}" is not in this document`,
+      );
+      continue;
+    }
+
+    try {
+      assets.push({
+        name: binding.name,
+        nodeId: binding.targetId,
+        targetNodeId: binding.targetId,
+        role: "background",
+        bytes: await image.getBytesAsync(),
+        // Always the file the designer exported, never something we drew.
+        source: "original",
+      });
+    } catch (err) {
+      console.log(`[fanos-studio] could not read "${binding.name}": ${errorMessage(err)}`);
+    }
+    await yieldToEventLoop();
+  }
+  return assets;
+}
+
+

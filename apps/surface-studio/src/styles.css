@@ -166,6 +166,160 @@ h1 {
   white-space: nowrap;
 }
 
+/* --- compile ------------------------------------------------------------- */
+
+.compile {
+  margin-top: 18px;
+  padding-top: 16px;
+  border-top: 1px solid #ddd6c6;
+}
+
+.go {
+  font: 650 13px/1 var(--font);
+  letter-spacing: 0.01em;
+  padding: 10px 16px;
+  color: var(--paper);
+  background: var(--paper-ink);
+  border: 0;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.go:disabled { opacity: 0.45; cursor: default; }
+
+.compile-note {
+  margin-left: 12px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #6d675c;
+}
+
+.compile-error {
+  margin: 10px 0 0;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: #9a3b2f;
+}
+
+.run-head {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  margin: 0 0 12px;
+}
+
+.run-status {
+  font-family: var(--mono);
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #6d675c;
+}
+
+.run-status.is-running { color: #a86a1d; }
+.run-status.is-succeeded { color: #46703c; }
+.run-status.is-failed { color: #9a3b2f; }
+
+.run-id {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #96907f;
+}
+
+.steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.steps li {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px 0;
+  font-family: var(--mono);
+  font-size: 12px;
+}
+
+.step-dot {
+  flex: 0 0 auto;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #c9c1ae;
+}
+
+.step-dot.is-running { background: #a86a1d; }
+.step-dot.is-succeeded { background: #46703c; }
+.step-dot.is-failed { background: #9a3b2f; }
+.step-dot.is-skipped { background: #ddd6c6; }
+
+.step-name { color: var(--paper-ink); }
+.step-detail { color: #6d675c; }
+
+/* --- preview ------------------------------------------------------------- */
+
+.preview { margin-top: 16px; }
+
+.preview-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 8px;
+}
+
+.chip {
+  font: 600 11px/1 var(--mono);
+  padding: 6px 10px;
+  color: #6d675c;
+  background: transparent;
+  border: 1px solid #ddd6c6;
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.chip.is-on {
+  color: var(--paper);
+  background: var(--paper-ink);
+  border-color: var(--paper-ink);
+}
+
+.recompile {
+  margin-left: auto;
+  font-weight: 450;
+  padding: 4px 9px;
+}
+
+.preview-note {
+  margin-left: 6px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #96907f;
+}
+
+.preview-open {
+  margin-left: auto;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: #6d675c;
+}
+
+/* The iframe keeps its true width and is transformed; this clips the overflow
+   so a 1280px page does not push the plate sideways. */
+.preview-box {
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid #ddd6c6;
+  border-radius: 2px;
+}
+
+.preview-box iframe {
+  display: block;
+  border: 0;
+}
+
 .log {
   list-style: none;
   margin: 28px 0 0;

@@ -8,7 +8,13 @@
  */
 import { AppError } from "../../src/kernel/errors.js";
 import type { ConformOutcome } from "../../src/modules/fidelity/domain/gate.js";
-import type { CompileOutcome, ParsedIr, ParsedTheme, Toolchain } from "../../src/modules/runs/domain/ports.js";
+import type {
+  CompileOutcome,
+  GeometryMeasurer,
+  ParsedIr,
+  ParsedTheme,
+  Toolchain,
+} from "../../src/modules/runs/domain/ports.js";
 
 export interface FakeToolchainScript {
   parseIr?: () => ParsedIr;
@@ -23,7 +29,7 @@ export function passingConform(over: Partial<ConformOutcome> = {}): ConformOutco
     errors: [],
     warnings: [],
     coverage: { paints: 10, direct: 10, absorbed: 0, repeated: 0, missing: 0 },
-    geometry: { compared: 4, skipped: 0, worstDelta: 0.2 },
+    geometry: { compared: 4, skipped: 0, exempt: 0, worstDelta: 0.2, totalDelta: 0 },
     nodeCount: 12,
     waived: 0,
     ...over,
@@ -45,7 +51,7 @@ export class FakeToolchain implements Toolchain {
 
   parseIr(): ParsedIr {
     this.calls.push("parseIr");
-    return this.script.parseIr?.() ?? { handle: { root: "ir" }, nodeCount: 42 };
+    return this.script.parseIr?.() ?? { handle: { root: "ir" }, nodeCount: 42, rootNodeId: "1:1" };
   }
 
   parseTheme(): ParsedTheme {
@@ -61,14 +67,38 @@ export class FakeToolchain implements Toolchain {
         stats: { irNodes: 42, emitted: 30, absorbed: 12 },
         notes: [],
         requiredSurfaces: [],
+        requiredAssets: [],
+        metrics: { rawValues: 0, rawPositions: 0, tokenCoverage: 1 },
       }
     );
   }
 
-  conform(): ConformOutcome {
+  /** Recorded so a test can prove boxes actually reached the geometry check. */
+  lastConform?: {
+    boxes?: readonly { id: string }[];
+    rootSrc?: string;
+    tolerance?: number;
+  };
+
+  conform(input: {
+    boxes?: readonly { id: string }[];
+    rootSrc?: string;
+    tolerance?: number;
+  }): ConformOutcome {
     this.calls.push("conform");
+    this.lastConform = input;
     return this.script.conform?.() ?? passingConform();
   }
+}
+
+/** Measures nothing, and says so — the shape of a host with no chromium. */
+export function unavailableMeasurer(reason = "no chromium here"): GeometryMeasurer {
+  return { measure: async () => ({ measured: false, reason }) };
+}
+
+/** Returns fixed boxes, so a test can assert they arrive at conform. */
+export function fakeMeasurer(boxes = [{ id: "root", x: 0, y: 0, w: 100, h: 40 }]): GeometryMeasurer {
+  return { measure: async () => ({ measured: true, boxes }) };
 }
 
 /** A toolchain whose compile step always fails, permanently or otherwise. */

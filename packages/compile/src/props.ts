@@ -11,9 +11,12 @@
 import type { FrameIRNode, Layout, TokenValue } from "@fanos/surface-canvas/ir";
 import type { NormalizedTheme } from "@fanos/tokens";
 import { canonicalRef } from "./refs.js";
+import { flowChildren } from "./classify.js";
+import { layoutBox } from "./geometry.js";
 
 export type Raw = { raw: number; _unbound: true };
 export const raw = (n: number): Raw => ({ raw: round(n), _unbound: true });
+
 
 /** Four decimals is past sub-pixel; more just makes trees noisy to diff. */
 export function round(n: number): number {
@@ -121,7 +124,7 @@ export interface SizeProps {
 export function size(n: FrameIRNode, isRoot: boolean): SizeProps | undefined {
   const out: SizeProps = {};
   const { w, h } = n.layout.sizing;
-  const box = n.geometry.relBbox;
+  const box = layoutBox(n);
 
   /**
    * The root defines the frame, so its WIDTH is its box — there is nothing
@@ -137,15 +140,51 @@ export function size(n: FrameIRNode, isRoot: boolean): SizeProps | undefined {
     return out;
   }
 
-  if (w === "hug") out.w = "auto";
+  const pin = unhuggableAxes(n);
+
+  if (w === "hug") out.w = pin.w ? raw(box.w) : "auto";
   else if (w === "fill") out.w = "full";
   else out.w = raw(box.w);
 
-  if (h === "hug") out.h = "auto";
+  if (h === "hug") out.h = pin.h ? raw(box.h) : "auto";
   else if (h === "fill") out.h = "full";
   else out.h = raw(box.h);
 
   return out;
+}
+
+/**
+ * Axes where `hug` cannot be reproduced, so the box has to be pinned.
+ *
+ * Figma and CSS disagree about one thing here, and it is not a rounding
+ * difference. A Figma frame set to hug still resolves to a concrete box around
+ * absolutely-positioned children. In CSS those children are out of flow and
+ * contribute NOTHING to intrinsic size, so `width: auto` collapses — measured
+ * on the fixtures page, a 333px overlay of three placed buttons came out 72px,
+ * and every descendant inherited the 262px shift.
+ *
+ * So: hug is only reproducible when something is in flow to hug. When nothing
+ * is, the IR's own box is the only honest answer.
+ *
+ * Narrow deliberately, because pinning costs responsiveness — the doc on
+ * `size` is right that a raw px freezes the node at export width:
+ *
+ *   - per axis, since a node can hug one and fix the other;
+ *   - only when the flow is EMPTY. A node with even one in-flow child hugs it,
+ *     and Figma ignores absolute children for hug sizing too, so the two agree;
+ *   - only for nodes that have children at all. A childless hug resolves to
+ *     padding in both systems.
+ *
+ * Type-agnostic on purpose. This is about flow, not about `Overlay`: an
+ * auto-layout Stack whose children are all absolute fails in exactly the same
+ * way, and would be missed by a rule that keyed off the node type.
+ */
+export function unhuggableAxes(n: FrameIRNode): { w: boolean; h: boolean } {
+  if ((n.children ?? []).length === 0) return { w: false, h: false };
+  if (flowChildren(n).length > 0) return { w: false, h: false };
+
+  const { w, h } = n.layout.sizing;
+  return { w: w === "hug", h: h === "hug" };
 }
 
 export interface PlaceProps {

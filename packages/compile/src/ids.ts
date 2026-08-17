@@ -18,6 +18,17 @@ import type { FrameIRNode } from "@fanos/surface-canvas/ir";
 const GENERIC =
   /^(frame|group|rectangle|ellipse|vector|union|subtract|intersect|exclude|component|instance|line|star|polygon|image|mask|clip|shape|path|layer)([\s_-]*\d+)*$/i;
 
+/**
+ * SVG-import scaffolding: "Clip path group", "clip0_160_1336", "Mask group".
+ *
+ * Multi-word, so `GENERIC` — which anchors on a single token — lets them
+ * through as if they meant something. They do not: pasting an SVG logo into
+ * Figma produces a clip wrapper around the real artwork, and naming a glyph
+ * after it buries the one layer that identifies the thing. Four club crests
+ * came out as `clip_path_group`.
+ */
+const STRUCTURAL = /^(clip|mask)([\s_-]*(path|group))+([\s_-]*\d+)*$|^clip\d+[\d_]*$/i;
+
 const MAX = 40;
 
 export function slug(name: string): string {
@@ -36,6 +47,7 @@ export function isMeaningful(name: string): boolean {
   const trimmed = name.trim();
   if (trimmed === "") return false;
   if (GENERIC.test(trimmed)) return false;
+  if (STRUCTURAL.test(trimmed)) return false;
   // A pure number or punctuation run is no more useful than "Frame 12".
   return /[a-z]/i.test(trimmed);
 }

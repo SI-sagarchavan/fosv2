@@ -45,6 +45,7 @@ export function node(overrides: NodeOverrides = {}): FrameIRNode {
     geometry: {
       bbox: { x: 0, y: 0, w, h },
       relBbox: { x: 0, y: 0, w, h },
+      rotation: 0,
       aspect: h === 0 ? 0 : w / h,
       aspectBucket,
     },

@@ -255,6 +255,33 @@ verdict. The verdict is what blocks publishing.
 Playwright harness in `@fanos/renderer` running out-of-process. `planFor` throws
 for them rather than silently succeeding.
 
+### Marked backgrounds, and the `AssetPublisher` port
+
+The compiler emits `asset.texture.<name>` and never a URL. That is deliberate:
+one compiled tree has to render against inlined bytes in a preview iframe, an
+API URL in the board, and an S3 object in production, and baking a URL into the
+tree freezes it to whichever environment compiled it.
+
+Resolving that ref is the run's job, because the run is the only thing that
+knows which artifact holds the bytes — `input.assets` carries the
+`name → artifactId` join, by value, so a re-run six months later resolves the
+texture that was marked *then*, not whatever the export points at now.
+
+`AssetPublisher` is the seam, selected by `ASSET_PUBLISHER`:
+
+| Mode | URL it produces | Use |
+| ---- | --------------- | --- |
+| `data-uri` (default) | `data:image/png;base64,…` inlined into the run's `surface_set` | Self-contained: preview, the pixel harness and an offline reader all paint with no credential and no round trip |
+| `artifact-url` | `<base>/v1/blobs/<artifactId>` | Small artifacts, once there is somewhere reachable to serve them |
+| `s3` | `<cdn>/<project>/textures/<digest>.png` | Production. Not implemented — the shape is documented on the class |
+
+There is no mode that substitutes a default image. That **was** the behaviour: a
+single hardcoded tenant URL was written against every asset in every project, so
+a designer could mark any image at all and the page rendered somebody else's
+listing pattern. An asset that cannot be resolved is now simply absent from the
+set, renders as nothing, and is named in the compile step's `unresolvedAssets`.
+Silence is recoverable; a confident wrong picture is not.
+
 ## Live progress, and why closing the tab is safe
 
 `GET /projects/:project/sync` streams `runs` and `run_steps` to the browser

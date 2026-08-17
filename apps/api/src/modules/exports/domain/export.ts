@@ -85,6 +85,34 @@ export const IngestExportCommand = z.object({
     )
     .max(PLATE_LIMIT)
     .default([]),
+  /**
+   * Static background images the designer marked in Surface Canvas.
+   * Separate from screenshots: those are section plates, these are files
+   * the compiler turns into `asset.texture.*`.
+   */
+  assets: z
+    .array(
+      z.object({
+        name: z.string().min(1),
+        nodeId: z.string().min(1),
+        targetNodeId: z.string().min(1),
+        role: z.literal("background"),
+        /**
+         * `original` — the bytes out of Figma's image store. `rendered` — the
+         * node re-exported as a PNG, which is always the case for a composite
+         * of several layers because flattening IS a render.
+         *
+         * Optional so an older plugin build still posts. Recorded on the
+         * artifact rather than dropped: a render bakes in opacity, effects and
+         * the on-canvas scale, and that is worth knowing about a file that
+         * ships.
+         */
+        source: z.enum(["original", "rendered"]).optional(),
+        bytesBase64: z.string(),
+      }),
+    )
+    .max(PLATE_LIMIT)
+    .default([]),
   /** Signatures, when the plugin computed them. */
   structuralSignature: z.string().optional(),
   canonicalSignature: z.string().optional(),
@@ -163,6 +191,14 @@ export interface ExportPlateView {
   artifactId: string;
 }
 
+export interface ExportAssetView {
+  name: string;
+  nodeId: string;
+  targetNodeId: string;
+  role: "background";
+  artifactId: string;
+}
+
 export interface ExportView {
   id: string;
   fileKey: string | null;
@@ -180,8 +216,35 @@ export interface ExportView {
   receivedAt: string;
   exportedBy: string | null;
   plates: ExportPlateView[];
+  assets: ExportAssetView[];
   /** True when these exact bytes and timestamp were already recorded. */
   deduplicated?: boolean;
+}
+
+export function assetsFromSummary(summary: Record<string, unknown>): ExportAssetView[] {
+  const raw = summary.backgroundAssets;
+  if (!Array.isArray(raw)) return [];
+  return raw.flatMap((item) => {
+    if (!item || typeof item !== "object") return [];
+    const row = item as Record<string, unknown>;
+    if (
+      typeof row.name !== "string" ||
+      typeof row.nodeId !== "string" ||
+      typeof row.targetNodeId !== "string" ||
+      typeof row.artifactId !== "string"
+    ) {
+      return [];
+    }
+    return [
+      {
+        name: row.name,
+        nodeId: row.nodeId,
+        targetNodeId: row.targetNodeId,
+        role: "background" as const,
+        artifactId: row.artifactId,
+      },
+    ];
+  });
 }
 
 export function toExportView(row: FigmaExport, plates: ExportPlate[]): ExportView {
@@ -205,6 +268,7 @@ export function toExportView(row: FigmaExport, plates: ExportPlate[]): ExportVie
       .slice()
       .sort((a, b) => a.seq - b.seq)
       .map((p) => ({ nodeId: p.nodeId, name: p.name, seq: p.seq, artifactId: p.artifactId })),
+    assets: assetsFromSummary(row.summary),
   };
 }
 

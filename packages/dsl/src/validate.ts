@@ -25,7 +25,7 @@ export const ISSUE_CODES = [
   "S3", // missing or duplicate id; missing src
   "S4", // Section not a direct child of root
   "S5", // Repeater carrying layout/space/size/surface props
-  "S6", // place.anchor on a node whose parent is not Overlay
+  "S6", // place.anchor under a parent that cannot position it
   "S7", // place.span on a node whose parent is not Grid
   "S8", // Overlay child with no place.anchor
   "S9", // Grid columns:"auto" with no minItemWidth
@@ -74,6 +74,26 @@ function expectedCategory(type: FieldType): string | undefined {
   if (type.k === "size" || type.k === "offset") return "space";
   return undefined;
 }
+
+/**
+ * Parents that can honour `place.anchor`.
+ *
+ * An Overlay positions every child (S8). A Stack positions the children that
+ * opt OUT of its flow — which is a real thing Figma does and CSS does: an
+ * absolutely-positioned child of an auto-layout frame anchors to that frame
+ * while its siblings keep flowing. Both render as `position: absolute` inside a
+ * `position: relative` box, and the renderer has always drawn it correctly.
+ *
+ * Excluding Stack forced the compiler to demote any auto-layout frame with one
+ * absolute child to an Overlay — which anchors ALL of its children and throws
+ * the row away. On the fixtures page that collapsed a 333px button row to 72px
+ * and shifted its subtree by 262px.
+ *
+ * Leaves and fragments stay excluded, which is the rule's real job: a Repeater
+ * under a Stack makes its children flex items, and an anchor there is
+ * meaningless because nothing will ever honour it.
+ */
+const ANCHORS_CHILDREN = new Set(["Overlay", "Stack"]);
 
 /** Chrome a Carousel renders itself; finding it as a child node is the S10 smell. */
 const CONTROL_SRC_RE = /(arrow|chevron|dot|pagination|counter|prev|next)/i;
@@ -188,13 +208,13 @@ export function validate(tree: FlatTree, options: ValidateOptions): ValidationRe
     // --- S6 / S7 / S8 ----------------------------------------------------
     const place = node.props["place"] as Record<string, unknown> | undefined;
     if (place && typeof place === "object") {
-      if (place["anchor"] !== undefined && layoutParent?.type !== "Overlay") {
+      if (place["anchor"] !== undefined && !ANCHORS_CHILDREN.has(layoutParent?.type ?? "")) {
         add({
           code: "S6",
           severity: "error",
           nodeId: node.id,
           path: "place.anchor",
-          message: `place.anchor is only meaningful under an Overlay; "${node.id}" lays out under ${layoutParent ? `a ${layoutParent.type}` : "no parent"}`,
+          message: `place.anchor needs a parent that can position it (${[...ANCHORS_CHILDREN].join(" or ")}); "${node.id}" lays out under ${layoutParent ? `a ${layoutParent.type}` : "no parent"}`,
         });
       }
       if (place["span"] !== undefined && layoutParent?.type !== "Grid") {

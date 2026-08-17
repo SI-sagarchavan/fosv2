@@ -104,6 +104,12 @@ export function run(argv: readonly string[]): number {
         process.stdout.write(`     ${r.name.padEnd(28)} ${JSON.stringify(r.spec)}\n`);
       }
     }
+    if (result.requiredAssets.length) {
+      process.stdout.write(`  ${result.requiredAssets.length} background assets:\n`);
+      for (const a of result.requiredAssets) {
+        process.stdout.write(`     ${a.ref}  ${a.sourceId} → ${a.targetId}\n`);
+      }
+    }
     const byKind: Record<string, number> = {};
     for (const n of result.notes) byKind[n.kind] = (byKind[n.kind] ?? 0) + 1;
     if (Object.keys(byKind).length) {

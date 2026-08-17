@@ -9,7 +9,13 @@ import { beforeEach, describe, expect, it } from "vitest";
 
 import { shouldGiveUp } from "../src/modules/runs/domain/run.js";
 import { createTestApp, type TestApp } from "./fakes/app.js";
-import { FakeToolchain, brokenToolchain, failingConform } from "./fakes/toolchain.js";
+import {
+  FakeToolchain,
+  brokenToolchain,
+  fakeMeasurer,
+  failingConform,
+  unavailableMeasurer,
+} from "./fakes/toolchain.js";
 
 let app: TestApp;
 let projectId: string;
@@ -25,10 +31,15 @@ async function seedInputs() {
     { kind: "token_set", json: { tokens: {} }, meta: {} },
     "tester",
   );
-  return { irArtifact: ir.digest, themeArtifact: theme.digest, surfaceKey: "player-card" };
+  return {
+    irArtifact: ir.digest,
+    themeArtifact: theme.digest,
+    surfaceKey: "player-card",
+    assets: [],
+  };
 }
 
-async function boot(over: { toolchain?: TestApp["toolchain"] } = {}) {
+async function boot(over: Parameters<typeof createTestApp>[0] = {}) {
   app = createTestApp(over);
   projectId = await app.seedProject();
   await app.ctx.surfaces.create(projectId, { key: "player-card", name: "Player Card" }, "tester");
@@ -262,5 +273,230 @@ describe("shouldGiveUp", () => {
 
   it("gives up once attempts are exhausted", () => {
     expect(shouldGiveUp({ permanent: false, attempt: 3, maxAttempts: 3 })).toBe(true);
+  });
+});
+
+
+/**
+ * C2 is the only check that can see a layout error, and it only runs when boxes
+ * reach it. The failure this guards against is not a wrong answer — it is a
+ * gate that compares nothing and reports it as though everything were fine.
+ */
+describe("the geometry gate", () => {
+  it("passes measured boxes and the root src to conform", async () => {
+    const toolchain = new FakeToolchain();
+    const input = await boot({
+      toolchain,
+      measurer: fakeMeasurer([{ id: "root", x: 0, y: 0, w: 240, h: 80 }]),
+    });
+
+    const run = await app.ctx.runs.start(projectId, { kind: "pipeline", input }, "tester");
+    await app.ctx.runs.execute(run.id);
+
+    expect(toolchain.lastConform?.boxes).toHaveLength(1);
+    expect(toolchain.lastConform?.rootSrc).toBe("1:1");
+  });
+
+  it("records that geometry went unchecked, with the reason", async () => {
+    const input = await boot({ measurer: unavailableMeasurer("chromium missing") });
+
+    const run = await app.ctx.runs.start(projectId, { kind: "pipeline", input }, "tester");
+    await app.ctx.runs.execute(run.id);
+
+    const finished = await app.ctx.runs.get(projectId, run.id);
+    const step = finished.steps?.find((s) => s.name === "conform");
+    const geometry = (step?.detail as { geometry?: Record<string, unknown> }).geometry;
+
+    expect(geometry?.measured).toBe(false);
+    expect(geometry?.reason).toContain("chromium missing");
+  });
+
+  it("does not hand conform any boxes when measurement failed", async () => {
+    const toolchain = new FakeToolchain();
+    const input = await boot({ toolchain, measurer: unavailableMeasurer() });
+
+    const run = await app.ctx.runs.start(projectId, { kind: "pipeline", input }, "tester");
+    await app.ctx.runs.execute(run.id);
+
+    expect(toolchain.lastConform?.boxes).toBeUndefined();
+  });
+
+  /**
+   * A host with no browser must still produce a verdict on everything else. The
+   * skip is recorded, not fatal — but it is recorded.
+   */
+  it("still completes the run when measurement is unavailable", async () => {
+    const input = await boot({ measurer: unavailableMeasurer() });
+
+    const run = await app.ctx.runs.start(projectId, { kind: "pipeline", input }, "tester");
+    await app.ctx.runs.execute(run.id);
+
+    const finished = await app.ctx.runs.get(projectId, run.id);
+    expect(finished.status).toBe("succeeded");
+    expect(finished.steps?.map((s) => s.name)).toContain("conform");
+  });
+
+  it("marks the stored report so a reader can tell silence from a pass", async () => {
+    const input = await boot({ measurer: unavailableMeasurer("no chromium") });
+
+    const run = await app.ctx.runs.start(projectId, { kind: "pipeline", input }, "tester");
+    await app.ctx.runs.execute(run.id);
+
+    const finished = await app.ctx.runs.get(projectId, run.id);
+    const step = finished.steps?.find((s) => s.name === "conform");
+    const artifact = await app.ctx.artifacts.download(projectId, step!.outputArtifactId!);
+    const report = JSON.parse(new TextDecoder().decode(artifact.bytes)) as {
+      measurement: { measured: boolean; reason?: string };
+    };
+
+    expect(report.measurement.measured).toBe(false);
+    expect(report.measurement.reason).toBe("no chromium");
+  });
+});
+
+/**
+ * Fidelity and responsiveness are reported together on purpose: any layout
+ * error can be driven to zero by pinning raw pixels, which buys a green gate by
+ * making the tree correct at exactly one width.
+ */
+describe("what a run reports about the tree", () => {
+  it("records drift magnitude, not just the error count", async () => {
+    const input = await boot();
+    const run = await app.ctx.runs.start(projectId, { kind: "pipeline", input }, "tester");
+    await app.ctx.runs.execute(run.id);
+
+    const finished = await app.ctx.runs.get(projectId, run.id);
+    const geometry = (
+      finished.steps?.find((s) => s.name === "conform")?.detail as {
+        geometry?: Record<string, unknown>;
+      }
+    ).geometry;
+
+    expect(geometry).toHaveProperty("totalDelta");
+  });
+
+  it("records pixel debt beside the tree that carries it", async () => {
+    const input = await boot();
+    const run = await app.ctx.runs.start(projectId, { kind: "pipeline", input }, "tester");
+    await app.ctx.runs.execute(run.id);
+
+    const finished = await app.ctx.runs.get(projectId, run.id);
+    const metrics = (
+      finished.steps?.find((s) => s.name === "compile")?.detail as {
+        metrics?: Record<string, unknown>;
+      }
+    ).metrics;
+
+    expect(metrics).toMatchObject({
+      rawValues: expect.any(Number),
+      rawPositions: expect.any(Number),
+      tokenCoverage: expect.any(Number),
+    });
+  });
+});
+
+/**
+ * The chain from "a designer marked an image" to "the renderer has a URL".
+ *
+ * The compiler emits `asset.texture.x` and nothing else — deliberately, so one
+ * tree renders against a data URI in preview and an S3 object in production.
+ * The run is the only place that knows which artifact holds those bytes, so if
+ * it does not resolve the ref, nothing does.
+ */
+describe("marked background assets", () => {
+  const marked = {
+    tree: { schemaVersion: "1.0.0", nodes: [{ id: "root", type: "Box" }] },
+    stats: { irNodes: 42, emitted: 30, absorbed: 12 },
+    notes: [],
+    requiredSurfaces: [],
+    requiredAssets: [
+      {
+        name: "tickets_plate",
+        ref: "asset.texture.tickets_plate",
+        role: "background" as const,
+        sourceId: "1:10",
+        targetId: "1:2",
+      },
+    ],
+    metrics: { rawValues: 0, rawPositions: 0, tokenCoverage: 1 },
+  };
+
+  /**
+   * `boot` rebuilds the app and the project, so anything the run needs to find
+   * has to be uploaded AFTER it — hence the callback rather than an argument.
+   */
+  async function runWith(
+    seedAssets: () => Promise<Array<{ name: string; artifactId: string }>>,
+  ) {
+    const base = await boot({ toolchain: new FakeToolchain({ compile: () => marked }) });
+    const assets = await seedAssets();
+
+    const run = await app.ctx.runs.start(
+      projectId,
+      { kind: "pipeline", input: { ...base, assets } },
+      "tester",
+    );
+    await app.ctx.runs.execute(run.id);
+    return app.ctx.runs.get(projectId, run.id);
+  }
+
+  /** The surface set the run persisted, by value. */
+  async function surfaceSetOf(finished: Awaited<ReturnType<typeof runWith>>) {
+    const detail = finished.steps?.find((s) => s.name === "compile")?.detail as {
+      surfaceSetArtifact?: string;
+    };
+    return app.ctx.artifacts.readJson<{ assets: Record<string, string> }>(
+      projectId,
+      detail.surfaceSetArtifact!,
+    );
+  }
+
+  it("resolves a marked asset to its own bytes, not a stand-in", async () => {
+    const finished = await runWith(async () => {
+      const png = await app.ctx.artifacts.upload(
+        projectId,
+        {
+          kind: "screenshot",
+          base64: Buffer.from([0x89, 0x50, 0x4e, 0x47]).toString("base64"),
+          mediaType: "image/png",
+          meta: {},
+        },
+        "tester",
+      );
+      return [{ name: "tickets_plate", artifactId: png.id }];
+    });
+    const set = await surfaceSetOf(finished);
+
+    // Keyed by the BARE leaf, which is what the token registry looks up.
+    expect(set.assets["texture.tickets_plate"]).toBe(
+      `data:image/png;base64,${Buffer.from([0x89, 0x50, 0x4e, 0x47]).toString("base64")}`,
+    );
+
+    const compile = finished.steps?.find((s) => s.name === "compile");
+    expect(compile?.detail).toMatchObject({ unresolvedAssets: [] });
+  });
+
+  /**
+   * The regression guard. This used to write one hardcoded tenant URL, so an
+   * asset the run could not find rendered as a real — but completely wrong —
+   * picture. Nothing in the trace said so, because as far as the pipeline was
+   * concerned it had resolved.
+   */
+  it("leaves an asset it cannot resolve absent, and names it in the trace", async () => {
+    const finished = await runWith(async () => []);
+    const set = await surfaceSetOf(finished);
+
+    expect(set.assets).toEqual({});
+
+    const compile = finished.steps?.find((s) => s.name === "compile");
+    expect(compile?.detail).toMatchObject({
+      requiredAssets: ["asset.texture.tickets_plate"],
+      unresolvedAssets: ["asset.texture.tickets_plate"],
+    });
+  });
+
+  it("still succeeds — an unresolved background is not a failed run", async () => {
+    const finished = await runWith(async () => []);
+    expect(finished.status).toBe("succeeded");
   });
 });

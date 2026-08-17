@@ -80,3 +80,21 @@ export function defaultTheme(): NormalizedTheme {
   if (themes.length === 0) throw new Error("No themes are bundled into this build.");
   return themes[0]!.theme;
 }
+
+/**
+ * The RAW theme file a theme came from.
+ *
+ * The compile preview posts this to Surface Studio, which re-normalizes it
+ * itself: `emitCss` and the renderer both take a theme file, not a
+ * `NormalizedTheme`, and handing them an already-normalized one fails schema
+ * validation with an unhelpful "Required".
+ *
+ * Sending it at all is what keeps the preview standalone — the board needs no
+ * project, no artifacts and no control plane to answer "what does this frame
+ * compile to", because the tenant's tokens travel with the question.
+ */
+export function rawThemeFileFor(id: string): unknown {
+  const entry = loadBundledThemes().find((t) => t.theme.id === id);
+  const source = entry?.source ?? THEME_FILES[0]?.source;
+  return THEME_FILES.find((file) => file.source === source)?.json;
+}

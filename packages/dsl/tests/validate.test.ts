@@ -101,13 +101,28 @@ describe("S5 — Repeater is a fragment", () => {
 });
 
 describe("S6 / S7 — place belongs to the child, checked against the parent", () => {
-  it("rejects place.anchor when the parent is not an Overlay", () => {
+  /**
+   * A Stack positions the children that opt OUT of its flow. Figma does this —
+   * an absolutely-positioned child of an auto-layout frame — and CSS renders it
+   * as `position: absolute` inside a `position: relative` box. Forbidding it
+   * forced the compiler to demote the whole frame to an Overlay, which anchors
+   * every sibling and discards the row.
+   */
+  it("accepts place.anchor under a Stack — a child may opt out of the flow", () => {
     const tree = card();
     // `stat_matches_label` sits under `stat_matches`, a Stack.
     nodeOf(tree, "stat_matches_label").props["place"] = { anchor: "center" };
+    expect(issuesByCode(check(tree), "S6")).toHaveLength(0);
+  });
+
+  it("still rejects place.anchor under a parent that cannot position it", () => {
+    const tree = tinyTree([
+      { id: "b", parent: null, idx: 0, type: "Box", src: "1:1", props: {} },
+      { id: "c", parent: "b", idx: 0, type: "Box", src: "1:2", props: { place: { anchor: "center" } } },
+    ]);
     const [issue] = issuesByCode(check(tree), "S6");
-    expect(issue?.nodeId).toBe("stat_matches_label");
-    expect(issue?.message).toContain("Stack");
+    expect(issue?.nodeId).toBe("c");
+    expect(issue?.message).toContain("Box");
   });
 
   it("rejects place.span when the parent is not a Grid", () => {
@@ -331,13 +346,38 @@ describe("metrics", () => {
     expect(m.customNodeCount).toBe(0);
   });
 
-  it("reports token coverage as tokenised / (tokenised + raw.total)", () => {
+  it("reports token coverage over values that could actually be a token", () => {
     const m = check(card()).metrics;
+    const tokenisable = m.rawValueCount.total - m.rawPositionCount;
     expect(m.tokenCoverage).toBeCloseTo(
-      m.tokenisedValueCount / (m.tokenisedValueCount + m.rawValueCount.total),
+      m.tokenisedValueCount / (m.tokenisedValueCount + tokenisable),
       4,
     );
     expect(m.tokenisedValueCount).toBeGreaterThan(25);
+  });
+
+  /**
+   * A coordinate has no token to bind to, so counting it caps the ratio below
+   * 1 forever — the metric would measure how many Overlays a design has, not
+   * how well it is tokenised. On the fixtures page 954 of 1496 raws were
+   * coordinates, reporting 27% for a tree that was genuinely at 51%.
+   */
+  it("excludes position from coverage, and reports it undiluted instead", () => {
+    const tree = card();
+    const before = check(tree).metrics;
+
+    // Pin one more node by hand: pure position debt, no token was possible.
+    const node = nodeOf(tree, "stat_matches_label");
+    node.props["place"] = {
+      anchor: "top-start",
+      offset: { block: { raw: 12, _unbound: true }, inline: { raw: 34, _unbound: true } },
+    };
+    const after = check(tree).metrics;
+
+    expect(after.rawPositionCount).toBe(before.rawPositionCount + 2);
+    expect(after.rawValueCount.total).toBe(before.rawValueCount.total + 2);
+    // The thing that matters: coverage did not fall because of it.
+    expect(after.tokenCoverage).toBeCloseTo(before.tokenCoverage, 4);
   });
 
   it("does NOT count percentages as raw debt — they are relative and re-theme correctly", () => {

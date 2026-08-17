@@ -23,11 +23,36 @@ export type StepStatus = "pending" | "running" | "succeeded" | "failed" | "skipp
  * "whatever the surface points at now". That is what makes a six-month-old run
  * explicable rather than merely recorded.
  */
+/**
+ * A marked background the frame ships, and the artifact holding its bytes.
+ *
+ * Carried BY VALUE on the run, like every other input, for the reason the type
+ * doc above gives: a run must be replayable from its own record. Reaching back
+ * to "whatever the export points at now" would mean a re-run six months later
+ * silently picking up a texture the designer has since replaced.
+ *
+ * The bytes themselves stay in the artifact store; this is the join the
+ * compile step needs to turn `asset.texture.x` into a URL.
+ */
+export const RunAsset = z.object({
+  name: z.string().min(1),
+  artifactId: z.string().min(1),
+});
+export type RunAsset = z.infer<typeof RunAsset>;
+
+const ASSET_LIMIT = 64;
+
 export const PipelineInput = z.object({
   surfaceKey: z.string().min(1),
   irArtifact: z.string().min(1),
   themeArtifact: z.string().min(1),
   surfacesArtifact: z.string().min(1).optional(),
+  /**
+   * Empty by default, which is honest: a frame with no marked images has none,
+   * and a caller that forgets to send them gets a run whose trace says exactly
+   * which refs went unresolved rather than a page painted with a stand-in.
+   */
+  assets: z.array(RunAsset).max(ASSET_LIMIT).default([]),
   notes: z.string().max(2000).optional(),
 });
 export type PipelineInput = z.infer<typeof PipelineInput>;

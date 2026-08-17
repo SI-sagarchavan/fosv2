@@ -6,6 +6,7 @@
   "ui": "dist/ui.html",
   "editorType": ["figma"],
   "documentAccess": "dynamic-page",
+  "enablePrivatePluginApi": true,
   "permissions": ["teamlibrary", "currentuser"],
   "networkAccess": {
     "allowedDomains": ["http://localhost:3000"],

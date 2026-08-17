@@ -47,11 +47,29 @@ import {
 } from "./fix.js";
 import * as heatmap from "./heatmap.js";
 import { loadBindingIndex, reconcile, type BindingIndex } from "./reconcile.js";
+import {
+  ASSET_PLUGIN_KEY,
+  isConfident,
+  matchAssetToTargets,
+  parseBindings,
+  placementsFromIr,
+  removeBinding,
+  renameBinding,
+  retargetBinding,
+  serializeBindings,
+  setBindingFit,
+  suggestAssetName,
+  targetOptionsFromIr,
+  upsertBinding,
+  type AssetBinding,
+  type AssetFit,
+} from "./assets.js";
 import { runExport } from "./export.js";
 import { createMissingVariables, resetDriftedVariables } from "./variables.js";
-import { defaultTheme, themeById, themeChoices } from "./themes.js";
+import { defaultTheme, rawThemeFileFor, themeById, themeChoices } from "./themes.js";
 import {
   buildExportBody,
+  bytesToBase64,
   createApiClient,
   resolveOrigin,
   type ApiClient,
@@ -75,6 +93,7 @@ import {
   newCaches,
   traverseSubtree,
   traverseToDocument,
+  yieldToEventLoop,
   type Caches,
 } from "./traverse";
 
@@ -285,6 +304,27 @@ async function handle(message: UiMessage): Promise<void> {
     case "set-panel-state":
       await setPanelState(message.state);
       return;
+    case "upload-asset":
+      await uploadAsset(message);
+      return;
+    case "place-asset":
+      await placeAsset(message);
+      return;
+    case "retarget-asset":
+      await retargetAsset(message.key, message.targetId);
+      return;
+    case "remove-asset":
+      removeAsset(message.key);
+      return;
+    case "rename-asset":
+      renameAsset(message.key, message.name);
+      return;
+    case "set-asset-fit":
+      setAssetFit(message.key, message.fit);
+      return;
+    case "preview-compile":
+      await previewCompile();
+      return;
     case "export-ir":
       await exportIr("local");
       return;
@@ -308,7 +348,6 @@ async function fullLint(repick = false): Promise<void> {
     return;
   }
   state.root = root;
-
   await busy(async () => {
     // Walk FIRST. The traversal's id->name cache ends up holding every variable
     // the page is already bound to, and on a library-driven file those are the
@@ -352,6 +391,7 @@ function runLint(scope: "full" | "incremental"): void {
   );
   state.report = report;
   postReport(report, scope);
+  postAssets();
 }
 
 function postBoot(): void {
@@ -366,6 +406,7 @@ function postBoot(): void {
       user: currentActor(),
     },
   });
+  postAssets();
 }
 
 function postReport(report: LintReport, scope: "full" | "incremental"): void {
@@ -1139,6 +1180,73 @@ async function readStoredApiOrigin(): Promise<string | undefined> {
  */
 const sandboxFetch: ApiFetch = (url: string, init: ApiFetchInit) => fetch(url, init);
 
+/**
+ * Compile the checked frame and render it, without persisting anything.
+ *
+ * Runs the walk again rather than reusing `state.ir`: the marked assets have to
+ * be exported as bytes anyway, and a preview built from a stale walk would
+ * answer a question about a frame the designer has since edited — which is the
+ * one failure a preview cannot have.
+ *
+ * The compiler runs on the BOARD, not here. `@fanos/compile` imports
+ * `@fanos/surface-canvas/ir`, so a plugin that imported it would close a
+ * dependency cycle and the workspace would have no valid build order. Surface
+ * Studio sits downstream of both and already owns the renderer, so it is the
+ * one place the real compiler and the real renderer can meet — which also means
+ * this preview is produced by exactly the code a real run uses, and cannot
+ * flatter the result.
+ */
+async function previewCompile(): Promise<void> {
+  const root = await resolveRoot(false);
+  if (!root) {
+    fail("Nothing to preview. Select the frame you want compiled.");
+    return;
+  }
+  const api = state.api;
+  if (!api) {
+    postPreviewFailure("Surface Studio is not configured.");
+    return;
+  }
+
+  await busy(async () => {
+    post({ type: "preview-progress", message: "Walking the frame…" });
+    const result = await runExport(root, state.caches, (message) =>
+      post({ type: "preview-progress", message }),
+    );
+
+    post({ type: "preview-progress", message: "Compiling…" });
+    const response = await api.previewCompile({
+      ir: JSON.parse(result.json) as unknown,
+      theme: rawThemeFileFor(state.themeId),
+      assets: result.assets.map((asset) => ({
+        name: asset.name,
+        bytesBase64: bytesToBase64(asset.bytes),
+      })),
+    });
+
+    if (!response.ok) {
+      postPreviewFailure(
+        response.status === null
+          ? `${response.message} — is Surface Studio running? (pnpm dev)`
+          : response.message,
+      );
+      return;
+    }
+
+    post({
+      type: "preview-done",
+      html: response.data.html,
+      width: response.data.width,
+      summary: response.data.summary,
+      error: null,
+    });
+  });
+}
+
+function postPreviewFailure(message: string): void {
+  post({ type: "preview-done", html: null, width: 0, summary: null, error: message });
+}
+
 async function exportIr(mode: "local" | "publish"): Promise<void> {
   const root = await resolveRoot(false);
   if (!root) {
@@ -1157,6 +1265,7 @@ async function exportIr(mode: "local" | "publish"): Promise<void> {
       jsonName: result.jsonName,
       json: result.json,
       screenshots: result.screenshots,
+      assets: result.assets,
       summary,
       publish,
     });
@@ -1185,6 +1294,7 @@ async function publishExport(
       json: result.json,
       summary,
       screenshots: result.screenshots,
+      assets: result.assets,
     }),
   );
   if (sent.ok) return { kind: "sent", origin };
@@ -1204,6 +1314,9 @@ function currentPageRef(root: SceneNode): StudioPage {
 function postSelection(): void {
   const selection = figma.currentPage.selection;
   const only = selection.length === 1 ? selection[0]! : null;
+  const parent = only && only.parent && "id" in only.parent && only.parent.type !== "PAGE" && only.parent.type !== "DOCUMENT"
+    ? only.parent
+    : null;
   post({
     type: "selection",
     count: selection.length,
@@ -1211,8 +1324,204 @@ function postSelection(): void {
     // Only containers are offerable as a root — a selected text layer is not a
     // page to check.
     id: only && "children" in only ? only.id : null,
+    nodeId: only ? only.id : null,
+    hasImage: only ? "fills" in only : false,
+    parentId: parent && "id" in parent ? parent.id : null,
+    parentName: parent && "name" in parent ? parent.name : null,
   });
 }
+
+function readBindings(): AssetBinding[] {
+  return state.root ? parseBindings(state.root.getPluginData(ASSET_PLUGIN_KEY)) : [];
+}
+
+function writeBindings(bindings: AssetBinding[]): void {
+  if (!state.root) return;
+  state.root.setPluginData(ASSET_PLUGIN_KEY, serializeBindings(bindings));
+  postAssets();
+}
+
+/**
+ * The assets, where each lands, and where else each could go.
+ *
+ * Placement and target options are computed by the SAME functions the compiler
+ * uses, from the same IR, so the panel's "covers its target" and the tree that
+ * comes out cannot disagree.
+ */
+function postAssets(): void {
+  const bindings = readBindings();
+  post({
+    type: "assets",
+    bindings,
+    placements: state.ir ? placementsFromIr(state.ir.root, bindings) : {},
+    targets: state.ir ? targetOptionsFromIr(state.ir.root, bindings) : {},
+  });
+}
+
+async function sceneNode(id: string): Promise<SceneNode | null> {
+  const node = await figma.getNodeByIdAsync(id);
+  if (!node || node.type === "PAGE" || node.type === "DOCUMENT") return null;
+  return node as SceneNode;
+}
+
+// ---------------------------------------------------------------------------
+// Uploaded assets
+// ---------------------------------------------------------------------------
+
+/**
+ * Take a dropped image, work out which region it is, and bind it there.
+ *
+ * The bytes go into the FIGMA DOCUMENT via `figma.createImage`, not into
+ * pluginData. pluginData is a small key-value store on a node; a 3MB header
+ * base64s to 4MB and would not survive there. The document's image store has no
+ * such ceiling, dedupes by content hash, and persists across reopening the
+ * file — so a binding only ever carries the hash.
+ *
+ * The mapping is a guess with a confidence, and it says so. A confident match
+ * is applied; anything less is returned as ranked candidates for the designer
+ * to pick from, because a background painted onto the wrong element is harder
+ * to notice than one that was never placed.
+ */
+async function uploadAsset(message: {
+  fileName: string;
+  bytes: Uint8Array;
+  width: number;
+  height: number;
+  targetId?: string;
+}): Promise<void> {
+  if (!state.root || !state.ir) {
+    fail("Check a frame first, then drop the image in.");
+    return;
+  }
+
+  let image: Image;
+  try {
+    image = figma.createImage(message.bytes);
+  } catch (err) {
+    // Figma refuses images past its own size ceiling. That is a fact about the
+    // file, not a bug, and the designer needs the reason rather than a stack.
+    fail(`Figma would not accept "${message.fileName}": ${errorMessage(err)}`);
+    return;
+  }
+
+  const existing = readBindings();
+  const upload = {
+    fileName: message.fileName,
+    width: message.width,
+    height: message.height,
+  };
+
+  const taken = new Set(existing.map((b) => b.targetId));
+  const matches = matchAssetToTargets(state.ir.root, upload, { taken });
+
+  // An explicit target wins over the matcher: the designer is answering the
+  // question the matcher was asking.
+  const chosenId = message.targetId ?? (isConfident(matches) ? matches[0]!.id : undefined);
+  if (!chosenId) {
+    post({
+      type: "asset-unmapped",
+      fileName: message.fileName,
+      imageHash: image.hash,
+      width: message.width,
+      height: message.height,
+      candidates: matches,
+    });
+    return;
+  }
+
+  const target = await sceneNode(chosenId);
+  if (!target) {
+    fail("That element is no longer in this frame.");
+    return;
+  }
+
+  const taken_names = new Set(
+    existing.filter((b) => b.imageHash !== image.hash).map((b) => b.name),
+  );
+  const binding: AssetBinding = {
+    role: "background",
+    name: suggestAssetName(message.fileName, taken_names),
+    imageHash: image.hash,
+    fileName: message.fileName,
+    width: Math.max(1, message.width),
+    height: Math.max(1, message.height),
+    targetId: target.id,
+    targetName: target.name,
+    // An exported region fills the element it came from.
+    fit: "cover",
+    mapping: message.targetId ? "manual" : "auto",
+  };
+
+  writeBindings(upsertBinding(existing, binding));
+  figma.notify(`"${message.fileName}" paints ${target.name}`);
+}
+
+/**
+ * Bind an already-registered image to an element the designer picked.
+ *
+ * Split from `uploadAsset` because the bytes are already in the document:
+ * re-running `createImage` on an answer would either duplicate the image or,
+ * with no bytes to hand, throw.
+ */
+async function placeAsset(message: {
+  imageHash: string;
+  fileName: string;
+  width: number;
+  height: number;
+  targetId: string;
+}): Promise<void> {
+  const target = await sceneNode(message.targetId);
+  if (!target) {
+    fail("That element is no longer in this frame.");
+    return;
+  }
+
+  const existing = readBindings();
+  const taken = new Set(existing.filter((b) => b.imageHash !== message.imageHash).map((b) => b.name));
+
+  writeBindings(
+    upsertBinding(existing, {
+      role: "background",
+      name: suggestAssetName(message.fileName, taken),
+      imageHash: message.imageHash,
+      fileName: message.fileName,
+      width: Math.max(1, message.width),
+      height: Math.max(1, message.height),
+      targetId: target.id,
+      targetName: target.name,
+      fit: "cover",
+      mapping: "manual",
+    }),
+  );
+  figma.notify(`"${message.fileName}" paints ${target.name}`);
+}
+
+async function retargetAsset(key: string, targetId: string): Promise<void> {
+  const target = await sceneNode(targetId);
+  if (!target) {
+    fail("Pick the element this image should paint.");
+    return;
+  }
+  writeBindings(retargetBinding(readBindings(), key, { id: target.id, name: target.name }));
+}
+
+function removeAsset(key: string): void {
+  writeBindings(removeBinding(readBindings(), key));
+}
+
+function renameAsset(key: string, name: string): void {
+  const result = renameBinding(readBindings(), key, name.trim());
+  if (!result.ok) {
+    fail(result.error);
+    return;
+  }
+  writeBindings(result.bindings);
+}
+
+function setAssetFit(key: string, fit: AssetFit): void {
+  writeBindings(setBindingFit(readBindings(), key, fit));
+}
+
 
 // ---------------------------------------------------------------------------
 // Plumbing
