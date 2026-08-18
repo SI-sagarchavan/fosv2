@@ -20,7 +20,32 @@ import {
 import { layoutBox } from "./geometry.js";
 import { isMeaningful } from "./ids.js";
 
-export type DslType = "Box" | "Stack" | "Overlay" | "Text" | "Image" | "Icon" | "Divider";
+export type DslType =
+  | "Box"
+  | "Stack"
+  | "Overlay"
+  | "Text"
+  | "Image"
+  | "Icon"
+  | "Divider"
+  | "Button";
+
+/**
+ * Figma components the designer has declared to be a DSL primitive.
+ *
+ * Keyed by `componentKey`, not by name. The NAME is what decides — a master
+ * called `atom_button` is the designer saying "this is a button" — but a name
+ * is edited, overridden per instance, and typed differently by two people,
+ * while the key is exact and survives a rename. So the name proposes the entry
+ * and the key is what it is stored against.
+ *
+ * This is the one thing that cannot be read off the IR. Everything else in this
+ * file is a field read: a TEXT node is a Text, an auto-layout frame is a Stack.
+ * Nothing in a frame's geometry distinguishes a button from a rounded box with
+ * a label in it, because at rest there is no difference — the difference is
+ * that one is pressable, and Figma has nowhere to record that.
+ */
+export type PrimitiveMap = Readonly<Record<string, DslType>>;
 
 /**
  * How thin counts as a line, in px.
@@ -70,7 +95,17 @@ export function hasAbsoluteChild(n: FrameIRNode): boolean {
   return (n.children ?? []).some((c) => c.layout.positioning === "absolute");
 }
 
-export function classify(n: FrameIRNode): DslType {
+export function classify(n: FrameIRNode, primitives: PrimitiveMap = {}): DslType {
+  /**
+   * A declared primitive wins over everything below.
+   *
+   * Deliberately first. A button IS an auto-layout frame with a label, so every
+   * rule after this one would classify it as a Stack and be right about the
+   * geometry and wrong about the thing.
+   */
+  const declared = n.componentKey ? primitives[n.componentKey] : undefined;
+  if (declared) return declared;
+
   if (n.text !== undefined) return "Text";
   /**
    * An image fill on a container is paint, not a leaf. Marking that fill as a

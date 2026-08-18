@@ -38,6 +38,8 @@ export interface CompilePreviewInput {
   theme: unknown;
   assets?: readonly PreviewAsset[];
   width?: number;
+  /** Sample payload for a bound tree's `{path}` bindings. See `PreviewSource`. */
+  data?: Record<string, unknown>;
 }
 
 /** What the panel shows beside the picture. */
@@ -94,11 +96,22 @@ export async function compilePreview(input: CompilePreviewInput): Promise<Compil
     surfaces: Object.fromEntries(result.requiredSurfaces.map((s) => [s.name, s.spec])),
   };
 
+  /**
+   * Preview at the width the frame was DRAWN at unless asked otherwise.
+   *
+   * From the IR, because the tree no longer always says: a full-width band
+   * compiles to `size.w: "full"` on purpose, and falling through to the
+   * renderer's generic default would preview a 1366px design at 1280 and show
+   * the panel a squeezed layout that no viewport actually produces.
+   */
+  const designWidth = Math.round(doc.root.geometry.relBbox.w) || doc.breakpointHint;
+
   const rendered = await renderPreview({
     tree: result.tree,
     theme: input.theme,
     surfaces,
-    ...(input.width ? { width: input.width } : {}),
+    width: input.width ?? designWidth,
+    ...(input.data ? { data: input.data } : {}),
   });
 
   return {

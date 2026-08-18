@@ -216,6 +216,88 @@
   overflow: hidden;
 }
 
+/* --- Button ------------------------------------------------------------
+ *
+ * One rule set for every variant. `Button.tsx` resolves which token family
+ * applies and hands the values down as custom properties, so adding a variant
+ * to the theme needs no CSS here.
+ *
+ * Every fallback is `transparent` or `inherit` rather than a colour, because a
+ * family legitimately omits parts: `link` has no surface, `filled` has no
+ * border. A missing var must disappear, not paint black.
+ */
+
+.fos-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--fos-space-1, 0.25rem);
+  /* A button is a control, not text: it never wraps mid-label by default. */
+  white-space: nowrap;
+  text-decoration: none;
+  cursor: pointer;
+  border: 0;
+  border-radius: var(--fos-radius-md, 0);
+  background: var(--fos-btn-surface, transparent);
+  color: var(--fos-btn-text, inherit);
+  /**
+   * No font declarations here, deliberately.
+   *
+   * `<button>` does come with a UA font that has to be overridden — but the
+   * `fos-type-*` class Button.tsx applies is what overrides it, and these rules
+   * are emitted AFTER the theme's type rules with the same specificity. A
+   * `font: inherit` reset here therefore wins the cascade and silently wipes
+   * the token: the news section's VIEW MORE label rendered in the UA serif with
+   * the type class present and losing.
+   */
+  transition: background-color 120ms ease, color 120ms ease, border-color 120ms ease;
+}
+
+.fos-button-outline {
+  border: 1px solid var(--fos-btn-border, currentColor);
+}
+
+.fos-button-link,
+.fos-button-no-padding {
+  background: none;
+}
+
+.fos-button-link {
+  text-decoration: underline;
+  text-underline-offset: 0.2em;
+}
+
+/* `:hover` only where the pointer can actually hover, so a tap does not stick. */
+@media (hover: hover) {
+  .fos-button:hover:not(:disabled):not([aria-disabled="true"]) {
+    background: var(--fos-btn-surface-hover, var(--fos-btn-surface, transparent));
+    color: var(--fos-btn-text-hover, var(--fos-btn-text, inherit));
+    border-color: var(--fos-btn-border-hover, var(--fos-btn-border, currentColor));
+  }
+}
+
+/**
+ * Focus is not optional. A design that never drew a focus state still has to
+ * be keyboard-operable, so this is the SDK's floor rather than a token read.
+ */
+.fos-button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+
+.fos-button:disabled,
+.fos-button[aria-disabled="true"] {
+  background: var(--fos-btn-surface-disabled, var(--fos-btn-surface, transparent));
+  color: var(--fos-btn-text-disabled, var(--fos-btn-text, inherit));
+  border-color: var(--fos-btn-border-disabled, var(--fos-btn-border, currentColor));
+  cursor: not-allowed;
+}
+
+/* Mid-flight: the label stays put, so the control does not resize under a tap. */
+.fos-button[aria-busy="true"] {
+  cursor: progress;
+}
+
 /* --- Icon placeholder ------------------------------------------------- */
 
 .fos-icon-unknown {

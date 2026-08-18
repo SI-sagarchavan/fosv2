@@ -213,3 +213,135 @@ export function moveNode(tree: FlatTree, id: string, newParent: string, idx: num
     }),
   );
 }
+
+export interface CollapseOptions {
+  /**
+   * The sibling instances the design drew, in document order. The FIRST is kept
+   * as the template; the rest are removed with their subtrees.
+   */
+  instances: readonly string[];
+  /** Dotted path to the array the template repeats over, e.g. `section.briefs`. */
+  over: string;
+  /** The alias one item binds under inside the template, e.g. `brief`. */
+  as: string;
+  /**
+   * How many items to render.
+   *
+   * Defaults to the number of instances the design drew, which is a fact about
+   * the design rather than a guess: a column laid out for three cards is not a
+   * column for ten, and an API that returns ten would otherwise push the page
+   * apart. Pass `null` for a genuinely unbounded list.
+   */
+  limit?: number | null;
+  /** Id for the inserted Repeater. Defaults to `<template>__repeat`. */
+  id?: string;
+}
+
+/** `{section.briefs.2.headline}` -> `{brief.headline}`, for one array and alias. */
+function realias(value: string, over: string, as: string): string {
+  const escaped = over.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const re = new RegExp(`\\{${escaped}\\.\\d+((?:\\.[A-Za-z_][A-Za-z0-9_]*)*)\\}`, "g");
+  return value.replace(re, (_match, rest: string) => `{${as}${rest}}`);
+}
+
+/** Rewrite every string in a props bag, at any depth. */
+function rebindProps(value: unknown, over: string, as: string): unknown {
+  if (typeof value === "string") return realias(value, over, as);
+  if (Array.isArray(value)) return value.map((v) => rebindProps(v, over, as));
+  if (value !== null && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value as Record<string, unknown>).map(([k, v]) => [k, rebindProps(v, over, as)]),
+    );
+  }
+  return value;
+}
+
+/** Every id in `id`'s subtree, including itself. */
+function subtreeOf(tree: FlatTree, id: string): Set<string> {
+  const ids = new Set<string>([id]);
+  let grew = true;
+  while (grew) {
+    grew = false;
+    for (const n of tree.nodes) {
+      if (n.parent !== null && ids.has(n.parent) && !ids.has(n.id)) {
+        ids.add(n.id);
+        grew = true;
+      }
+    }
+  }
+  return ids;
+}
+
+/**
+ * N sibling instances of one component -> one template under a Repeater.
+ *
+ * The mechanical half of "these three cards are one card, three times". It does
+ * the surgery and nothing else: which siblings are instances, which array they
+ * come from and what an item is called are all decided by the caller, because
+ * they cannot be derived. `canonicalSignature` gets close — on a real news
+ * section it grouped the three briefs correctly, missed two feature cards that
+ * differ by an 8px gap, and confidently grouped six headline/summary text pairs
+ * that have nothing to do with each other. It is a way to find CANDIDATES, not
+ * an answer, so the answer is an argument here.
+ *
+ * Bindings are re-aliased on the way: the design's instances were bound by
+ * index, and one template cannot be, so `{section.briefs.2.headline}` becomes
+ * `{brief.headline}` throughout the kept subtree. Any index is rewritten, not
+ * just zero — the caller may keep whichever instance is the cleanest.
+ *
+ * Coverage survives this. C1 in @fanos/conform counts everything under a
+ * container holding a Repeater as `repeated` rather than `missing`, so the two
+ * removed cards are still accounted for against the IR.
+ */
+export function collapseToRepeater(tree: FlatTree, options: CollapseOptions): FlatTree {
+  const { instances, over, as } = options;
+
+  if (instances.length === 0) throw new TreeOpError("collapseToRepeater: no instances given");
+  if (new Set(instances).size !== instances.length) {
+    throw new TreeOpError("collapseToRepeater: an instance is listed twice");
+  }
+  if (!over.trim()) throw new TreeOpError("collapseToRepeater: `over` is empty");
+  if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(as)) {
+    throw new TreeOpError(
+      `collapseToRepeater: \`as\` must be a bare name — "${as}" cannot be the head of a data path`,
+    );
+  }
+
+  const nodes = instances.map((id) => requireNode(tree, id));
+  const template = nodes[0]!;
+  if (template.parent === null) {
+    throw new TreeOpError(`cannot collapse the root node "${template.id}"`, template.id);
+  }
+  const strayParent = nodes.find((n) => n.parent !== template.parent);
+  if (strayParent) {
+    throw new TreeOpError(
+      `collapseToRepeater: "${strayParent.id}" is not a sibling of "${template.id}" — ` +
+        `instances of one component share a parent`,
+      strayParent.id,
+    );
+  }
+
+  // Re-alias first, while the template is still where the caller found it.
+  const kept = subtreeOf(tree, template.id);
+  let next: FlatTree = withNodes(
+    tree,
+    tree.nodes.map((n) =>
+      kept.has(n.id)
+        ? { ...n, props: rebindProps(n.props, over, as) as Record<string, unknown> }
+        : n,
+    ),
+  );
+
+  for (const extra of instances.slice(1)) {
+    next = removeNode(next, extra, { cascade: true });
+  }
+
+  const limit = options.limit === undefined ? instances.length : options.limit;
+  return wrapIn(
+    next,
+    template.id,
+    "Repeater",
+    { over, as, ...(limit === null ? {} : { limit }) },
+    options.id ?? `${template.id}__repeat`,
+  );
+}

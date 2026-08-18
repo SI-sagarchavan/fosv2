@@ -16,7 +16,8 @@ export {
   isRule,
   paintsAsSurface,
 } from "./classify.js";
-export type { DslType } from "./classify.js";
+export type { DslType, PrimitiveMap } from "./classify.js";
+export { declaredType, primitivesFromNames, PRIMITIVE_PREFIX } from "./primitives.js";
 export { IdAllocator, isMeaningful, slug } from "./ids.js";
 export { canonicalRef, candidates, paintRef } from "./refs.js";
 export { length, place, raw, round, size, space, stack, text } from "./props.js";

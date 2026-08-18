@@ -51,7 +51,14 @@ export class FakeToolchain implements Toolchain {
 
   parseIr(): ParsedIr {
     this.calls.push("parseIr");
-    return this.script.parseIr?.() ?? { handle: { root: "ir" }, nodeCount: 42, rootNodeId: "1:1" };
+    return (
+      this.script.parseIr?.() ?? {
+        handle: { root: "ir" },
+        nodeCount: 42,
+        rootNodeId: "1:1",
+        designWidth: 1366,
+      }
+    );
   }
 
   parseTheme(): ParsedTheme {

@@ -63,6 +63,16 @@ export const previewRequestSchema = z.object({
     .optional()
     .default([]),
   width: z.number().int().positive().max(4000).optional(),
+  /**
+   * A sample payload the tree's `{path}` bindings resolve against.
+   *
+   * Optional, and inert on a freshly compiled tree: the compiler emits Figma's
+   * literal characters on purpose, so there is nothing to fill until something
+   * has bound the tree. It matters for the step after that — a bound tree
+   * rendered without a bag shows `{section.title}` to the designer, which looks
+   * like a broken preview rather than a missing argument.
+   */
+  data: z.record(z.unknown()).optional(),
 });
 export type PreviewRequest = z.infer<typeof previewRequestSchema>;
 

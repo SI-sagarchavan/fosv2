@@ -223,11 +223,19 @@ function RunTrace({
   );
 }
 
-/** The widths worth checking. Type tokens are per-breakpoint, so these differ. */
+/**
+ * The widths worth checking. Type tokens are per-breakpoint, so these differ.
+ *
+ * Two desktops, because one is not enough to see the thing most likely to be
+ * wrong. A frame drawn on a 1366 artboard looks perfect at 1280 whether it is
+ * fluid or pinned to the artboard; the difference only shows up on a wider
+ * monitor, as a gutter of bare page down the right-hand side.
+ */
 const WIDTHS = [
   { label: "Mobile", px: 390 },
   { label: "Tablet", px: 768 },
   { label: "Desktop", px: 1280 },
+  { label: "Wide", px: 1920 },
 ] as const;
 
 /**

@@ -25,6 +25,7 @@ export type { DataBag, InterpolateResult } from "./resolve/data.js";
 export { Render } from "./components/Render.js";
 export type { RenderProps } from "./components/Render.js";
 export { Box } from "./components/Box.js";
+export { Button } from "./components/Button.js";
 export { Stack } from "./components/Stack.js";
 export { Overlay } from "./components/Overlay.js";
 export { Text } from "./components/Text.js";

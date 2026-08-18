@@ -12,8 +12,17 @@
  */
 
 import { describe, expect, it } from "vitest";
-import { reify, type FlatTree } from "../src/flat.js";
-import { insertBefore, moveNode, removeNode, replaceNode, setProp, TreeOpError, wrapIn } from "../src/ops.js";
+import { reify, type FlatNode, type FlatTree } from "../src/flat.js";
+import {
+  collapseToRepeater,
+  insertBefore,
+  moveNode,
+  removeNode,
+  replaceNode,
+  setProp,
+  TreeOpError,
+  wrapIn,
+} from "../src/ops.js";
 import { validate } from "../src/validate.js";
 import { card, nodeOf, registry } from "./helpers.js";
 
@@ -217,6 +226,144 @@ describe("immutability", () => {
     removeNode(before, "left");
     moveNode(before, "header", "body", 0);
     expect(JSON.stringify(before)).toBe(snapshot);
+  });
+});
+
+/**
+ * The shape a section arrives in before the repeat is recognised: three
+ * instances of one card, each bound to its own index of the same array.
+ *
+ *   column (Stack)
+ *    ├ brief_1 (Stack) ├ title_1 {section.briefs.0.headline}
+ *    │                 └ date_1  {section.briefs.0.date}
+ *    ├ brief_2 …0 -> 1
+ *    └ brief_3 …0 -> 2
+ */
+function column(): FlatTree {
+  const nodes: FlatNode[] = [
+    { id: "column", parent: null, idx: 0, type: "Stack", src: "9:1", props: { direction: "column", gap: "space.4" } },
+  ];
+  for (let i = 0; i < 3; i++) {
+    const n = i + 1;
+    nodes.push(
+      { id: `brief_${n}`, parent: "column", idx: i, type: "Stack", src: `9:1${n}`, props: { direction: "row" } },
+      {
+        id: `title_${n}`,
+        parent: `brief_${n}`,
+        idx: 0,
+        type: "Text",
+        src: `9:2${n}`,
+        props: { content: `{section.briefs.${i}.headline}`, style: "type.body_md_bold" },
+      },
+      {
+        id: `date_${n}`,
+        parent: `brief_${n}`,
+        idx: 1,
+        type: "Text",
+        src: `9:3${n}`,
+        props: { content: `{section.briefs.${i}.date}`, style: "type.body_xs_regular" },
+      },
+    );
+  }
+  return { schemaVersion: "1.0.0", nodes };
+}
+
+describe("collapseToRepeater", () => {
+  const collapse = (over = "section.briefs", as = "brief") =>
+    collapseToRepeater(column(), { instances: ["brief_1", "brief_2", "brief_3"], over, as });
+
+  it("keeps the first instance and drops the rest with their subtrees", () => {
+    const after = collapse();
+    expect(after.nodes.some((n) => n.id === "brief_1")).toBe(true);
+    for (const gone of ["brief_2", "brief_3", "title_2", "date_3"]) {
+      expect(after.nodes.some((n) => n.id === gone), `${gone} should be gone`).toBe(false);
+    }
+  });
+
+  it("puts a Repeater where the instances were, holding the template", () => {
+    const repeater = at(collapse(), "brief_1__repeat");
+    expect(repeater.type).toBe("Repeater");
+    expect(repeater.parent).toBe("column");
+    expect(repeater.idx).toBe(0);
+    expect(repeater.props).toEqual({ over: "section.briefs", as: "brief", limit: 3 });
+    expect(at(collapse(), "brief_1").parent).toBe("brief_1__repeat");
+  });
+
+  /**
+   * The whole point of the alias. One template cannot be bound to index 0 —
+   * every item would render the first story.
+   */
+  it("re-aliases the template's index-bound paths", () => {
+    const after = collapse();
+    expect(at(after, "title_1").props["content"]).toBe("{brief.headline}");
+    expect(at(after, "date_1").props["content"]).toBe("{brief.date}");
+  });
+
+  it("rewrites whichever index the kept instance carried", () => {
+    const after = collapseToRepeater(column(), {
+      instances: ["brief_2", "brief_1", "brief_3"],
+      over: "section.briefs",
+      as: "brief",
+    });
+    expect(at(after, "title_2").props["content"]).toBe("{brief.headline}");
+  });
+
+  it("leaves paths into other data alone", () => {
+    const before = setProp(column(), "title_1", "content", "{section.title} — {section.briefs.0.headline}");
+    const after = collapseToRepeater(before, {
+      instances: ["brief_1", "brief_2", "brief_3"],
+      over: "section.briefs",
+      as: "brief",
+    });
+    expect(at(after, "title_1").props["content"]).toBe("{section.title} — {brief.headline}");
+  });
+
+  /**
+   * A column laid out for three cards is not a column for ten, and the design
+   * is the only thing that knows which. `null` is how a caller says otherwise.
+   */
+  it("limits to the number of instances the design drew, unless told not to", () => {
+    expect(at(collapse(), "brief_1__repeat").props["limit"]).toBe(3);
+    const unbounded = collapseToRepeater(column(), {
+      instances: ["brief_1", "brief_2"],
+      over: "section.briefs",
+      as: "brief",
+      limit: null,
+    });
+    expect(at(unbounded, "brief_1__repeat").props).toEqual({ over: "section.briefs", as: "brief" });
+  });
+
+  it("leaves the tree reifiable and valid", () => {
+    const after = collapse();
+    expect(() => reify(after)).not.toThrow();
+    expect(check(after).errors).toEqual([]);
+  });
+
+  it("does not mutate the input", () => {
+    const before = column();
+    collapseToRepeater(before, { instances: ["brief_1", "brief_2", "brief_3"], over: "section.briefs", as: "brief" });
+    expect(before.nodes).toHaveLength(10);
+    expect(at(before, "title_1").props["content"]).toBe("{section.briefs.0.headline}");
+  });
+
+  it("refuses instances that are not siblings", () => {
+    expect(() =>
+      collapseToRepeater(column(), { instances: ["brief_1", "title_2"], over: "section.briefs", as: "brief" }),
+    ).toThrow(/share a parent/);
+  });
+
+  it("refuses an alias that cannot head a data path", () => {
+    expect(() => collapse("section.briefs", "brief.item")).toThrow(TreeOpError);
+    expect(() => collapse("section.briefs", "")).toThrow(TreeOpError);
+  });
+
+  it("refuses a duplicate or missing instance", () => {
+    expect(() =>
+      collapseToRepeater(column(), { instances: ["brief_1", "brief_1"], over: "section.briefs", as: "brief" }),
+    ).toThrow(/twice/);
+    expect(() =>
+      collapseToRepeater(column(), { instances: ["ghost"], over: "section.briefs", as: "brief" }),
+    ).toThrow(TreeOpError);
   });
 });
 

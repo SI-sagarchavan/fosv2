@@ -9,6 +9,7 @@ import type { FlatTree, Node } from "@fanos/dsl";
 import { childrenOf, reify, rootOf } from "@fanos/dsl";
 import type { NodeRenderContext, RenderConfig } from "../context.js";
 import { Box } from "./Box.js";
+import { Button } from "./Button.js";
 import { Stack } from "./Stack.js";
 import { Overlay } from "./Overlay.js";
 import { Text } from "./Text.js";
@@ -151,6 +152,8 @@ function RenderNode({
       );
     case "Text":
       return <Text node={node} ctx={ctx} />;
+    case "Button":
+      return <Button node={node} ctx={ctx} />;
     case "Image":
       return <Image node={node} ctx={ctx} />;
     case "Icon":

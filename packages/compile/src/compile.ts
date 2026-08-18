@@ -40,16 +40,46 @@ import {
   isIconGroup,
   paintsAsSurface,
   type DslType,
+  type PrimitiveMap,
 } from "./classify.js";
 import { IdAllocator, isMeaningful, slug } from "./ids.js";
 import { canonicalRef } from "./refs.js";
 import { layoutBox } from "./geometry.js";
-import { place, raw, size, space, stack, text, unhuggableAxes, type Raw } from "./props.js";
+import {
+  button,
+  childrenFillRow,
+  inlineStretch,
+  isBand,
+  place,
+  raw,
+  size,
+  space,
+  stack,
+  text,
+  unhuggableAxes,
+  type Raw,
+  type SpaceProps,
+} from "./props.js";
+import { primitivesFromNames } from "./primitives.js";
 import { SurfaceResolver, specOf, type RequiredSurface } from "./surfaces.js";
 
 export interface CompileOptions {
   theme: NormalizedTheme;
   surfaces?: SurfaceSet;
+  /**
+   * Figma components declared to be DSL primitives, keyed by `componentKey`.
+   *
+   * Layered OVER what the document's own component names declare — see
+   * `primitivesFromNames`. The names are the designer's channel and cover the
+   * normal case without anything having to be wired or stored; this is for the
+   * two things a name cannot do: correct a component that is named wrongly, and
+   * declare one whose master nobody can rename.
+   *
+   * A component neither names nor maps compiles exactly as it did before — as
+   * the frames it is drawn from — and is reported once, so the gap is visible
+   * rather than silent.
+   */
+  primitives?: PrimitiveMap;
 }
 
 export interface CompileNote {
@@ -63,6 +93,8 @@ export interface CompileNote {
     | "background-asset"
     | "decorative-vector"
     | "pinned-size"
+    | "fluid-band"
+    | "unmapped-component"
     | "unsupported-type";
   irId: string;
   nodeId?: string;
@@ -91,6 +123,9 @@ interface Ctx {
   readonly theme: NormalizedTheme;
   readonly ids: IdAllocator;
   readonly surfaces: SurfaceResolver;
+  readonly primitives: PrimitiveMap;
+  /** Components seen that the primitive map does not name, for one note each. */
+  readonly unmapped: Map<string, { name: string; count: number }>;
   readonly assetsByTarget: Map<string, AssetBinding[]>;
   /**
    * Every IR node by id.
@@ -116,6 +151,10 @@ export function compile(doc: FrameIRDocument, options: CompileOptions): CompileR
     theme: options.theme,
     ids: new IdAllocator(),
     surfaces: new SurfaceResolver(options.surfaces),
+    // The document's own names first, so the common case needs no configuration;
+    // an explicit entry wins, because it is the one someone typed on purpose.
+    primitives: { ...primitivesFromNames(doc), ...(options.primitives ?? {}) },
+    unmapped: new Map(),
     assetsByTarget,
     byId,
     usedAssets: new Map(),
@@ -126,6 +165,24 @@ export function compile(doc: FrameIRDocument, options: CompileOptions): CompileR
   };
 
   emit(ctx, doc.root, null, 0, true, undefined);
+
+  /**
+   * One note per unmapped component, not per instance.
+   *
+   * This is how the primitive map gets filled in: from what a real file
+   * actually uses, in usage order, rather than from someone enumerating a
+   * design system up front. A component nobody instantiates never needs an
+   * entry, and one used 40 times says so.
+   */
+  for (const [key, seen] of ctx.unmapped) {
+    ctx.notes.push({
+      kind: "unmapped-component",
+      irId: key,
+      message:
+        `"${seen.name}" is a Figma component used ${seen.count} time(s) with no primitive ` +
+        `declared — compiled as frames. Map componentKey ${key} to declare what it is.`,
+    });
+  }
 
   return {
     tree: { schemaVersion: SCHEMA_VERSION, nodes: ctx.nodes },
@@ -204,6 +261,20 @@ function describePlacement(source: FrameIRNode, target: FrameIRNode): string {
 }
 
 /**
+ * What a child needs to know about the node it is being emitted into.
+ *
+ * `fluid` is the piece that cannot be recovered later: whether the parent's
+ * width is a number or the page. A child of a fixed parent may safely keep the
+ * box the IR gave it; a child of a fluid one may not, or it tears away from the
+ * edge the design put it against.
+ */
+interface Parent {
+  node: FrameIRNode;
+  type: DslType;
+  fluid: boolean;
+}
+
+/**
  * Emit one IR node and recurse.
  *
  * @param parentId  DSL parent id, or null for the root
@@ -216,20 +287,61 @@ function emit(
   parentId: string | null,
   idx: number,
   isRoot: boolean,
-  parentType?: DslType,
+  parent?: Parent,
 ): boolean {
+  const parentType = parent?.type;
   ctx.irNodes += 1;
 
   const iconGroup = !isRoot && isIconGroup(node);
 
-  const type: DslType = iconGroup ? "Icon" : classify(node);
+  const declared: DslType = iconGroup ? "Icon" : classify(node, ctx.primitives);
+
+  /**
+   * A declared primitive has to survive derivation, or it is not one.
+   *
+   * Decided BEFORE the type is fixed, because the fallback is a different node
+   * type with different children: a Button subsumes its subtree, and one that
+   * kept the type without the props would emit a labelless control with its own
+   * label nested inside it.
+   */
+  let type = declared;
+  const buttonProps = declared === "Button" ? button(ctx.theme, node) : undefined;
+  if (declared === "Button" && !buttonProps) {
+    type = classify(node);
+    ctx.notes.push({
+      kind: "unmapped-component",
+      irId: node.id,
+      message:
+        `"${node.name}" is declared a Button but has no text under it — compiled as ` +
+        `${type} instead. A button without a label is not a button.`,
+    });
+  }
+
   const id = ctx.ids.take(node, type.toLowerCase());
 
   const props: Record<string, unknown> = {};
 
+  /**
+   * A declared component the map does not name, counted for one note at the end.
+   *
+   * Counted on every instance rather than on the master, because the master may
+   * live on a page nobody exported — what matters is that this file uses it.
+   */
+  if (node.componentKey && !ctx.primitives[node.componentKey] && isMeaningful(node.name)) {
+    const seen = ctx.unmapped.get(node.componentKey);
+    if (seen) seen.count += 1;
+    else ctx.unmapped.set(node.componentKey, { name: node.name, count: 1 });
+  }
+
   // --- paint -------------------------------------------------------------
+  /**
+   * A Button paints itself from its own token family — `button_<variant>_
+   * style_<n>_surface_*` — and it has three states where a surface has one. A
+   * folded surface here would win over the family and freeze the button in the
+   * colour it was drawn in, which is the whole bug the primitive exists to fix.
+   */
   // Read before children so a fill plate can be folded in below.
-  applyPaint(ctx, node, props, id);
+  if (type !== "Button") applyPaint(ctx, node, props, id);
 
   // --- layout ------------------------------------------------------------
   if (type === "Stack") Object.assign(props, stack(ctx.theme, node.layout));
@@ -241,11 +353,28 @@ function emit(
   // hairlines in the fixtures card declare 16px padding inside a 1px-tall box,
   // which Figma cannot honour and which CSS turns into a 33px bar. The IR's own
   // `bbox` says the node occupies 1px on screen; anything taller contradicts it.
-  const sp = type === "Divider" ? undefined : space(ctx.theme, node.layout);
+  // A Button's padding comes from the frame that actually carries its box,
+  // which is usually the master INSIDE the instance — see `button()`.
+  const sp =
+    type === "Divider" || type === "Button" ? undefined : space(ctx.theme, node.layout);
   if (sp) props.space = sp;
 
-  const sz = size(node, isRoot);
+  const band = isRoot && isBand(node);
+  // `Button.size` is the sm/md/lg enum, which shadows the universal size object
+  // — the DSL gives a node's own field precedence, so a box here would be lost.
+  const sz = type === "Button" ? undefined : size(node, isRoot, band);
   if (sz && Object.keys(sz).length > 0) props.size = sz;
+
+  if (band) {
+    ctx.notes.push({
+      kind: "fluid-band",
+      irId: node.id,
+      nodeId: id,
+      message:
+        `the frame is ${Math.round(layoutBox(node).w)}px wide — a page-width band, not an ` +
+        `object — so it fills the viewport rather than being pinned to the artboard`,
+    });
+  }
 
   // Pinning a raw px costs responsiveness, so it is never done quietly.
   if (!isRoot) {
@@ -263,15 +392,101 @@ function emit(
     }
   }
 
+  let stretched = false;
   if (!isRoot && (node.layout.positioning === "absolute" || parentType === "Overlay")) {
     // A GROUP has no auto-layout, so Figma reports its children as `auto`
     // positioned even though nothing flows them — their box IS their position.
     // S8 requires an anchor on every Overlay child, and it is right to.
     props.place = place(node);
+
+    /**
+     * A child that spans a fluid parent spans it at every width, not just the
+     * one it was drawn at. See `inlineStretch` — the offsets become padding and
+     * the box stretches, which is the same rectangle here and the right one
+     * everywhere else.
+     */
+    const stretch = parent?.fluid ? inlineStretch(ctx.theme, node, parent.node) : null;
+    if (stretch) {
+      stretched = true;
+      const { offset } = props.place as { offset?: { block?: Raw; inline?: Raw } };
+      props.place = {
+        anchor: "top-fill",
+        ...(offset?.block !== undefined ? { offset: { block: offset.block } } : {}),
+      };
+
+      // The design's side gaps, now inside the box. `inlineStretch` has already
+      // folded in whatever padding the node declared on that edge.
+      const padded = splitInline(props.space as SpaceProps | undefined);
+      if (stretch.pl !== undefined) padded.pl = stretch.pl;
+      if (stretch.pr !== undefined) padded.pr = stretch.pr;
+      if (Object.keys(padded).length > 0) props.space = padded;
+
+      // `width` alongside two insets over-constrains the box, and CSS resolves
+      // that by dropping the end inset — which is the pin all over again.
+      if (props.size) {
+        delete (props.size as { w?: unknown }).w;
+        if (Object.keys(props.size).length === 0) delete props.size;
+      }
+
+      /**
+       * The box really has moved, and C2 is right to notice.
+       *
+       * Its padding box now spans the parent where the IR says it started
+       * 41.7px in — while every descendant still lands exactly where Figma put
+       * it, because the offset became the padding. That is a deliberate
+       * departure with a reason, which is what `deviations` is for, and `max: 1`
+       * keeps any OTHER geometry problem on this node failing.
+       */
+      const box = layoutBox(node);
+      props._meta = {
+        ...((props._meta as Record<string, unknown> | undefined) ?? {}),
+        deviations: [
+          {
+            check: "C2",
+            reason:
+              `stretched to follow a fluid parent: the IR's ${Math.round(box.w)}px box at ` +
+              `x=${Math.round(box.x)} became the parent's full width with the side gaps as ` +
+              `padding, so the content sits where the IR puts it and the box does not`,
+            max: 1,
+          },
+        ],
+      };
+
+      ctx.notes.push({
+        kind: "fluid-band",
+        irId: node.id,
+        nodeId: id,
+        message:
+          `spans its fluid parent, so its ${Math.round(box.w)}px width became a ` +
+          `stretch with the side gaps as padding — it now follows the parent's width`,
+      });
+    }
+  }
+
+  /**
+   * A stretched row's children reached both edges at the design width, and
+   * `justify: start` only reproduces that while the row is exactly as wide as
+   * they are. See `childrenFillRow`.
+   */
+  if (stretched && type === "Stack" && props.direction === "row" && props.justify === "start") {
+    if (childrenFillRow(node)) {
+      props.justify = "between";
+      ctx.notes.push({
+        kind: "fluid-band",
+        irId: node.id,
+        nodeId: id,
+        message:
+          `children fill this row edge to edge, so the free space a wider viewport adds is ` +
+          `distributed between them rather than piling up after the last one`,
+      });
+    }
   }
 
   // --- leaves ------------------------------------------------------------
   switch (type) {
+    case "Button":
+      Object.assign(props, buttonProps);
+      break;
     case "Text": {
       const t = text(ctx.theme, node);
       if (!t) {
@@ -391,7 +606,17 @@ function emit(
   ctx.nodes.push({ id, parent: parentId, idx, type, src: node.id, props } as FlatNode);
 
   // --- children ----------------------------------------------------------
-  const leaf = type === "Text" || type === "Image" || type === "Icon" || type === "Divider";
+  /**
+   * A Button subsumes what it is drawn from: the label, the glyphs and the
+   * wrapper frames are all `button()`'s inputs, and emitting them again would
+   * paint a second label inside the control.
+   */
+  const leaf =
+    type === "Text" ||
+    type === "Image" ||
+    type === "Icon" ||
+    type === "Divider" ||
+    type === "Button";
   if (leaf) {
     // Everything below a leaf is how Figma drew it, not separate content.
     const below = countIr(node) - 1;
@@ -402,6 +627,15 @@ function emit(
 
   // Does a photo already cover this element? Decided once, not per child.
   const painted = (ctx.assetsByTarget.get(node.id) ?? []).length > 0;
+
+  /**
+   * Is this node's own width the page's, rather than a number?
+   *
+   * True for a band, for anything Figma set to fill, and for a node that was
+   * just stretched to span a fluid parent — fluidity is inherited, so a row
+   * that follows the band must not hand its children a pinned box either.
+   */
+  const fluid = stretched || (props.size as { w?: unknown } | undefined)?.w === "full";
 
   let out = 0;
   for (const child of node.children ?? []) {
@@ -434,9 +668,33 @@ function emit(
     }
     // Only a child that actually produced a node consumes an index; S1 requires
     // siblings to be contiguous from 0, and a skipped child would leave a hole.
-    if (emit(ctx, child, id, out, false, type)) out += 1;
+    if (emit(ctx, child, id, out, false, { node, type, fluid })) out += 1;
   }
   return true;
+}
+
+/**
+ * Padding shorthands expanded far enough that one inline edge can be rewritten.
+ *
+ * `p` and `px` say the same thing about both edges, and a stretch has a
+ * different number for each. The block axis is left in whatever form `space`
+ * chose, because nothing here touches it.
+ */
+function splitInline(sp: SpaceProps | undefined): SpaceProps {
+  const out: SpaceProps = { ...(sp ?? {}) };
+  if (out.p !== undefined) {
+    out.pt ??= out.p;
+    out.pb ??= out.p;
+    out.pl ??= out.p;
+    out.pr ??= out.p;
+    delete out.p;
+  }
+  if (out.px !== undefined) {
+    out.pl ??= out.px;
+    out.pr ??= out.px;
+    delete out.px;
+  }
+  return out;
 }
 
 /** Fill / stroke / radius / shadow -> a `surface` prop, plus notes. */

@@ -151,22 +151,23 @@ describe("C5 — src", () => {
   });
 });
 
-describe("C2 — geometry", () => {
-  const boxesFor = (t: FlatTree, doc: FrameIRDocument) => {
-    // Synthesise perfect boxes from the IR, so the test exercises the
-    // comparison rather than the browser.
-    const index = new Map<string, { x: number; y: number; w: number; h: number }>();
-    const walk = (n: FrameIRDocument["root"], x: number, y: number): void => {
-      const abs = { x: x + n.geometry.relBbox.x, y: y + n.geometry.relBbox.y };
-      index.set(n.id, { ...abs, w: n.geometry.relBbox.w, h: n.geometry.relBbox.h });
-      for (const c of n.children ?? []) walk(c, abs.x, abs.y);
-    };
-    walk(doc.root, -doc.root.geometry.relBbox.x, -doc.root.geometry.relBbox.y);
-    return t.nodes
-      .filter((n) => index.has(n.src))
-      .map((n) => ({ id: n.id, ...index.get(n.src)! }));
+/**
+ * Perfect boxes, synthesised from the IR, so a test exercises the comparison
+ * rather than the browser. Shared with the deviation suite, which needs an
+ * otherwise-clean render to put one deliberate departure into.
+ */
+const boxesFor = (t: FlatTree, doc: FrameIRDocument) => {
+  const index = new Map<string, { x: number; y: number; w: number; h: number }>();
+  const walk = (n: FrameIRDocument["root"], x: number, y: number): void => {
+    const abs = { x: x + n.geometry.relBbox.x, y: y + n.geometry.relBbox.y };
+    index.set(n.id, { ...abs, w: n.geometry.relBbox.w, h: n.geometry.relBbox.h });
+    for (const c of n.children ?? []) walk(c, abs.x, abs.y);
   };
+  walk(doc.root, -doc.root.geometry.relBbox.x, -doc.root.geometry.relBbox.y);
+  return t.nodes.filter((n) => index.has(n.src)).map((n) => ({ id: n.id, ...index.get(n.src)! }));
+};
 
+describe("C2 — geometry", () => {
   it("passes when every box matches the IR", () => {
     const t = tree("newsletter-signup");
     const doc = ir("newsletter-signup");
@@ -225,6 +226,40 @@ describe("_meta.deviations", () => {
     const r = conform(t, ir("player-card"), { theme });
     expect(r.ok).toBe(false);
     expect(r.errors.some((e) => e.message.includes("past the declared max"))).toBe(true);
+  });
+
+  /**
+   * A waived box is not error magnitude.
+   *
+   * `totalDelta` is the number a reader watches to tell whether a tree is
+   * getting better, and the compiler now produces boxes that depart from the IR
+   * on purpose — a band's content row is stretched to follow its fluid parent,
+   * with the old offset carried as padding, so the row's box is the band's and
+   * every descendant is still where Figma put it. Counting that departure would
+   * report a large and permanent regression for a layout nobody is meant to fix.
+   */
+  it("takes a waived geometry failure back out of the totals", () => {
+    const t = tree("newsletter-signup");
+    const doc = ir("newsletter-signup");
+    // One node stretched past its IR box, the way a band's content row is.
+    const boxes = boxesFor(t, doc).map((b) =>
+      b.id === "copy" ? { ...b, x: b.x - 40, w: b.w + 60 } : b,
+    );
+
+    const before = conform(t, doc, { theme, boxes, only: ["C2"] });
+    expect(before.errors.map((e) => e.nodeId)).toEqual(["copy"]);
+    expect(before.summary.geometry.totalDelta).toBeGreaterThan(50);
+
+    nodeOf(t, "copy").props._meta = {
+      deviations: [{ check: "C2", reason: "stretched to follow a fluid parent", max: 1 }],
+    };
+    const after = conform(t, doc, { theme, boxes, only: ["C2"] });
+    expect(after.ok).toBe(true);
+    expect(after.summary.waived).toBe(1);
+    expect(after.summary.geometry.totalDelta).toBe(0);
+    expect(after.summary.geometry.worstDelta).toBe(0);
+    // Still reported, with the reason attached — waived, not hidden.
+    expect(after.infos.some((i) => i.code === "C2" && i.nodeId === "copy")).toBe(true);
   });
 
   it("waives only the check it names", () => {

@@ -63,12 +63,15 @@ function expectedFor(
     "top-start": { block: "start", inline: "start" },
     "top-center": { block: "start", inline: "center" },
     "top-end": { block: "start", inline: "end" },
+    "top-fill": { block: "start", inline: "both" },
     "mid-start": { block: "center", inline: "start" },
     center: { block: "center", inline: "center" },
     "mid-end": { block: "center", inline: "end" },
+    "mid-fill": { block: "center", inline: "both" },
     "bottom-start": { block: "end", inline: "start" },
     "bottom-center": { block: "end", inline: "center" },
     "bottom-end": { block: "end", inline: "end" },
+    "bottom-fill": { block: "end", inline: "both" },
   };
 
   const a = axes[anchor];
@@ -114,6 +117,25 @@ describe("resolveAnchor exhaustive table", () => {
       }
     });
   }
+});
+
+/**
+ * Version skew, which is normal rather than exceptional: a tree is a stored
+ * artifact and the renderer that draws it can be older than the compiler that
+ * wrote it. This used to throw and take the whole page down.
+ */
+describe("resolveAnchor with an anchor from the future", () => {
+  it("places the node at top-start rather than throwing", () => {
+    const got = resolveAnchor({
+      anchor: "corner-swirl" as Anchor,
+      offset: { block: "space.4" },
+    });
+    expect(got).toEqual({
+      position: "absolute",
+      insetBlockStart: "var(--fos-space-4)",
+      insetInlineStart: "0",
+    });
+  });
 });
 
 describe("resolveAnchor fixture cases", () => {

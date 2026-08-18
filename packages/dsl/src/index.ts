@@ -118,6 +118,7 @@ export { emitDocs } from "./emit/docs.js";
 
 // Part 8 — tree operations
 export {
+  collapseToRepeater,
   insertBefore,
   moveNode,
   removeNode,
@@ -126,4 +127,4 @@ export {
   TreeOpError,
   wrapIn,
 } from "./ops.js";
-export type { RemoveOptions } from "./ops.js";
+export type { CollapseOptions, RemoveOptions } from "./ops.js";

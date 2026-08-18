@@ -48,12 +48,35 @@ import { z } from "zod";
  * A consumer must know which of these a corpus row was produced with, so the
  * version is part of every document.
  *
+ * 1.7.0 — adds `truncation` and `maxLines` to a text node.
+ *
+ * `autoResize` alone could not say that a text is clamped. It carries Figma's
+ * OLD truncation mode, which current Figma does not produce: a designer today
+ * sets `textTruncation: ENDING` on an auto-height layer, and the layer reports
+ * `autoResize: "HEIGHT"` like any other. The clamp was therefore invisible, and
+ * a news card whose Figma box is two lines tall rendered all 474 characters of
+ * its body copy — six of them in one section, which took a 444px band to 837px
+ * and left the design unrecognisable inside its own clip.
+ *
+ * Both fields are optional and absent on 1.1.0–1.6.0 documents, which still
+ * parse and still compile exactly as they did: no clamp is inferred from a box
+ * that merely looks too small, because a text that genuinely flows is
+ * indistinguishable from one that is clamped without Figma saying so.
+ *
  * Hidden nodes are not in the document: they are skipped during traversal, as
  * in 1.0.0. Should that ever change, it is a version bump, not a silent one —
  * a corpus row's node set must be inferable from its `irVersion` alone.
  */
-export const IR_VERSION = "1.6.0" as const;
-export const IR_VERSIONS = ["1.1.0", "1.2.0", "1.3.0", "1.4.0", "1.5.0", "1.6.0"] as const;
+export const IR_VERSION = "1.7.0" as const;
+export const IR_VERSIONS = [
+  "1.1.0",
+  "1.2.0",
+  "1.3.0",
+  "1.4.0",
+  "1.5.0",
+  "1.6.0",
+  "1.7.0",
+] as const;
 
 /** pluginData key on the export root. The list of bindings lives on the frame. */
 export const ASSET_PLUGIN_KEY = "fanos/assets";
@@ -306,6 +329,10 @@ export const effectSchema = z.object({
 });
 export type Effect = z.infer<typeof effectSchema>;
 
+/** Figma's `textTruncation`. Only `ENDING` is recorded; see `textSchema`. */
+export const truncationSchema = z.enum(["ENDING"]);
+export type Truncation = z.infer<typeof truncationSchema>;
+
 export const textSchema = z.object({
   characters: z.string(),
   styleRef: z.string().optional(),
@@ -317,6 +344,23 @@ export const textSchema = z.object({
   lineHeight: z.union([z.number(), z.literal("auto")]),
   autoResize: autoResizeSchema,
   lines: z.number(),
+  /**
+   * Present only when the layer is clamped (1.7.0+).
+   *
+   * `DISABLED` is not recorded, for the same reason an unset padding is not
+   * written as `0`: absence already means it. That does make absence ambiguous
+   * between "not clamped" and "document too old to say", but both answers lead
+   * to the same place — no clamp — so nothing downstream has to tell them apart.
+   */
+  truncation: truncationSchema.optional(),
+  /**
+   * Figma's `maxLines`, when the designer pinned one.
+   *
+   * Null in Figma means "clamp at whatever the box holds" rather than "do not
+   * clamp", so it is omitted here and the consumer falls back to `lines` — the
+   * count the box itself implies.
+   */
+  maxLines: z.number().optional(),
 });
 export type TextInfo = z.infer<typeof textSchema>;
 
@@ -443,9 +487,34 @@ export const frameIRDocumentSchema = z.object({
 });
 export type FrameIRDocument = z.infer<typeof frameIRDocumentSchema>;
 
-/** Runtime validator. Returns the parsed document or throws a ZodError. */
+/**
+ * Runtime validator. Returns the parsed document or throws a ZodError — except
+ * for one case it can explain far better than Zod can.
+ *
+ * A plugin that has been reloaded ahead of the service reading its exports
+ * produces a version this build has never heard of, and the raw failure is a
+ * wall of enum JSON that names every version EXCEPT the one that would tell you
+ * what happened. The document is almost certainly fine; the reader is old. That
+ * is a deployment fact, not a schema fact, so it is worth saying out loud —
+ * twice over in development, where "the dist changed but this process started
+ * before it" is a normal Tuesday.
+ */
 export function parseFrameIRDocument(input: unknown): FrameIRDocument {
-  return frameIRDocumentSchema.parse(input);
+  const result = frameIRDocumentSchema.safeParse(input);
+  if (result.success) return result.data;
+
+  const stale = result.error.issues.find(
+    (issue) => issue.path.length === 1 && issue.path[0] === "irVersion",
+  );
+  if (stale) {
+    const sent = (input as { irVersion?: unknown } | null)?.irVersion;
+    throw new Error(
+      `this build reads Frame IR up to ${IR_VERSION}, and the document says ${String(sent)}. ` +
+        `Whatever produced it is newer than whatever is reading it — rebuild and restart the ` +
+        `service (in development, a process started before the last build still holds the old schema).`,
+    );
+  }
+  throw result.error;
 }
 
 /** Non-throwing variant, for reporting validation state in the plugin UI. */

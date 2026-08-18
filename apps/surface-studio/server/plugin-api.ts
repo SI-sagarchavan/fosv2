@@ -256,6 +256,7 @@ async function previewCompile(req: IncomingMessage, res: ServerResponse): Promis
       theme: body.data.theme,
       assets: body.data.assets,
       ...(body.data.width ? { width: body.data.width } : {}),
+      ...(body.data.data ? { data: body.data.data } : {}),
     });
     json(res, 200, result);
   } catch (err) {

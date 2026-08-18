@@ -86,6 +86,17 @@ export interface ParsedIr {
    * deliberately opaque to everything above the adapter.
    */
   readonly rootNodeId: string;
+  /**
+   * The width the frame was drawn at, and therefore the width its boxes were
+   * measured at.
+   *
+   * An IR fact, not a DSL one. The compiler used to leave it on the tree's root
+   * as a raw pixel width, and reading it back from there was fine right up until
+   * the compiler stopped pinning full-width bands — at which point the gate
+   * would have measured a 1366px design at the renderer's default and reported
+   * every node in it as misplaced.
+   */
+  readonly designWidth: number;
 }
 
 export interface ParsedTheme {

@@ -55,6 +55,15 @@ export interface PreviewSource {
   /** Painted behind the tree; a compiled frame is often transparent. */
   background?: string;
   width?: number;
+  /**
+   * The bag the tree's `{path}` bindings resolve against.
+   *
+   * A compiled tree has none — the compiler keeps Figma's literal characters —
+   * so this does nothing until a tree has been bound. Passing it anyway is what
+   * makes the preview show a bound surface as content rather than as a page of
+   * `{section.title}` placeholders.
+   */
+  data?: Record<string, unknown>;
 }
 
 export interface RenderedPreview {
@@ -88,8 +97,36 @@ export async function renderPreview(source: PreviewSource): Promise<RenderedPrev
   const tree = source.tree as FlatTree;
   const width = source.width ?? rootWidthOf(tree) ?? DEFAULT_WIDTH;
 
+  /**
+   * A fluid tree is laid out by the window, not by a number.
+   *
+   * `width` is still the width this preview is FOR — it sizes the iframe, and
+   * the emitted media queries key off that viewport. But writing it onto the
+   * root as `width: 1280px` pins the very thing a full-width band exists to
+   * avoid: the compiler emits `size.w: "full"`, the band resolves it to 100% of
+   * a 1280px wrapper, and the page shows a 1280px strip in a 1512px window with
+   * bare background beside it — which looks exactly like the bug the fluid band
+   * was meant to fix, one layer further out.
+   *
+   * So for a fluid root the wrapper and the body are left to fill whatever they
+   * are given. Inside the studio's iframe that IS `width`, so the chips behave
+   * as before; opened directly in a browser it is the window, which is the
+   * honest answer to "how does this look on my monitor".
+   *
+   * The harness deliberately keeps pinning — `renderToPng` and
+   * `measureNodeBoxes` pass a width because C2 needs one definite layout to
+   * compare against the IR, and a measurement that drifted with the window
+   * would make every geometry number meaningless.
+   */
+  const fluid = rootIsFluid(tree);
+
   const markup = renderToStaticMarkup(
-    createElement(Render, { tree, assets, width }),
+    createElement(Render, {
+      tree,
+      assets,
+      ...(source.data ? { data: source.data } : {}),
+      ...(fluid ? {} : { width }),
+    }),
   );
 
   const html = `<!DOCTYPE html>
@@ -102,7 +139,7 @@ ${FONT_FACE_CSS}
 ${css}
 ${baseStyles()}
 html, body { margin: 0; padding: 0; background: ${source.background ?? "#ffffff"}; }
-body { width: ${width}px; }
+${fluid ? "" : `body { width: ${width}px; }`}
 </style>
 </head>
 <body>
@@ -168,7 +205,27 @@ function surfaceSetOf(value: unknown): SurfaceSet | null {
  * The compiler records an unbound width as `{_unbound: true, raw: 1170}` — the
  * raw pixel value it could not tie to a token. For a preview that number is
  * exactly right: it is the Figma frame's width.
+ *
+ * A full-width band has no such number — it compiles to `"full"`, because the
+ * page is what it fills — and this returns null for it. That is the honest
+ * answer, not a gap: a caller that knows the design width should pass it (see
+ * `compilePreview`, which reads it from the IR), and one that does not gets
+ * `DEFAULT_WIDTH`, at which a fluid tree lays out correctly anyway.
  */
+/**
+ * Does the root size itself from what it is given?
+ *
+ * `"full"` is the compiler saying "the page is my width" — see `isBand` in
+ * @fanos/compile. Anything else is a number the design chose.
+ */
+function rootIsFluid(tree: FlatTree): boolean {
+  const nodes = (tree as { nodes?: unknown }).nodes;
+  if (!Array.isArray(nodes)) return false;
+
+  const root = nodes.find((n) => (n as { parent?: unknown }).parent === null);
+  return (root as { props?: { size?: { w?: unknown } } } | undefined)?.props?.size?.w === "full";
+}
+
 function rootWidthOf(tree: FlatTree): number | null {
   const nodes = (tree as { nodes?: unknown }).nodes;
   if (!Array.isArray(nodes)) return null;

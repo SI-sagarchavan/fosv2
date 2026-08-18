@@ -41,6 +41,14 @@ export interface ConformIssue {
   message: string;
   /** Set when a `_meta.deviations` entry suppressed this from being an error. */
   waived?: string;
+  /**
+   * The node's worst axis delta in px (C2 only), so a waived issue can be taken
+   * back out of the geometry totals. Those totals are the number the team
+   * watches for progress, and a box that departs from the IR ON PURPOSE — a
+   * band's content row, stretched to follow a fluid parent — would otherwise
+   * dominate them with an error nobody is meant to fix.
+   */
+  delta?: number;
 }
 
 export interface ConformSummary {

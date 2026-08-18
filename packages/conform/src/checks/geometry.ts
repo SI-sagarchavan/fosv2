@@ -184,6 +184,7 @@ export function checkGeometry(
       nodeId: node.id,
       irId: node.src,
       message: `renders off its IR box — ${deltas.join(", ")}`,
+      delta: nodeWorst,
     });
   }
 

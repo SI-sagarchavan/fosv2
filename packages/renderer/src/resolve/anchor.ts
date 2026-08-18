@@ -34,12 +34,15 @@ const ANCHOR_AXES: Record<Anchor, { block: AxisEdge; inline: AxisEdge }> = {
   "top-start": { block: "start", inline: "start" },
   "top-center": { block: "start", inline: "center" },
   "top-end": { block: "start", inline: "end" },
+  "top-fill": { block: "start", inline: "both" },
   "mid-start": { block: "center", inline: "start" },
   center: { block: "center", inline: "center" },
   "mid-end": { block: "center", inline: "end" },
+  "mid-fill": { block: "center", inline: "both" },
   "bottom-start": { block: "end", inline: "start" },
   "bottom-center": { block: "end", inline: "center" },
   "bottom-end": { block: "end", inline: "end" },
+  "bottom-fill": { block: "end", inline: "both" },
 };
 
 /**
@@ -48,7 +51,22 @@ const ANCHOR_AXES: Record<Anchor, { block: AxisEdge; inline: AxisEdge }> = {
 export function resolveAnchor(place: PlaceInput | undefined | null): CssProperties {
   if (!place?.anchor) return {};
 
-  const axes = ANCHOR_AXES[place.anchor];
+  /**
+   * An anchor this renderer does not know falls back to `top-start`.
+   *
+   * Trees are stored artifacts, replayed by whatever renderer is running later,
+   * so the two versions skew as a matter of course — a tree compiled with
+   * `top-fill` was handed to a dev server still holding the table from before
+   * that anchor existed, and the undefined lookup took down the whole page with
+   * "Cannot read properties of undefined". One node placed conservatively is a
+   * far better failure than no page: `top-start` is where the IR measured the
+   * node from, so it lands in the right place and merely stops stretching.
+   *
+   * Silent by design — this file is pure, and an anchor outside the vocabulary
+   * is already an S12 error from the DSL validator, which is the layer whose
+   * job it is to say so.
+   */
+  const axes = ANCHOR_AXES[place.anchor] ?? ANCHOR_AXES["top-start"];
   const blockOff =
     place.offset?.block !== undefined ? resolveValue(place.offset.block).css : undefined;
   const inlineOff =

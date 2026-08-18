@@ -11,7 +11,18 @@
 
 import { z } from "zod";
 import type { Category } from "@fanos/tokens";
-import { PERCENT_RE, RATIO_RE, SEMVER_REF_RE, SIGNED_TOKEN_REF_RE, TOKEN_REF_RE } from "./values.js";
+import {
+  ANCHORS,
+  PERCENT_RE,
+  RATIO_RE,
+  SEMVER_REF_RE,
+  SIGNED_TOKEN_REF_RE,
+  TOKEN_REF_RE,
+  type Anchor,
+} from "./values.js";
+
+/** `z.enum` wants a non-empty tuple; the list itself stays the one source. */
+const ANCHOR_VALUES = ANCHORS as unknown as [Anchor, ...Anchor[]];
 
 // ---------------------------------------------------------------------------
 // Descriptors
@@ -156,18 +167,7 @@ function zodOfType(type: FieldType): z.ZodTypeAny {
     case "semverRef":
       return z.string().regex(SEMVER_REF_RE, "expected `name@1.2.3`");
     case "anchor":
-      return z.enum([
-        "fill",
-        "top-start",
-        "top-center",
-        "top-end",
-        "mid-start",
-        "center",
-        "mid-end",
-        "bottom-start",
-        "bottom-center",
-        "bottom-end",
-      ]);
+      return z.enum(ANCHOR_VALUES);
     case "action":
       return actionSchema;
     case "predicate":
@@ -360,18 +360,7 @@ function jsonOfType(type: FieldType, ctx: JsonContext): JsonSchema {
     case "anchor":
       return defineOnce(ctx, "Anchor", () => ({
         type: "string",
-        enum: [
-          "fill",
-          "top-start",
-          "top-center",
-          "top-end",
-          "mid-start",
-          "center",
-          "mid-end",
-          "bottom-start",
-          "bottom-center",
-          "bottom-end",
-        ],
+        enum: [...ANCHORS],
       }));
     case "action":
       return defineOnce(ctx, "Action", () => ({

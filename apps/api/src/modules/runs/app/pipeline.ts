@@ -240,28 +240,6 @@ const compile: PipelineStep = {
 };
 
 /**
- * The width the tree was laid out at, from its root node.
- *
- * The compiler writes the root's width as a raw pixel value because the root
- * defines the frame — there is nothing outside it to hug or fill against — so
- * this is exactly the width the IR's boxes were measured at.
- */
-function rootWidthOf(tree: unknown): number | null {
-  const nodes = (tree as { nodes?: unknown }).nodes;
-  if (!Array.isArray(nodes)) return null;
-
-  const root = nodes.find((n) => (n as { parent?: unknown }).parent === null);
-  const w = (root as { props?: { size?: { w?: unknown } } } | undefined)?.props?.size?.w;
-
-  if (typeof w === "number" && w > 0) return Math.round(w);
-  if (w && typeof w === "object" && "raw" in w) {
-    const raw = Number((w as { raw: unknown }).raw);
-    if (Number.isFinite(raw) && raw > 0) return Math.round(raw);
-  }
-  return null;
-}
-
-/**
  * The theme's authored surfaces, with the compiler's derived ones layered on.
  *
  * Derived wins on a name clash: it was produced from this frame, and a stale
@@ -355,14 +333,13 @@ const conform: PipelineStep = {
      * represented, correctly themed, and completely wrong. Without boxes this
      * gate passed that page for weeks.
      */
-    const width = rootWidthOf(compiled.tree);
     const measured = await ctx.measurer.measure({
       tree: compiled.tree,
       theme: ctx.scratch.themeJson,
       ...(ctx.scratch.surfaces !== undefined ? { surfaces: ctx.scratch.surfaces } : {}),
       // The frame's own width. The CLI otherwise defaults to a 534px card, and
       // every box in a 1170px page would then disagree with the IR by design.
-      ...(width !== null ? { width } : {}),
+      ...(ir.designWidth > 0 ? { width: ir.designWidth } : {}),
     });
 
     const outcome = ctx.toolchain.conform({

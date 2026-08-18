@@ -18,6 +18,7 @@ import {
 } from "../src/assets.js";
 import {
   assetRef,
+  IR_VERSION,
   parseFrameIRDocument,
   type AssetBinding,
   type FrameIRDocument,
@@ -91,6 +92,38 @@ function doc(root: FrameIRNode, irVersion: FrameIRDocument["irVersion"] = "1.6.0
     assets: [],
   };
 }
+
+/**
+ * The failure a plugin reload produces before the services catch up.
+ *
+ * Zod's own answer lists every version the build accepts and omits the one that
+ * actually arrived, which reads like the document is malformed when the reader
+ * is simply older. That cost two rounds of head-scratching the first time it
+ * happened, so the parser explains it instead.
+ */
+describe("a document from a newer plugin", () => {
+  const from = (version: string) => ({
+    ...doc(node({ id: "1:1", name: "Frame" })),
+    irVersion: version,
+  });
+
+  it("says the reader is behind, and what to do about it", () => {
+    expect(() => parseFrameIRDocument(from("9.9.9"))).toThrowError(
+      /reads Frame IR up to .*, and the document says 9\.9\.9/,
+    );
+    expect(() => parseFrameIRDocument(from("9.9.9"))).toThrowError(/rebuild and restart/);
+  });
+
+  it("leaves every other validation failure as the ZodError it was", () => {
+    const broken = { ...doc(node({ id: "1:1", name: "Frame" })), breakpointHint: "wide" };
+    expect(() => parseFrameIRDocument(broken)).toThrowError(/breakpointHint|expected/i);
+    expect(() => parseFrameIRDocument(broken)).not.toThrowError(/rebuild and restart/);
+  });
+
+  it("still parses the version this build writes", () => {
+    expect(parseFrameIRDocument(from(IR_VERSION)).irVersion).toBe(IR_VERSION);
+  });
+});
 
 describe("suggestAssetName", () => {
   it("slugs a filename, dropping the extension and the export scale", () => {

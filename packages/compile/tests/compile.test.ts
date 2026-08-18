@@ -18,6 +18,7 @@ import { compile } from "../src/compile.js";
 import { isMeaningful, slug } from "../src/ids.js";
 import { canonicalRef, paintRef } from "../src/refs.js";
 import { snapSpace, unhuggableAxes } from "../src/props.js";
+import { declaredType, primitivesFromNames } from "../src/primitives.js";
 
 const irDir = new URL("../../conform/fixtures/ir/", import.meta.url).pathname;
 const THEME = new URL("../../tokens/fixtures/southern-brave.json", import.meta.url).pathname;
@@ -1214,6 +1215,605 @@ describe("vector artwork", () => {
     // an Icon. A cluster holding content is a container, whatever its size.
     expect(result.tree.nodes.some((n) => n.src === "7:3")).toBe(true);
     expect(result.tree.nodes.find((n) => n.src === "7:1")?.type).not.toBe("Icon");
+  });
+});
+
+/**
+ * Declared primitives.
+ *
+ * The one classification that cannot be read off the IR. A button IS an
+ * auto-layout frame with a label in it — at rest there is no difference, and
+ * the difference is that one is pressable, which Figma has nowhere to record.
+ * So the designer declares it by naming the master, and the entry is stored
+ * against the `componentKey`, which survives the rename that a name does not.
+ */
+describe("declared primitives", () => {
+  const KEY = "c0ffee1234";
+  const pad = (v: number) => ({ value: v, unbound: false });
+  const at = (x: number, y: number, w: number, h: number) => ({
+    bbox: { x, y, w, h },
+    relBbox: { x, y, w, h },
+    rotation: 0,
+    aspect: w / (h || 1),
+    aspectBucket: "wide" as const,
+  });
+  const row = (px = 0, py = 0) => ({
+    mode: "horizontal" as const,
+    gap: { value: 4, unbound: false },
+    padding: { top: pad(py), right: pad(px), bottom: pad(py), left: pad(px) },
+    align: "CENTER" as const,
+    justify: "CENTER" as const,
+    wrap: false,
+    sizing: { w: "hug" as const, h: "hug" as const },
+    positioning: "auto" as const,
+  });
+  const base = {
+    fill: null,
+    stroke: null,
+    radius: null,
+    effects: [],
+    opacity: 1,
+    clipsContent: false,
+    structuralSignature: "s",
+    canonicalSignature: "c",
+    repeatedSiblings: 1,
+    depth: 1,
+    childCount: 0,
+    children: [],
+  };
+
+  /**
+   * The shape a real one arrives in: an INSTANCE wrapping the master, which
+   * holds the label and a glyph. `atom_button` in the news section is exactly
+   * this, and reading the outer frame gives a button with no padding.
+   */
+  function frame(over: { label?: string | null; paint?: string; type?: string; name?: string } = {}) {
+    const label =
+      over.label === null
+        ? []
+        : [
+            {
+              ...base,
+              id: "2:3",
+              name: "atom_text",
+              type: "TEXT" as const,
+              layout: row(),
+              geometry: at(16, 6, 64, 20),
+              fill: {
+                tokenRef: over.paint ?? "button/outline/style_2/text/default",
+                unbound: false,
+              },
+              text: {
+                characters: over.label ?? "VIEW MORE",
+                styleRef: "button/sm",
+                unbound: false,
+                fontSize: 10,
+                fontFamily: "Montserrat",
+                fontWeight: 700,
+                lineHeight: 20,
+                autoResize: "WIDTH_AND_HEIGHT" as const,
+                lines: 1,
+              },
+            },
+          ];
+
+    return parseFrameIRDocument({
+      fileKey: "t",
+      fileName: "t",
+      pageName: "p",
+      rootNodeId: "1:1",
+      extractedAt: "2026-01-01T00:00:00.000Z",
+      irVersion: "1.7.0",
+      breakpointHint: 400,
+      root: {
+        ...base,
+        id: "1:1",
+        name: "Header",
+        type: "FRAME",
+        layout: row(),
+        geometry: at(0, 0, 400, 32),
+        depth: 0,
+        childCount: 1,
+        children: [
+          {
+            ...base,
+            id: "2:1",
+            name: over.name ?? "atom_button",
+            type: (over.type ?? "INSTANCE") as "INSTANCE",
+            componentKey: KEY,
+            layout: row(),
+            geometry: at(0, 0, 118, 32),
+            childCount: 1,
+            children: [
+              {
+                ...base,
+                id: "2:2",
+                name: "atom_button_master",
+                type: "INSTANCE" as const,
+                layout: row(16, 6),
+                geometry: at(0, 0, 118, 32),
+                childCount: label.length + 1,
+                children: [
+                  ...label,
+                  {
+                    ...base,
+                    id: "2:4",
+                    name: "atom_icon_arrow_up_right",
+                    type: "INSTANCE" as const,
+                    layout: row(),
+                    geometry: at(84, 7, 18, 18),
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      },
+    });
+  }
+
+  type Primitives = NonNullable<Parameters<typeof compile>[1]["primitives"]>;
+  const compiled = (primitives?: Primitives) =>
+    compile(frame(), { theme, surfaces, ...(primitives ? { primitives } : {}) });
+  const buttonOf = (primitives?: Primitives) =>
+    compiled(primitives).tree.nodes.find((n) => n.type === "Button");
+
+  /** A component whose name says nothing is still just frames. */
+  it("compiles as frames when neither the name nor the map declares one", () => {
+    const result = compile(frame({ name: "Primary CTA" }), { theme, surfaces });
+    expect(result.tree.nodes.some((n) => n.type === "Button")).toBe(false);
+    expect(result.tree.nodes.find((n) => n.src === "2:1")?.type).toBe("Stack");
+  });
+
+  /**
+   * The designer's own channel: naming the master is the whole declaration, so
+   * the common case needs nothing wired, stored or configured.
+   */
+  it("reads the declaration off the component name", () => {
+    const result = compile(frame(), { theme, surfaces });
+    expect(result.tree.nodes.find((n) => n.type === "Button")?.props.label).toBe("VIEW MORE");
+  });
+
+  it("matches the prefix, not a bare name Figma also generates", () => {
+    expect(declaredType("atom_button")).toBe("Button");
+    expect(declaredType("Atom Button")).toBe("Button");
+    expect(declaredType("atom_button_master")).toBe("Button");
+    // Figma names layers `Button`/`Image` itself; a bare name cannot declare.
+    expect(declaredType("Button")).toBeUndefined();
+    expect(declaredType("atom_tabs")).toBeUndefined();
+  });
+
+  it("keys the declaration on componentKey, so a rename cannot break it", () => {
+    expect(primitivesFromNames(frame())).toEqual({ [KEY]: "Button" });
+  });
+
+  /** An explicit entry is the one someone typed on purpose, so it wins. */
+  it("lets an explicit map correct a component the name gets wrong", () => {
+    const result = compile(frame({ name: "Primary CTA" }), {
+      theme,
+      surfaces,
+      primitives: { [KEY]: "Button" },
+    });
+    expect(result.tree.nodes.some((n) => n.type === "Button")).toBe(true);
+  });
+
+  /**
+   * How the map gets filled in: from what a file actually uses, in usage order,
+   * rather than from someone enumerating a design system up front.
+   */
+  it("reports each undeclared component once, with the key to map", () => {
+    const notes = compile(frame({ name: "Primary CTA" }), { theme, surfaces }).notes.filter(
+      (n) => n.kind === "unmapped-component",
+    );
+    expect(notes.map((n) => n.irId)).toContain(KEY);
+    expect(notes.find((n) => n.irId === KEY)?.message).toContain("Primary CTA");
+  });
+
+  it("collapses the whole instance into one Button", () => {
+    const b = buttonOf({ [KEY]: "Button" })!;
+    expect(b.props.label).toBe("VIEW MORE");
+    // The label, the glyph and both wrapper frames are all inputs to it.
+    for (const gone of ["2:2", "2:3", "2:4"]) {
+      expect(compiled({ [KEY]: "Button" }).tree.nodes.some((n) => n.src === gone)).toBe(false);
+    }
+  });
+
+  /**
+   * The name says WHAT, the token binding says WHICH. Encode the variant in the
+   * name instead and it lies the moment a designer switches one instance.
+   */
+  it("takes variant and style from the token family, not the name", () => {
+    expect(buttonOf({ [KEY]: "Button" })?.props).toMatchObject({
+      variant: "outline",
+      styleN: 2,
+    });
+  });
+
+  it("follows the binding to a different family", () => {
+    const doc = frame({ paint: "button/filled/style_3/text/default" });
+    const b = compile(doc, { theme, surfaces, primitives: { [KEY]: "Button" } }).tree.nodes.find(
+      (n) => n.type === "Button",
+    );
+    expect(b?.props).toMatchObject({ variant: "filled", styleN: 3 });
+  });
+
+  it("takes size from the label's type token and padding from the drawn box", () => {
+    expect(buttonOf({ [KEY]: "Button" })?.props).toMatchObject({
+      size: "sm",
+      space: { px: "space.4", py: "space.1_5" },
+    });
+  });
+
+  /** `atom_icon_arrow_up_right` — the prefix is the marker, not the glyph. */
+  it("strips the naming convention off the glyph reference", () => {
+    expect(buttonOf({ [KEY]: "Button" })?.props.iconEnd).toBe("arrow_up_right");
+  });
+
+  /**
+   * Where a button goes is not in the design. Inventing an href is the same
+   * class of mistake as inventing a data model.
+   */
+  it("does not invent an action", () => {
+    expect(buttonOf({ [KEY]: "Button" })?.props.action).toEqual({ kind: "none" });
+  });
+
+  it("falls back to frames when a declared Button has no label", () => {
+    const doc = frame({ label: null });
+    const result = compile(doc, { theme, surfaces, primitives: { [KEY]: "Button" } });
+    expect(result.tree.nodes.some((n) => n.type === "Button")).toBe(false);
+    expect(result.notes.some((n) => n.message.includes("not a button"))).toBe(true);
+  });
+
+  it("still emits a legal tree", () => {
+    const result = compiled({ [KEY]: "Button" });
+    const merged = {
+      assets: surfaces.assets,
+      surfaces: new Map([
+        ...surfaces.surfaces,
+        ...result.requiredSurfaces.map((r) => [r.name, r.spec] as const),
+      ]),
+    };
+    const report = validate(result.tree, { registry: createRegistry(theme, { surfaces: merged }) });
+    expect(report.errors).toEqual([]);
+    expect(() => reify(flatTreeSchema.parse(result.tree))).not.toThrow();
+  });
+});
+
+/**
+ * The line clamp, which decides how tall a card is.
+ *
+ * A news section whose six body texts each hold 474 characters in a two-line
+ * box compiled without any clamp: every card grew to fit its copy, the 444px
+ * band rendered 837px tall, and the root's own `clip` cut the design in half.
+ * The clamp was in Figma the whole time — under `textTruncation`, which nothing
+ * read, because `autoResize` says `HEIGHT` on a clamped layer exactly as it
+ * does on a flowing one.
+ */
+describe("text truncation", () => {
+  const at = (x: number, y: number, w: number, h: number) => ({
+    bbox: { x, y, w, h },
+    relBbox: { x, y, w, h },
+    rotation: 0,
+    aspect: w / (h || 1),
+    aspectBucket: "wide" as const,
+  });
+  const layout = {
+    mode: "vertical" as const,
+    gap: null,
+    padding: {
+      top: { value: 0, unbound: false },
+      right: { value: 0, unbound: false },
+      bottom: { value: 0, unbound: false },
+      left: { value: 0, unbound: false },
+    },
+    align: "MIN" as const,
+    justify: "MIN" as const,
+    wrap: false,
+    sizing: { w: "fixed" as const, h: "hug" as const },
+    positioning: "auto" as const,
+  };
+  const base = {
+    layout,
+    fill: null,
+    stroke: null,
+    radius: null,
+    effects: [],
+    opacity: 1,
+    clipsContent: false,
+    structuralSignature: "s",
+    canonicalSignature: "c",
+    repeatedSiblings: 1,
+    depth: 1,
+    childCount: 0,
+    children: [],
+  };
+
+  /** One text layer, however Figma happens to describe its clamp. */
+  function withText(text: Record<string, unknown>, version = "1.7.0") {
+    return parseFrameIRDocument({
+      fileKey: "t",
+      fileName: "t",
+      pageName: "p",
+      rootNodeId: "1:1",
+      extractedAt: "2026-01-01T00:00:00.000Z",
+      irVersion: version,
+      breakpointHint: 379,
+      root: {
+        ...base,
+        id: "1:1",
+        name: "Card",
+        type: "FRAME",
+        geometry: at(0, 0, 379, 200),
+        depth: 0,
+        childCount: 1,
+        children: [
+          {
+            ...base,
+            id: "1:2",
+            name: "Body",
+            type: "TEXT",
+            geometry: at(0, 0, 379, 44),
+            text: {
+              characters: "James Vince stroked 60 from 38 and Chris Jordan produced a late cameo",
+              styleRef: "body_sm/medium",
+              unbound: false,
+              fontSize: 12,
+              fontFamily: "Montserrat",
+              fontWeight: 500,
+              lineHeight: 18,
+              lines: 2,
+              ...text,
+            },
+          },
+        ],
+      },
+    });
+  }
+
+  const truncateOf = (doc: ReturnType<typeof withText>) =>
+    compile(doc, { theme, surfaces }).tree.nodes.find((n) => n.src === "1:2")?.props.truncate;
+
+  it("clamps at maxLines when the designer pinned one", () => {
+    expect(truncateOf(withText({ autoResize: "HEIGHT", truncation: "ENDING", maxLines: 3 }))).toBe(3);
+  });
+
+  /** Figma's null maxLines means "as many as fit", and the box says how many. */
+  it("falls back to the line count the box implies", () => {
+    expect(truncateOf(withText({ autoResize: "HEIGHT", truncation: "ENDING" }))).toBe(2);
+  });
+
+  it("still honours the older TRUNCATE mode", () => {
+    expect(truncateOf(withText({ autoResize: "TRUNCATE" }))).toBe(2);
+  });
+
+  /**
+   * The guarantee that makes this safe to ship: a document that predates 1.7.0
+   * cannot say whether a text is clamped, so nothing is inferred. Clamping a
+   * text merely because its content looks too big for its box would put a
+   * permanent ellipsis on every paragraph in every design compiled so far.
+   */
+  it("infers nothing from geometry when Figma has not said", () => {
+    expect(truncateOf(withText({ autoResize: "HEIGHT" }, "1.6.0"))).toBeUndefined();
+    expect(truncateOf(withText({ autoResize: "WIDTH_AND_HEIGHT" }, "1.6.0"))).toBeUndefined();
+  });
+});
+
+/**
+ * Full-width bands, which are the whole reason a desktop design has a width at
+ * all.
+ *
+ * A live strip drawn on a 1366 artboard is not 1366 wide, it is page-wide, and
+ * compiling its artboard number left a white gutter on every larger desktop
+ * with the call to action stranded 550px short of the edge. Three rules undo
+ * that, and each is only allowed to fire where it changes nothing at the design
+ * width — which is what the last test here checks.
+ */
+describe("full-width bands", () => {
+  const pad = (v = 0) => ({
+    top: { value: v, unbound: false },
+    right: { value: v, unbound: false },
+    bottom: { value: v, unbound: false },
+    left: { value: v, unbound: false },
+  });
+  const at = (x: number, y: number, w: number, h: number) => ({
+    bbox: { x, y, w, h },
+    relBbox: { x, y, w, h },
+    rotation: 0,
+    aspect: w / (h || 1),
+    aspectBucket: "wide" as const,
+  });
+  const base = {
+    fill: null,
+    stroke: null,
+    radius: null,
+    effects: [],
+    opacity: 1,
+    clipsContent: false,
+    structuralSignature: "s",
+    canonicalSignature: "c",
+    repeatedSiblings: 1,
+    depth: 1,
+    childCount: 0,
+    children: [],
+  };
+  const absolute = {
+    mode: "none" as const,
+    gap: null,
+    padding: pad(),
+    align: null,
+    justify: null,
+    wrap: false,
+    sizing: { w: "fixed" as const, h: "fixed" as const },
+    positioning: "auto" as const,
+  };
+  const row = (justify: "MIN" | "SPACE_BETWEEN" = "MIN") => ({
+    mode: "horizontal" as const,
+    gap: { value: 20, tokenRef: "Spacing/spacing_5", unbound: false },
+    padding: pad(),
+    align: "CENTER" as const,
+    justify,
+    wrap: false,
+    sizing: { w: "fixed" as const, h: "hug" as const },
+    positioning: "auto" as const,
+  });
+
+  /**
+   * A band with one content row, shaped like the live strip: the row sits
+   * 41.72 from the left with 20.35 to spare on the right, and its own children
+   * run edge to edge inside it.
+   */
+  function band(
+    over: {
+      width?: number;
+      rowX?: number;
+      rowW?: number;
+      lastChildW?: number;
+      /** Space the design left after the last child, inside the row. */
+      slack?: number;
+      children?: number;
+    } = {},
+  ) {
+    const width = over.width ?? 1366;
+    const rowX = over.rowX ?? 41.72;
+    const rowW = over.rowW ?? 1303.93;
+    const lastW = over.lastChildW ?? 400;
+    const slack = over.slack ?? 0;
+    const count = over.children ?? 2;
+
+    const kids = [
+      { ...base, id: "2:1", name: "Score", type: "FRAME" as const, layout: row(), geometry: at(0, 0, 300, 40) },
+      {
+        ...base,
+        id: "2:2",
+        name: "Actions",
+        type: "FRAME" as const,
+        layout: row(),
+        geometry: at(rowW - lastW - slack, 0, lastW, 40),
+      },
+    ].slice(0, count);
+
+    return parseFrameIRDocument({
+      fileKey: "t",
+      fileName: "t",
+      pageName: "p",
+      rootNodeId: "1:1",
+      extractedAt: "2026-01-01T00:00:00.000Z",
+      irVersion: "1.6.0",
+      breakpointHint: width,
+      root: {
+        ...base,
+        id: "1:1",
+        name: "Live",
+        type: "FRAME",
+        layout: absolute,
+        geometry: at(0, 0, width, 67),
+        depth: 0,
+        childCount: 1,
+        children: [
+          {
+            ...base,
+            id: "1:2",
+            name: "Row",
+            type: "FRAME",
+            layout: row(),
+            geometry: at(rowX, 8, rowW, 52),
+            childCount: kids.length,
+            children: kids,
+          },
+        ],
+      },
+    });
+  }
+
+  const rootOfBand = (doc: ReturnType<typeof band>) =>
+    compile(doc, { theme, surfaces }).tree.nodes.find((n) => n.parent === null)!;
+  const rowOf = (doc: ReturnType<typeof band>) =>
+    compile(doc, { theme, surfaces }).tree.nodes.find((n) => n.src === "1:2")!;
+
+  it("fills the viewport instead of the artboard it was drawn on", () => {
+    expect((rootOfBand(band()).props.size as { w: unknown }).w).toBe("full");
+  });
+
+  /**
+   * The rule has to keep its hands off objects. A player card is 281px wide
+   * wherever it lands, and a card that grew to fill the page would be a far
+   * worse bug than the gutter this fixes.
+   */
+  it("leaves a frame narrower than a desktop breakpoint pinned", () => {
+    const w = (rootOfBand(band({ width: 900, rowW: 860 })).props.size as { w: { raw: number } }).w;
+    expect(w.raw).toBe(900);
+  });
+
+  it("stretches the content row and carries its side gaps as padding", () => {
+    const emitted = rowOf(band());
+
+    expect(emitted.props.place).toEqual({
+      anchor: "top-fill",
+      offset: { block: { raw: 8, _unbound: true } },
+    });
+    // `width` alongside both insets would over-constrain the box, and CSS
+    // resolves that by dropping the end inset — the pin all over again.
+    expect((emitted.props.size as { w?: unknown }).w).toBeUndefined();
+    expect(emitted.props.space).toEqual({
+      pl: { raw: 41.72, _unbound: true },
+      pr: { raw: 20.35, _unbound: true },
+    });
+  });
+
+  /**
+   * The row's children reached both its edges at 1366, and `justify: start`
+   * only reproduces that while the row is exactly as wide as they are.
+   */
+  it("distributes the free space a wider viewport adds", () => {
+    expect(rowOf(band()).props.justify).toBe("between");
+  });
+
+  it("leaves a row whose children stop short packed at the start", () => {
+    // The row still spans the band and still stretches — but 200px of empty
+    // row after the last child is a gap the design asked for, and spreading
+    // the children into it would be a relayout.
+    const stretched = rowOf(band({ slack: 200 }));
+    expect((stretched.props.place as { anchor: string }).anchor).toBe("top-fill");
+    expect(stretched.props.justify).toBe("start");
+  });
+
+  it("leaves a single-child row alone — there is nothing to distribute", () => {
+    expect(rowOf(band({ children: 1 })).props.justify).toBe("start");
+  });
+
+  /**
+   * Something positioned INSIDE a band is not its content row. A badge moved to
+   * the page edge is a relayout, not a de-pinning.
+   */
+  it("leaves a child that does not span the band where the IR put it", () => {
+    const badge = band({ rowX: 41.72, rowW: 300 });
+    const emitted = rowOf(badge);
+    expect((emitted.props.place as { anchor: string }).anchor).toBe("top-start");
+    expect((emitted.props.size as { w: { raw: number } }).w.raw).toBe(300);
+  });
+
+  it("says what it did, so a surprising layout is attributable", () => {
+    const kinds = compile(band(), { theme, surfaces })
+      .notes.filter((n) => n.kind === "fluid-band")
+      .map((n) => n.nodeId);
+    // One for the band, one for the stretched row, one for the distribution.
+    expect(kinds.length).toBe(3);
+  });
+
+  it("still emits a legal tree", () => {
+    const result = compile(band(), { theme, surfaces });
+    const merged = {
+      assets: surfaces.assets,
+      surfaces: new Map([
+        ...surfaces.surfaces,
+        ...result.requiredSurfaces.map((r) => [r.name, r.spec] as const),
+      ]),
+    };
+    const report = validate(result.tree, {
+      registry: createRegistry(theme, { surfaces: merged }),
+    });
+    expect(report.errors).toEqual([]);
+    expect(() => reify(flatTreeSchema.parse(result.tree))).not.toThrow();
   });
 });
 

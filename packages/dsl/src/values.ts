@@ -60,29 +60,48 @@ export type SizeValue = `space.${string}` | Raw<number> | Percent | "full" | "au
 /** Same as {@link SizeValue} minus the keywords; negatives are allowed. */
 export type OffsetValue = `space.${string}` | `-space.${string}` | Raw<number> | Percent;
 
+/**
+ * Where a positioned child sits in its parent: `{block}-{inline}`.
+ *
+ * `fill` on the inline axis stretches instead of anchoring — both insets are
+ * set, so the child is as wide as the parent whatever the parent's width turns
+ * out to be. That is the only way to say what a Figma LEFT+RIGHT constraint
+ * says, and without it a band exported at 1366 can only ever be 1366 wide.
+ *
+ * `fill` alone is the both-axes shorthand and `center` is `mid-center`; the
+ * block axis has no stretch variants because nothing produces one yet — a
+ * design's vertical extent is a real design constant far more often than its
+ * horizontal one.
+ */
 export type Anchor =
   | "fill"
   | "top-start"
   | "top-center"
   | "top-end"
+  | "top-fill"
   | "mid-start"
   | "center"
   | "mid-end"
+  | "mid-fill"
   | "bottom-start"
   | "bottom-center"
-  | "bottom-end";
+  | "bottom-end"
+  | "bottom-fill";
 
 export const ANCHORS: readonly Anchor[] = [
   "fill",
   "top-start",
   "top-center",
   "top-end",
+  "top-fill",
   "mid-start",
   "center",
   "mid-end",
+  "mid-fill",
   "bottom-start",
   "bottom-center",
   "bottom-end",
+  "bottom-fill",
 ];
 
 // ---------------------------------------------------------------------------

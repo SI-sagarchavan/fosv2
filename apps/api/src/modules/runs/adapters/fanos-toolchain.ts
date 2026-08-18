@@ -32,7 +32,15 @@ export function createFanosToolchain(): Toolchain {
   return {
     parseIr(json) {
       const doc = attempt(() => parseFrameIRDocument(json), "figma IR");
-      return { handle: doc, nodeCount: countNodes(doc.root), rootNodeId: doc.rootNodeId };
+      // The root's own box first: `breakpointHint` is derived from it, and a
+      // hand-assembled document could carry one that disagrees.
+      const width = doc.root.geometry.relBbox.w || doc.breakpointHint;
+      return {
+        handle: doc,
+        nodeCount: countNodes(doc.root),
+        rootNodeId: doc.rootNodeId,
+        designWidth: Math.round(width),
+      };
     },
 
     parseTheme(json) {

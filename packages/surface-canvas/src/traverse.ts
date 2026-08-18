@@ -719,6 +719,25 @@ async function extractText(node: TextNode, caches: Caches): Promise<TextInfo> {
     lines,
   };
   if (styleId) info.styleId = styleId;
+
+  /**
+   * The clamp, which `autoResize` does not carry.
+   *
+   * `textTruncation` is a separate property from `textAutoResize`, and it is
+   * the one current Figma sets: a clamped auto-height layer still reports
+   * `autoResize: "HEIGHT"`, so reading only that made every ellipsis in a
+   * design invisible to the pipeline. Read defensively — both properties
+   * postdate the plugin API this file was first written against, and a missing
+   * one must mean "not clamped", not a thrown export.
+   */
+  const truncation = (node as { textTruncation?: unknown }).textTruncation;
+  if (truncation === "ENDING") {
+    info.truncation = "ENDING";
+    const maxLines = (node as { maxLines?: unknown }).maxLines;
+    // Figma uses null for "as many as fit"; the consumer falls back to `lines`.
+    if (typeof maxLines === "number" && maxLines > 0) info.maxLines = maxLines;
+  }
+
   // styleRef carries whichever binding exists — a text style name, else the
   // variable name. Never both; a bound node is never flagged unbound.
   const ref = styleRef ?? variableRef;
