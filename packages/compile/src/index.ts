@@ -5,6 +5,8 @@
  */
 
 export { compile } from "./compile.js";
+export { cleanup, dropRedundantCrop, dropZeroValues } from "./cleanup.js";
+export type { CleanupNote, CleanupOptions, CleanupResult } from "./cleanup.js";
 export type { CompileNote, CompileOptions, CompileResult, RequiredAsset } from "./compile.js";
 export {
   classify,

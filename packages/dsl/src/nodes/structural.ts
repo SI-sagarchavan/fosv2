@@ -115,6 +115,24 @@ export const STRUCTURAL_NODES: NodeSpec[] = [
       over: req(f.str()),
       as: req(f.str()),
       limit: opt(f.num(true)),
+      /**
+       * `[start, end)` — a window on `over`, end exclusive.
+       *
+       * For the index-tiered grid, which is how editorial pages are actually
+       * laid out: one source list of six articles drawn as a lead, then two
+       * feature cards, then three briefs. Each tier is a different card, and
+       * which tier an item lands in is decided by its POSITION in the list.
+       *
+       * `when` cannot say this. A predicate tests a field on the item, and
+       * nothing on article #4 marks it as a brief — it is a brief because it
+       * is fourth. Without `slice` the only way to draw the page is three
+       * hand-maintained arrays, which puts an editor's ordering decision in
+       * three places and guarantees they drift.
+       *
+       * Mutually exclusive with `limit` (S13): both cap the same list, and a
+       * tree that says `slice: [3, 6], limit: 2` has two answers.
+       */
+      slice: opt(f.arr(f.num(true)), { doc: "[start, end) — end exclusive; not with `limit` (S13)" }),
       paginate: opt(
         f.obj({
           mode: req(f.enum("pages", "more", "infinite")),

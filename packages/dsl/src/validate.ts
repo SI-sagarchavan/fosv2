@@ -32,6 +32,8 @@ export const ISSUE_CODES = [
   "S10", // Carousel with control nodes among its children (warning, heuristic)
   "S11", // Custom.ref not name@semver
   "S12", // a prop failed its schema (shape, not resolution)
+  "S13", // Repeater.slice is malformed, out of order, or paired with limit
+  "S14", // two Repeaters over one source draw overlapping slices (warning)
   "T1", // token ref does not resolve
   "T2", // Text.style is not a TypeToken
   "T3", // Resp<> wrapper around a TypeToken
@@ -240,6 +242,78 @@ export function validate(tree: FlatTree, options: ValidateOptions): ValidationRe
       });
     }
 
+    // --- S13 -------------------------------------------------------------
+    if (node.type === "Repeater") {
+      const slice = node.props["slice"];
+      if (slice !== undefined) {
+        /**
+         * `[start, end)`, end exclusive, both integers, start before end.
+         *
+         * The field language has no tuple kind, so the schema accepts
+         * `number[]` and the arity is checked here. Reported as one issue per
+         * problem rather than a single "invalid slice", because "end is not
+         * after start" and "you also set limit" are different mistakes with
+         * different fixes.
+         */
+        if (!Array.isArray(slice) || slice.length !== 2) {
+          add({
+            code: "S13",
+            severity: "error",
+            nodeId: node.id,
+            path: "slice",
+            message: `Repeater.slice must be [start, end), got ${JSON.stringify(slice)}`,
+          });
+          cover(node.id, "slice");
+        } else {
+          const [start, end] = slice as [unknown, unknown];
+          const ints = typeof start === "number" && typeof end === "number";
+          if (!ints || !Number.isInteger(start) || !Number.isInteger(end)) {
+            add({
+              code: "S13",
+              severity: "error",
+              nodeId: node.id,
+              path: "slice",
+              message: `Repeater.slice takes two integers, got ${JSON.stringify(slice)}`,
+            });
+            cover(node.id, "slice");
+          } else {
+            if (start < 0) {
+              add({
+                code: "S13",
+                severity: "error",
+                nodeId: node.id,
+                path: "slice.0",
+                message: `Repeater.slice starts at ${start}; a slice cannot begin before the list does`,
+              });
+              cover(node.id, "slice");
+            }
+            if (end <= start) {
+              add({
+                code: "S13",
+                severity: "error",
+                nodeId: node.id,
+                path: "slice.1",
+                message: `Repeater.slice is [${start}, ${end}) — end is exclusive and must be past start, so this draws nothing`,
+              });
+              cover(node.id, "slice");
+            }
+          }
+        }
+
+        if (node.props["limit"] !== undefined) {
+          add({
+            code: "S13",
+            severity: "error",
+            nodeId: node.id,
+            path: "slice",
+            message: `Repeater "${node.id}" sets both slice and limit — they cap the same list two different ways, so the tree has two answers for how many items to draw`,
+          });
+          cover(node.id, "slice");
+          cover(node.id, "limit");
+        }
+      }
+    }
+
     // --- S9 --------------------------------------------------------------
     if (node.type === "Grid") {
       const columns = node.props["columns"];
@@ -400,6 +474,36 @@ export function validate(tree: FlatTree, options: ValidateOptions): ValidationRe
     }
   }
 
+  // --- S14: two windows on one list ---------------------------------------
+  /**
+   * Repeaters over the same source whose slices overlap.
+   *
+   * Cross-node, so it runs after the per-node pass. Scoped to the whole tree
+   * rather than to literal siblings, because the shape it exists to catch is
+   * never siblings: an index-tiered grid puts its lead, its features and its
+   * briefs in three different columns, and a rule that only looked at one
+   * parent's children would never fire on the page it was written for.
+   *
+   * A warning, not an error. Drawing article #2 in two places is nearly always
+   * a slip, and occasionally a deliberate "featured, and also in the list".
+   */
+  for (const [source, windows] of slicesBySource(tree)) {
+    for (let i = 0; i < windows.length; i++) {
+      for (let j = i + 1; j < windows.length; j++) {
+        const a = windows[i]!;
+        const b = windows[j]!;
+        if (a.start >= b.end || b.start >= a.end) continue;
+        add({
+          code: "S14",
+          severity: "warning",
+          nodeId: a.nodeId,
+          path: "slice",
+          message: `slice [${a.start}, ${a.end}) overlaps "${b.nodeId}"'s [${b.start}, ${b.end}) over the same "${source}" — items ${Math.max(a.start, b.start)}..${Math.min(a.end, b.end) - 1} are drawn twice`,
+        });
+      }
+    }
+  }
+
   const errors = issues.filter((i) => i.severity === "error");
   const warnings = issues.filter((i) => i.severity === "warning");
 
@@ -412,6 +516,29 @@ export function validate(tree: FlatTree, options: ValidateOptions): ValidationRe
     // the metric disappear exactly when someone is working on the tree.
     metrics: analyze(tree),
   };
+}
+
+interface SliceWindow {
+  nodeId: string;
+  start: number;
+  end: number;
+}
+
+/** Well-formed slices, grouped by the list they window. Malformed ones are S13's. */
+function slicesBySource(tree: FlatTree): Map<string, SliceWindow[]> {
+  const out = new Map<string, SliceWindow[]>();
+  for (const node of tree.nodes) {
+    if (node.type !== "Repeater") continue;
+    const over = node.props["over"];
+    const slice = node.props["slice"];
+    if (typeof over !== "string" || !Array.isArray(slice) || slice.length !== 2) continue;
+    const [start, end] = slice as [unknown, unknown];
+    if (typeof start !== "number" || typeof end !== "number" || end <= start) continue;
+    const list = out.get(over) ?? [];
+    list.push({ nodeId: node.id, start, end });
+    out.set(over, list);
+  }
+  return out;
 }
 
 export function issuesByCode(result: ValidationResult, code: IssueCode): Issue[] {

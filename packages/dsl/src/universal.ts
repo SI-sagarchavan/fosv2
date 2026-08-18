@@ -65,6 +65,17 @@ export const metaFields: Fields = {
   fidelity: opt(f.num()),
   note: opt(f.str()),
   /**
+   * Figma ids whose DSL nodes were folded away into a Repeater's template.
+   *
+   * Written by `applyCollapse` and read by drift detection and @fanos/conform:
+   * `src` is the anchor that maps a Figma node to the thing that draws it, and
+   * collapsing five cards into one deletes four fifths of those anchors. Without
+   * this list the next export of the same frame looks like someone deleted four
+   * cards. It holds every id under the removed members, not just their roots,
+   * because coverage is counted per painting node.
+   */
+  collapsedFrom: opt(f.arr(f.str()), { doc: "src ids a Repeater stands in for" }),
+  /**
    * Deliberate departures from the Figma IR, each naming the conformance check
    * it answers and why. @fanos/conform downgrades a matching failure to an info
    * line instead of failing the build.

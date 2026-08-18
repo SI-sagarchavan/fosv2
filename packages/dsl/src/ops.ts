@@ -345,3 +345,158 @@ export function collapseToRepeater(tree: FlatTree, options: CollapseOptions): Fl
     options.id ?? `${template.id}__repeat`,
   );
 }
+
+// ---------------------------------------------------------------------------
+// Applying a collapse proposal
+// ---------------------------------------------------------------------------
+
+export interface Binding {
+  /** Dotted path to the source list, e.g. `news.items`. */
+  over: string;
+  /** What one item is called inside the template, e.g. `article`. */
+  as: string;
+  /** `[start, end)` window on the source. See the Repeater schema and S13. */
+  slice?: [number, number];
+  /**
+   * Which template node's prop takes which field of the item.
+   *
+   * Keyed by node id so it lines up with a proposal's `varyingContent`, which
+   * is where a binder gets its candidates. The path is relative to the ITEM,
+   * not the document: `headline`, not `news.items.0.headline`.
+   */
+  fieldMap: Record<string, { prop: string; path: string }>;
+}
+
+/**
+ * Fold a proposal's members into one template under a Repeater.
+ *
+ * The proposal says WHICH siblings; the binding says WHAT they are. Both are
+ * arguments because neither can be derived from the other: `proposeCollapse`
+ * can prove three subtrees are the same shape and cannot know they are
+ * articles, and a data contract can name a list of articles and cannot know
+ * which three boxes on the page draw it.
+ *
+ * `src` survives on every node that survives, and the removed members' `src`
+ * values land on the Repeater as `_meta.collapsedFrom`. That is not
+ * bookkeeping: `src` is the anchor a pixel diff maps a region back to and the
+ * key drift detection joins on, so a Figma node whose DSL node has been folded
+ * away must still be findable — otherwise collapsing a card makes two thirds of
+ * the design look deleted the next time the file changes.
+ */
+export function applyCollapse(
+  tree: FlatTree,
+  proposal: {
+    parentId: string;
+    memberIds: readonly string[];
+    templateId: string;
+  },
+  binding: Binding,
+): FlatTree {
+  const { memberIds, templateId } = proposal;
+
+  if (memberIds.length === 0) throw new TreeOpError("applyCollapse: no members given");
+  if (new Set(memberIds).size !== memberIds.length) {
+    throw new TreeOpError("applyCollapse: a member is listed twice");
+  }
+  if (!memberIds.includes(templateId)) {
+    throw new TreeOpError(`applyCollapse: template "${templateId}" is not one of the members`, templateId);
+  }
+  if (!binding.over.trim()) throw new TreeOpError("applyCollapse: `over` is empty");
+  if (!/^[A-Za-z_][A-Za-z0-9_]*$/.test(binding.as)) {
+    throw new TreeOpError(
+      `applyCollapse: \`as\` must be a bare name — "${binding.as}" cannot be the head of a data path`,
+    );
+  }
+  if (binding.slice) {
+    const [start, end] = binding.slice;
+    if (!Number.isInteger(start) || !Number.isInteger(end) || start < 0 || end <= start) {
+      throw new TreeOpError(
+        `applyCollapse: slice must be [start, end) with 0 <= start < end, got [${start}, ${end})`,
+      );
+    }
+  }
+
+  const members = memberIds.map((id) => requireNode(tree, id));
+  const template = requireNode(tree, templateId);
+  const stray = members.find((n) => n.parent !== proposal.parentId);
+  if (stray) {
+    throw new TreeOpError(
+      `applyCollapse: "${stray.id}" is not a child of "${proposal.parentId}" — instances of one component share a parent`,
+      stray.id,
+    );
+  }
+
+  const kept = subtreeIds(tree, templateId);
+  for (const [nodeId, entry] of Object.entries(binding.fieldMap)) {
+    if (!kept.has(nodeId)) {
+      throw new TreeOpError(
+        `applyCollapse: fieldMap names "${nodeId}", which is not in the template "${templateId}" — a binding can only reach nodes that survive`,
+        nodeId,
+      );
+    }
+    if (!entry.path.trim()) {
+      throw new TreeOpError(`applyCollapse: fieldMap["${nodeId}"] has an empty path`, nodeId);
+    }
+  }
+
+  /**
+   * The removed members' Figma ids, in document order, deduped.
+   *
+   * Every node under a removed member, not just its root: C1 in @fanos/conform
+   * accounts for a whole subtree against the design, and a list holding only
+   * the card roots would leave every headline inside them looking missing.
+   */
+  const removed = new Set<string>();
+  for (const id of memberIds) {
+    if (id === templateId) continue;
+    for (const nodeId of subtreeIds(tree, id)) removed.add(nodeId);
+  }
+  const collapsedFrom: string[] = [];
+  const seen = new Set<string>();
+  // Document order, not traversal order — this list ends up in a stored tree
+  // and a diff of two runs should show what changed, not how it was walked.
+  for (const node of tree.nodes) {
+    if (!removed.has(node.id) || seen.has(node.src)) continue;
+    seen.add(node.src);
+    collapsedFrom.push(node.src);
+  }
+
+  // Bind first, while the template is still where the proposal found it.
+  let next: FlatTree = withNodes(
+    tree,
+    tree.nodes.map((n) => {
+      const entry = binding.fieldMap[n.id];
+      if (!entry || !kept.has(n.id)) return n;
+      return { ...n, props: { ...n.props, [entry.prop]: `{${binding.as}.${entry.path}}` } };
+    }),
+  );
+
+  for (const id of memberIds) {
+    if (id === templateId) continue;
+    next = removeNode(next, id, { cascade: true });
+  }
+
+  const repeaterProps: Record<string, unknown> = { over: binding.over, as: binding.as };
+  if (binding.slice) repeaterProps.slice = [...binding.slice];
+  if (collapsedFrom.length > 0) repeaterProps._meta = { collapsedFrom };
+
+  return wrapIn(next, template.id, "Repeater", repeaterProps, `${template.id}__repeat`);
+}
+
+/** Every id in `id`'s subtree, including itself. */
+function subtreeIds(tree: FlatTree, id: string): Set<string> {
+  const kids = new Map<string, string[]>();
+  for (const n of tree.nodes) {
+    if (n.parent === null) continue;
+    kids.set(n.parent, [...(kids.get(n.parent) ?? []), n.id]);
+  }
+  const ids = new Set<string>();
+  const stack = [id];
+  while (stack.length > 0) {
+    const nodeId = stack.pop()!;
+    if (ids.has(nodeId)) continue;
+    ids.add(nodeId);
+    for (const child of kids.get(nodeId) ?? []) stack.push(child);
+  }
+  return ids;
+}

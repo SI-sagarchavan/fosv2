@@ -60,6 +60,7 @@ import {
   type Raw,
   type SpaceProps,
 } from "./props.js";
+import { cleanup, type CleanupOptions } from "./cleanup.js";
 import { primitivesFromNames } from "./primitives.js";
 import { SurfaceResolver, specOf, type RequiredSurface } from "./surfaces.js";
 
@@ -80,6 +81,12 @@ export interface CompileOptions {
    * rather than silent.
    */
   primitives?: PrimitiveMap;
+  /**
+   * Post-emission cleanup passes. All on by default; see `cleanup.ts`.
+   * Turning one off is for regenerating the tree that documents why it exists,
+   * not for production.
+   */
+  cleanup?: CleanupOptions;
 }
 
 export interface CompileNote {
@@ -95,7 +102,9 @@ export interface CompileNote {
     | "pinned-size"
     | "fluid-band"
     | "unmapped-component"
-    | "unsupported-type";
+    | "unsupported-type"
+    | "crop-dropped"
+    | "zero-props";
   irId: string;
   nodeId?: string;
   message: string;
@@ -116,7 +125,13 @@ export interface CompileResult {
   /** Background files the tree references. The agent registers them as asset.texture.* */
   requiredAssets: RequiredAsset[];
   notes: CompileNote[];
-  stats: { irNodes: number; emitted: number; absorbed: number };
+  stats: {
+    irNodes: number;
+    emitted: number;
+    absorbed: number;
+    /** What the post-emission passes removed. See `cleanup.ts`. */
+    cleanup: { cropsDropped: number; rawsDropped: number; zeroProps: number };
+  };
 }
 
 interface Ctx {
@@ -184,8 +199,19 @@ export function compile(doc: FrameIRDocument, options: CompileOptions): CompileR
     });
   }
 
+  /**
+   * The tree is complete; now take out what it says twice.
+   *
+   * After emission, not during: the rule is about a RELATIONSHIP — an image and
+   * the frame that clips it — and `emit` only ever holds one node at a time.
+   */
+  const cleaned = cleanup(ctx.nodes, options.cleanup);
+  for (const note of cleaned.notes) {
+    ctx.notes.push({ kind: note.kind, irId: nodeSrc(ctx.nodes, note.nodeId), nodeId: note.nodeId, message: note.message });
+  }
+
   return {
-    tree: { schemaVersion: SCHEMA_VERSION, nodes: ctx.nodes },
+    tree: { schemaVersion: SCHEMA_VERSION, nodes: cleaned.nodes },
     requiredSurfaces: ctx.surfaces.missing(),
     requiredAssets: [...ctx.usedAssets.values()].map((b) => ({
       name: b.name,
@@ -195,8 +221,18 @@ export function compile(doc: FrameIRDocument, options: CompileOptions): CompileR
       targetId: b.targetId,
     })),
     notes: ctx.notes,
-    stats: { irNodes: ctx.irNodes, emitted: ctx.nodes.length, absorbed: ctx.absorbed },
+    stats: {
+      irNodes: ctx.irNodes,
+      emitted: cleaned.nodes.length,
+      absorbed: ctx.absorbed,
+      cleanup: cleaned.stats,
+    },
   };
+}
+
+/** The Figma id behind a DSL node, for a note that has only the node id. */
+function nodeSrc(nodes: FlatNode[], nodeId: string): string {
+  return nodes.find((n) => n.id === nodeId)?.src ?? nodeId;
 }
 
 function indexBindings(doc: FrameIRDocument): Map<string, AssetBinding[]> {

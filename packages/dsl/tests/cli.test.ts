@@ -3,7 +3,7 @@ import { tmpdir } from "node:os";
 import { join } from "node:path";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createRegistry, loadSurfaces, loadTheme } from "@fanos/tokens";
-import { run } from "../src/cli.js";
+import { main, run } from "../src/cli.js";
 import { flatTreeSchema } from "../src/flat.js";
 import { validate } from "../src/validate.js";
 
@@ -105,5 +105,66 @@ describe("argument handling", () => {
   it("rejects an unknown command", () => {
     expect(run(["frobnicate"])).toBe(1);
     expect(err.join("")).toContain('unknown command "frobnicate"');
+  });
+});
+
+describe("collapse", () => {
+  const GRID = new URL("../fixtures/news-grid.json", import.meta.url).pathname;
+  const BINDING = new URL("../fixtures/bindings/news-grid.binding.json", import.meta.url).pathname;
+
+  /**
+   * The default is a report, and the report says so. A command that quietly
+   * rewrote a tree because it found something that looked repeated would be the
+   * automatic collapse this whole feature exists not to do.
+   */
+  it("reports without changing anything", () => {
+    const before = readFileSync(GRID, "utf8");
+    expect(run(["collapse", "--tree", GRID])).toBe(0);
+    const report = out.join("");
+    expect(report).toContain("1 collapse proposal(s)");
+    expect(report).toContain("[0] 3x under trailing_column");
+    expect(report).toContain("saves 20 nodes");
+    expect(report).toContain("Nothing was changed.");
+    expect(readFileSync(GRID, "utf8")).toBe(before);
+  });
+
+  it("says out loud when a run carries identical copy", () => {
+    run(["collapse", "--tree", GRID]);
+    expect(out.join("")).toContain("varying content: none");
+  });
+
+  it("reports as JSON", () => {
+    run(["collapse", "--tree", GRID, "--json"]);
+    const parsed = JSON.parse(out.join(""));
+    expect(parsed.nodes).toBe(69);
+    expect(parsed.proposals).toHaveLength(1);
+    expect(parsed.proposals[0].templateId).toBe("stack_12");
+    expect(parsed.proposals[0]).not.toHaveProperty("confidence");
+  });
+
+  it("applies one proposal against a binding file", () => {
+    const file = join(tmp(), "collapsed.json");
+    expect(run(["collapse", "--tree", GRID, "--apply", "0", "--binding", BINDING, "--out", file])).toBe(0);
+    expect(out.join("")).toContain("69 -> 50 nodes");
+
+    const tree = flatTreeSchema.parse(JSON.parse(readFileSync(file, "utf8")));
+    const result = validate(tree, {
+      registry: createRegistry(loadTheme(THEME), { surfaces: loadSurfaces(SURFACES) }),
+    });
+    expect(result.errors).toEqual([]);
+    expect(tree.nodes.find((n) => n.type === "Repeater")?.props.over).toBe("news.items");
+  });
+
+  it("refuses to apply without a binding — a collapse with no data source draws one card", () => {
+    const file = join(tmp(), "collapsed.json");
+    // Through `main`, which is what the binary calls — `run` throws and `main`
+    // is the layer that turns that into an exit code and a message.
+    expect(main(["collapse", "--tree", GRID, "--apply", "0", "--out", file])).toBe(1);
+    expect(err.join("")).toContain("missing --binding");
+  });
+
+  it("refuses an index that is not on the list", () => {
+    expect(run(["collapse", "--tree", GRID, "--apply", "7", "--binding", BINDING, "--out", "/dev/null"])).toBe(1);
+    expect(err.join("")).toContain("no such proposal");
   });
 });

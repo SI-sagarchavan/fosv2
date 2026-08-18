@@ -116,8 +116,21 @@ export { collectRefs, emitJsonSchema, selfReferentialDefs } from "./emit/json-sc
 export type { EmitJsonSchemaOptions } from "./emit/json-schema.js";
 export { emitDocs } from "./emit/docs.js";
 
+// Subtree signatures and collapse proposals
+export {
+  normaliseProps,
+  stableJson,
+  subtreeSignature,
+  subtreeSignatures,
+  SUBTREE_SIGNATURE_PREFIX,
+} from "./subtree-signature.js";
+export { sha1Hex } from "./sha1.js";
+export { proposeCollapse } from "./collapse.js";
+export type { CollapseProposal, VaryingContent } from "./collapse.js";
+
 // Part 8 — tree operations
 export {
+  applyCollapse,
   collapseToRepeater,
   insertBefore,
   moveNode,
@@ -127,4 +140,4 @@ export {
   TreeOpError,
   wrapIn,
 } from "./ops.js";
-export type { CollapseOptions, RemoveOptions } from "./ops.js";
+export type { Binding, CollapseOptions, RemoveOptions } from "./ops.js";

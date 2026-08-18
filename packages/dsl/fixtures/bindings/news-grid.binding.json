@@ -1,0 +1,11 @@
+{
+  "over": "news.items",
+  "as": "article",
+  "slice": [3, 6],
+  "fieldMap": {
+    "image_4": { "prop": "src", "path": "thumbnail" },
+    "james_vince_fires_southern_brave_to_firs_2": { "prop": "content", "path": "headline" },
+    "james_vince_stroked_60_from_38_and_chris_3": { "prop": "content", "path": "summary" },
+    "mar_22_2025_3": { "prop": "content", "path": "date" }
+  }
+}

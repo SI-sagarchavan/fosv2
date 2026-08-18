@@ -1,0 +1,1345 @@
+{
+  "schemaVersion": "1.0.0",
+  "nodes": [
+    {
+      "id": "latest_news",
+      "parent": null,
+      "idx": 0,
+      "type": "Overlay",
+      "src": "333:9499",
+      "props": {
+        "surface": "surface.latest_news",
+        "size": {
+          "w": "full",
+          "h": {
+            "raw": 538,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "stack",
+      "parent": "latest_news",
+      "idx": 0,
+      "type": "Stack",
+      "src": "333:9500",
+      "props": {
+        "gap": "space.8",
+        "align": "center",
+        "justify": "center",
+        "size": {
+          "w": {
+            "raw": 1170,
+            "_unbound": true
+          },
+          "h": "auto"
+        },
+        "place": {
+          "anchor": "top-start",
+          "offset": {
+            "block": {
+              "raw": 60.6421,
+              "_unbound": true
+            },
+            "inline": {
+              "raw": 98,
+              "_unbound": true
+            }
+          }
+        }
+      }
+    },
+    {
+      "id": "stack_2",
+      "parent": "stack",
+      "idx": 0,
+      "type": "Stack",
+      "src": "333:9501",
+      "props": {
+        "direction": "row",
+        "gap": "space.8",
+        "align": "center",
+        "justify": "start",
+        "size": {
+          "w": {
+            "raw": 1170,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 32,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "south_coast_stories",
+      "parent": "stack_2",
+      "idx": 0,
+      "type": "Text",
+      "src": "333:9502",
+      "props": {
+        "size": {
+          "w": "auto",
+          "h": "auto"
+        },
+        "content": "SOUTH COAST STORIES",
+        "style": "type.dp_4_regular",
+        "tone": "color.text_main_sec"
+      }
+    },
+    {
+      "id": "atom_button",
+      "parent": "stack_2",
+      "idx": 1,
+      "type": "Button",
+      "src": "333:9503",
+      "props": {
+        "label": "VIEW MORE",
+        "variant": "outline",
+        "styleN": 2,
+        "size": "sm",
+        "action": {
+          "kind": "none"
+        },
+        "iconEnd": "arrow_up_right",
+        "space": {
+          "py": "space.1_5",
+          "px": "space.4"
+        }
+      }
+    },
+    {
+      "id": "stack_3",
+      "parent": "stack",
+      "idx": 1,
+      "type": "Stack",
+      "src": "333:9674",
+      "props": {
+        "direction": "row",
+        "gap": "space.4",
+        "align": "center",
+        "justify": "center",
+        "clip": true,
+        "size": {
+          "w": {
+            "raw": 1170,
+            "_unbound": true
+          },
+          "h": "auto"
+        }
+      }
+    },
+    {
+      "id": "leading_column",
+      "parent": "stack_3",
+      "idx": 0,
+      "type": "Stack",
+      "src": "333:9675",
+      "props": {
+        "surface": "surface.video_caption",
+        "align": "start",
+        "justify": "start",
+        "clip": true,
+        "size": {
+          "w": "full",
+          "h": "full"
+        }
+      }
+    },
+    {
+      "id": "thumbnail",
+      "parent": "leading_column",
+      "idx": 0,
+      "type": "Overlay",
+      "src": "333:9676",
+      "props": {
+        "clip": true,
+        "size": {
+          "w": "full",
+          "h": {
+            "raw": 213.375,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "image",
+      "parent": "thumbnail",
+      "idx": 0,
+      "type": "Image",
+      "src": "333:9677",
+      "props": {
+        "size": {
+          "w": {
+            "raw": 455,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 369,
+            "_unbound": true
+          }
+        },
+        "place": {
+          "anchor": "top-start",
+          "offset": {
+            "block": {
+              "raw": -1.5,
+              "_unbound": true
+            },
+            "inline": {
+              "raw": -21,
+              "_unbound": true
+            }
+          }
+        },
+        "src": "",
+        "alt": "image",
+        "fit": "cover"
+      }
+    },
+    {
+      "id": "content",
+      "parent": "leading_column",
+      "idx": 1,
+      "type": "Stack",
+      "src": "333:9678",
+      "props": {
+        "align": "start",
+        "justify": "center",
+        "clip": true,
+        "space": {
+          "py": "space.4",
+          "px": "space.2"
+        },
+        "size": {
+          "w": "full",
+          "h": "full"
+        }
+      }
+    },
+    {
+      "id": "stack_4",
+      "parent": "content",
+      "idx": 0,
+      "type": "Stack",
+      "src": "333:9679",
+      "props": {
+        "align": "start",
+        "justify": "between",
+        "size": {
+          "w": "full",
+          "h": "full"
+        }
+      }
+    },
+    {
+      "id": "stack_5",
+      "parent": "stack_4",
+      "idx": 0,
+      "type": "Stack",
+      "src": "I333:9679;13448:62716",
+      "props": {
+        "gap": "space.4",
+        "align": "start",
+        "justify": "start",
+        "size": {
+          "w": "full",
+          "h": "auto"
+        }
+      }
+    },
+    {
+      "id": "over_400_players_will_be_available_in_th",
+      "parent": "stack_5",
+      "idx": 0,
+      "type": "Text",
+      "src": "I333:9679;13448:62717",
+      "props": {
+        "size": {
+          "w": "full",
+          "h": "auto"
+        },
+        "content": "Chris Jordan saw it through late on. Calm as a cucumber.",
+        "style": "type.body_md_bold",
+        "tone": "color.text_main_high",
+        "truncate": 2
+      }
+    },
+    {
+      "id": "the_longlist_for_the_hundred_auction_hav",
+      "parent": "stack_5",
+      "idx": 1,
+      "type": "Text",
+      "src": "I333:9679;13448:62718",
+      "props": {
+        "size": {
+          "w": "full",
+          "h": "auto"
+        },
+        "content": "James Vince stroked 60 from 38 and Chris Jordan produced a late cameo with the bat as Southern Brave finally got their campaign up and running with victory under the lights at the Ageas Bowl. Liam Livingstone produced his first significant contribution of the Hundred with an unbeaten half-century and Adam Milne's 3 for 15 had seemingly set up Birmingham Phoenix for a narrow victory - only for Tom Helm to blink first against Jordan in the final set of five.\nAdvertisement",
+        "style": "type.body_sm_medium",
+        "tone": "color.text_main_medium",
+        "truncate": 3
+      }
+    },
+    {
+      "id": "label",
+      "parent": "stack_4",
+      "idx": 1,
+      "type": "Stack",
+      "src": "I333:9679;13448:62719",
+      "props": {
+        "align": "start",
+        "justify": "end",
+        "size": {
+          "w": "auto",
+          "h": "auto"
+        }
+      }
+    },
+    {
+      "id": "date",
+      "parent": "label",
+      "idx": 0,
+      "type": "Stack",
+      "src": "I333:9679;13448:62720",
+      "props": {
+        "direction": "row",
+        "gap": "space.0_5",
+        "align": "center",
+        "justify": "start",
+        "size": {
+          "w": "auto",
+          "h": "auto"
+        }
+      }
+    },
+    {
+      "id": "mar_23_2025",
+      "parent": "date",
+      "idx": 0,
+      "type": "Text",
+      "src": "I333:9679;13448:62722",
+      "props": {
+        "size": {
+          "w": "auto",
+          "h": "auto"
+        },
+        "content": "Mar 23, 2025",
+        "style": "type.body_sm_regular",
+        "tone": "color.text_main_low"
+      }
+    },
+    {
+      "id": "middle_column",
+      "parent": "stack_3",
+      "idx": 1,
+      "type": "Stack",
+      "src": "333:9680",
+      "props": {
+        "surface": "surface.middle_column",
+        "gap": "space.4",
+        "align": "start",
+        "justify": "start",
+        "clip": true,
+        "size": {
+          "w": "full",
+          "h": "auto"
+        }
+      }
+    },
+    {
+      "id": "stack_6",
+      "parent": "middle_column",
+      "idx": 0,
+      "type": "Stack",
+      "src": "333:9681",
+      "props": {
+        "surface": "surface.video_caption",
+        "direction": "row",
+        "align": "center",
+        "justify": "center",
+        "clip": true,
+        "size": {
+          "w": "full",
+          "h": "auto"
+        }
+      }
+    },
+    {
+      "id": "thumbnail_2",
+      "parent": "stack_6",
+      "idx": 0,
+      "type": "Overlay",
+      "src": "333:9682",
+      "props": {
+        "surface": "surface.fixture_shell",
+        "clip": true,
+        "size": {
+          "w": {
+            "raw": 182,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 182,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "image_2",
+      "parent": "thumbnail_2",
+      "idx": 0,
+      "type": "Image",
+      "src": "333:9683",
+      "props": {
+        "size": {
+          "w": {
+            "raw": 337,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 189,
+            "_unbound": true
+          }
+        },
+        "place": {
+          "anchor": "top-start",
+          "offset": {
+            "block": {
+              "raw": -4,
+              "_unbound": true
+            },
+            "inline": {
+              "raw": -77.3334,
+              "_unbound": true
+            }
+          }
+        },
+        "src": "",
+        "alt": "image 649",
+        "fit": "cover"
+      }
+    },
+    {
+      "id": "content_2",
+      "parent": "stack_6",
+      "idx": 1,
+      "type": "Stack",
+      "src": "333:9684",
+      "props": {
+        "align": "start",
+        "justify": "start",
+        "clip": true,
+        "space": {
+          "py": "space.4",
+          "px": "space.2"
+        },
+        "size": {
+          "w": "full",
+          "h": "full"
+        }
+      }
+    },
+    {
+      "id": "stack_7",
+      "parent": "content_2",
+      "idx": 0,
+      "type": "Stack",
+      "src": "333:9685",
+      "props": {
+        "gap": "space.3",
+        "align": "start",
+        "justify": "between",
+        "size": {
+          "w": "full",
+          "h": "full"
+        }
+      }
+    },
+    {
+      "id": "stack_8",
+      "parent": "stack_7",
+      "idx": 0,
+      "type": "Stack",
+      "src": "333:9686",
+      "props": {
+        "gap": "space.4",
+        "align": "start",
+        "justify": "start",
+        "size": {
+          "w": "full",
+          "h": "auto"
+        }
+      }
+    },
+    {
+      "id": "james_vince_fires_southern_brave_to_firs",
+      "parent": "stack_8",
+      "idx": 0,
+      "type": "Text",
+      "src": "333:9687",
+      "props": {
+        "size": {
+          "w": "full",
+          "h": "auto"
+        },
+        "content": "James Vince fires Southern Brave to first win despite Adam Milne heroics",
+        "style": "type.body_md_bold",
+        "tone": "color.text_main_high",
+        "truncate": 3
+      }
+    },
+    {
+      "id": "james_vince_stroked_60_from_38_and_chris",
+      "parent": "stack_8",
+      "idx": 1,
+      "type": "Text",
+      "src": "333:9688",
+      "props": {
+        "size": {
+          "w": "full",
+          "h": "auto"
+        },
+        "content": "James Vince stroked 60 from 38 and Chris Jordan produced a late cameo with the bat as Southern Brave finally got their campaign up and running with victory under the lights at the Ageas Bowl. Liam Livingstone produced his first significant contribution of the Hundred with an unbeaten half-century and Adam Milne's 3 for 15 had seemingly set up Birmingham Phoenix for a narrow victory - only for Tom Helm to blink first against Jordan in the final set of five.\nAdvertisement",
+        "style": "type.body_sm_medium",
+        "tone": "color.text_main_medium",
+        "truncate": 3
+      }
+    },
+    {
+      "id": "date_2",
+      "parent": "stack_7",
+      "idx": 1,
+      "type": "Stack",
+      "src": "333:9689",
+      "props": {
+        "direction": "row",
+        "align": "center",
+        "justify": "start",
+        "size": {
+          "w": "auto",
+          "h": "auto"
+        }
+      }
+    },
+    {
+      "id": "mar_22_2025",
+      "parent": "date_2",
+      "idx": 0,
+      "type": "Text",
+      "src": "333:9691",
+      "props": {
+        "size": {
+          "w": "auto",
+          "h": "auto"
+        },
+        "content": "Mar 22, 2025",
+        "style": "type.body_sm_regular",
+        "tone": "color.text_main_medium"
+      }
+    },
+    {
+      "id": "stack_9",
+      "parent": "middle_column",
+      "idx": 1,
+      "type": "Stack",
+      "src": "333:9694",
+      "props": {
+        "surface": "surface.video_caption",
+        "direction": "row",
+        "gap": "space.2",
+        "align": "center",
+        "justify": "center",
+        "clip": true,
+        "size": {
+          "w": "full",
+          "h": "auto"
+        }
+      }
+    },
+    {
+      "id": "thumbnail_3",
+      "parent": "stack_9",
+      "idx": 0,
+      "type": "Overlay",
+      "src": "333:9695",
+      "props": {
+        "surface": "surface.fixture_shell",
+        "clip": true,
+        "size": {
+          "w": {
+            "raw": 182,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 182,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "image_3",
+      "parent": "thumbnail_3",
+      "idx": 0,
+      "type": "Image",
+      "src": "333:9696",
+      "props": {
+        "size": {
+          "w": {
+            "raw": 337.907,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 241.8481,
+            "_unbound": true
+          }
+        },
+        "place": {
+          "anchor": "top-start",
+          "offset": {
+            "block": {
+              "raw": -13.8518,
+              "_unbound": true
+            },
+            "inline": {
+              "raw": -15.9032,
+              "_unbound": true
+            }
+          }
+        },
+        "src": "",
+        "alt": "image",
+        "fit": "cover"
+      }
+    },
+    {
+      "id": "content_3",
+      "parent": "stack_9",
+      "idx": 1,
+      "type": "Stack",
+      "src": "333:9697",
+      "props": {
+        "align": "start",
+        "justify": "start",
+        "clip": true,
+        "space": {
+          "py": "space.4",
+          "px": "space.2"
+        },
+        "size": {
+          "w": "full",
+          "h": "full"
+        }
+      }
+    },
+    {
+      "id": "stack_10",
+      "parent": "content_3",
+      "idx": 0,
+      "type": "Stack",
+      "src": "333:9698",
+      "props": {
+        "gap": "space.3",
+        "align": "start",
+        "justify": "between",
+        "size": {
+          "w": "full",
+          "h": "full"
+        }
+      }
+    },
+    {
+      "id": "stack_11",
+      "parent": "stack_10",
+      "idx": 0,
+      "type": "Stack",
+      "src": "333:9699",
+      "props": {
+        "gap": "space.4",
+        "align": "start",
+        "justify": "start",
+        "size": {
+          "w": "full",
+          "h": "auto"
+        }
+      }
+    },
+    {
+      "id": "women_s_hundred_2021_edwards_dunkley_and",
+      "parent": "stack_11",
+      "idx": 0,
+      "type": "Text",
+      "src": "333:9700",
+      "props": {
+        "size": {
+          "w": "full",
+          "h": "auto"
+        },
+        "content": "Women's Hundred 2021 - Edwards, Dunkley and the Vipers connection",
+        "style": "type.body_md_bold",
+        "tone": "color.text_main_high",
+        "truncate": 3
+      }
+    },
+    {
+      "id": "james_vince_stroked_60_from_38_and_chris_2",
+      "parent": "stack_11",
+      "idx": 1,
+      "type": "Text",
+      "src": "333:9701",
+      "props": {
+        "size": {
+          "w": "full",
+          "h": "auto"
+        },
+        "content": "James Vince stroked 60 from 38 and Chris Jordan produced a late cameo with the bat as Southern Brave finally got their campaign up and running with victory under the lights at the Ageas Bowl. Liam Livingstone produced his first significant contribution of the Hundred with an unbeaten half-century and Adam Milne's 3 for 15 had seemingly set up Birmingham Phoenix for a narrow victory - only for Tom Helm to blink first against Jordan in the final set of five.\nAdvertisement",
+        "style": "type.body_sm_medium",
+        "tone": "color.text_main_medium",
+        "truncate": 3
+      }
+    },
+    {
+      "id": "date_3",
+      "parent": "stack_10",
+      "idx": 1,
+      "type": "Stack",
+      "src": "333:9702",
+      "props": {
+        "direction": "row",
+        "align": "center",
+        "justify": "start",
+        "size": {
+          "w": "auto",
+          "h": "auto"
+        }
+      }
+    },
+    {
+      "id": "mar_22_2025_2",
+      "parent": "date_3",
+      "idx": 0,
+      "type": "Text",
+      "src": "333:9704",
+      "props": {
+        "size": {
+          "w": "auto",
+          "h": "auto"
+        },
+        "content": "Mar 22, 2025",
+        "style": "type.body_sm_regular",
+        "tone": "color.text_main_medium"
+      }
+    },
+    {
+      "id": "trailing_column",
+      "parent": "stack_3",
+      "idx": 2,
+      "type": "Stack",
+      "src": "333:9707",
+      "props": {
+        "gap": "space.4",
+        "align": "start",
+        "justify": "start",
+        "clip": true,
+        "size": {
+          "w": "full",
+          "h": "auto"
+        }
+      }
+    },
+    {
+      "id": "stack_12",
+      "parent": "trailing_column",
+      "idx": 0,
+      "type": "Stack",
+      "src": "333:9708",
+      "props": {
+        "surface": "surface.video_caption",
+        "direction": "row",
+        "gap": "space.2",
+        "align": "start",
+        "justify": "start",
+        "clip": true,
+        "size": {
+          "w": "full",
+          "h": {
+            "raw": 116,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "thumbnail_4",
+      "parent": "stack_12",
+      "idx": 0,
+      "type": "Overlay",
+      "src": "333:9711",
+      "props": {
+        "surface": "surface.middle_column",
+        "clip": true,
+        "size": {
+          "w": {
+            "raw": 116,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 116,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "image_4",
+      "parent": "thumbnail_4",
+      "idx": 0,
+      "type": "Image",
+      "src": "333:9712",
+      "props": {
+        "size": {
+          "w": {
+            "raw": 337.907,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 241.8481,
+            "_unbound": true
+          }
+        },
+        "place": {
+          "anchor": "top-start",
+          "offset": {
+            "block": {
+              "raw": -13.8518,
+              "_unbound": true
+            },
+            "inline": {
+              "raw": -15.9032,
+              "_unbound": true
+            }
+          }
+        },
+        "src": "",
+        "alt": "image",
+        "fit": "cover"
+      }
+    },
+    {
+      "id": "content_4",
+      "parent": "stack_12",
+      "idx": 1,
+      "type": "Stack",
+      "src": "333:9713",
+      "props": {
+        "align": "start",
+        "justify": "start",
+        "clip": true,
+        "space": {
+          "py": "space.4",
+          "px": "space.2"
+        },
+        "size": {
+          "w": "full",
+          "h": "full"
+        }
+      }
+    },
+    {
+      "id": "stack_13",
+      "parent": "content_4",
+      "idx": 0,
+      "type": "Stack",
+      "src": "333:9714",
+      "props": {
+        "gap": "space.3",
+        "align": "start",
+        "justify": "between",
+        "size": {
+          "w": "full",
+          "h": "full"
+        }
+      }
+    },
+    {
+      "id": "stack_14",
+      "parent": "stack_13",
+      "idx": 0,
+      "type": "Stack",
+      "src": "333:9715",
+      "props": {
+        "gap": "space.4",
+        "align": "start",
+        "justify": "start",
+        "size": {
+          "w": "full",
+          "h": "auto"
+        }
+      }
+    },
+    {
+      "id": "james_vince_fires_southern_brave_to_firs_2",
+      "parent": "stack_14",
+      "idx": 0,
+      "type": "Text",
+      "src": "333:9716",
+      "props": {
+        "size": {
+          "w": "full",
+          "h": "auto"
+        },
+        "content": "James Vince fires Southern Brave to first win despite Adam Milne heroics",
+        "style": "type.body_md_bold",
+        "tone": "color.text_main_high",
+        "truncate": 2
+      }
+    },
+    {
+      "id": "james_vince_stroked_60_from_38_and_chris_3",
+      "parent": "stack_14",
+      "idx": 1,
+      "type": "Text",
+      "src": "333:9717",
+      "props": {
+        "size": {
+          "w": "full",
+          "h": "auto"
+        },
+        "content": "James Vince stroked 60 from 38 and Chris Jordan produced a late cameo with the bat as Southern Brave finally got their campaign up and running with victory under the lights at the Ageas Bowl. Liam Livingstone produced his first significant contribution of the Hundred with an unbeaten half-century and Adam Milne's 3 for 15 had seemingly set up Birmingham Phoenix for a narrow victory - only for Tom Helm to blink first against Jordan in the final set of five.\nAdvertisement",
+        "style": "type.body_sm_medium",
+        "tone": "color.text_main_medium",
+        "truncate": 1
+      }
+    },
+    {
+      "id": "date_4",
+      "parent": "stack_13",
+      "idx": 1,
+      "type": "Stack",
+      "src": "333:9718",
+      "props": {
+        "direction": "row",
+        "align": "center",
+        "justify": "start",
+        "size": {
+          "w": "auto",
+          "h": "auto"
+        }
+      }
+    },
+    {
+      "id": "mar_22_2025_3",
+      "parent": "date_4",
+      "idx": 0,
+      "type": "Text",
+      "src": "333:9720",
+      "props": {
+        "size": {
+          "w": "auto",
+          "h": "auto"
+        },
+        "content": "Mar 22, 2025",
+        "style": "type.body_sm_regular",
+        "tone": "color.text_main_medium"
+      }
+    },
+    {
+      "id": "stack_15",
+      "parent": "trailing_column",
+      "idx": 1,
+      "type": "Stack",
+      "src": "333:9723",
+      "props": {
+        "surface": "surface.video_caption",
+        "direction": "row",
+        "gap": "space.2",
+        "align": "start",
+        "justify": "start",
+        "clip": true,
+        "size": {
+          "w": "full",
+          "h": {
+            "raw": 116,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "thumbnail_5",
+      "parent": "stack_15",
+      "idx": 0,
+      "type": "Overlay",
+      "src": "333:9726",
+      "props": {
+        "surface": "surface.middle_column",
+        "clip": true,
+        "size": {
+          "w": {
+            "raw": 116,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 116,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "image_5",
+      "parent": "thumbnail_5",
+      "idx": 0,
+      "type": "Image",
+      "src": "333:9727",
+      "props": {
+        "size": {
+          "w": {
+            "raw": 337.907,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 241.8481,
+            "_unbound": true
+          }
+        },
+        "place": {
+          "anchor": "top-start",
+          "offset": {
+            "block": {
+              "raw": -13.8518,
+              "_unbound": true
+            },
+            "inline": {
+              "raw": -15.9032,
+              "_unbound": true
+            }
+          }
+        },
+        "src": "",
+        "alt": "image",
+        "fit": "cover"
+      }
+    },
+    {
+      "id": "content_5",
+      "parent": "stack_15",
+      "idx": 1,
+      "type": "Stack",
+      "src": "333:9728",
+      "props": {
+        "align": "start",
+        "justify": "start",
+        "clip": true,
+        "space": {
+          "py": "space.4",
+          "px": "space.2"
+        },
+        "size": {
+          "w": "full",
+          "h": "full"
+        }
+      }
+    },
+    {
+      "id": "stack_16",
+      "parent": "content_5",
+      "idx": 0,
+      "type": "Stack",
+      "src": "333:9729",
+      "props": {
+        "gap": "space.3",
+        "align": "start",
+        "justify": "between",
+        "size": {
+          "w": "full",
+          "h": "full"
+        }
+      }
+    },
+    {
+      "id": "stack_17",
+      "parent": "stack_16",
+      "idx": 0,
+      "type": "Stack",
+      "src": "333:9730",
+      "props": {
+        "gap": "space.4",
+        "align": "start",
+        "justify": "start",
+        "size": {
+          "w": "full",
+          "h": "auto"
+        }
+      }
+    },
+    {
+      "id": "james_vince_fires_southern_brave_to_firs_3",
+      "parent": "stack_17",
+      "idx": 0,
+      "type": "Text",
+      "src": "333:9731",
+      "props": {
+        "size": {
+          "w": "full",
+          "h": "auto"
+        },
+        "content": "James Vince fires Southern Brave to first win despite Adam Milne heroics",
+        "style": "type.body_md_bold",
+        "tone": "color.text_main_high",
+        "truncate": 2
+      }
+    },
+    {
+      "id": "james_vince_stroked_60_from_38_and_chris_4",
+      "parent": "stack_17",
+      "idx": 1,
+      "type": "Text",
+      "src": "333:9732",
+      "props": {
+        "size": {
+          "w": "full",
+          "h": "auto"
+        },
+        "content": "James Vince stroked 60 from 38 and Chris Jordan produced a late cameo with the bat as Southern Brave finally got their campaign up and running with victory under the lights at the Ageas Bowl. Liam Livingstone produced his first significant contribution of the Hundred with an unbeaten half-century and Adam Milne's 3 for 15 had seemingly set up Birmingham Phoenix for a narrow victory - only for Tom Helm to blink first against Jordan in the final set of five.\nAdvertisement",
+        "style": "type.body_sm_medium",
+        "tone": "color.text_main_medium",
+        "truncate": 1
+      }
+    },
+    {
+      "id": "date_5",
+      "parent": "stack_16",
+      "idx": 1,
+      "type": "Stack",
+      "src": "333:9733",
+      "props": {
+        "direction": "row",
+        "align": "center",
+        "justify": "start",
+        "size": {
+          "w": "auto",
+          "h": "auto"
+        }
+      }
+    },
+    {
+      "id": "mar_22_2025_4",
+      "parent": "date_5",
+      "idx": 0,
+      "type": "Text",
+      "src": "333:9735",
+      "props": {
+        "size": {
+          "w": "auto",
+          "h": "auto"
+        },
+        "content": "Mar 22, 2025",
+        "style": "type.body_sm_regular",
+        "tone": "color.text_main_medium"
+      }
+    },
+    {
+      "id": "stack_18",
+      "parent": "trailing_column",
+      "idx": 2,
+      "type": "Stack",
+      "src": "333:9738",
+      "props": {
+        "surface": "surface.video_caption",
+        "direction": "row",
+        "gap": "space.2",
+        "align": "start",
+        "justify": "start",
+        "clip": true,
+        "size": {
+          "w": "full",
+          "h": {
+            "raw": 116,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "thumbnail_6",
+      "parent": "stack_18",
+      "idx": 0,
+      "type": "Overlay",
+      "src": "333:9741",
+      "props": {
+        "surface": "surface.middle_column",
+        "clip": true,
+        "size": {
+          "w": {
+            "raw": 116,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 116,
+            "_unbound": true
+          }
+        }
+      }
+    },
+    {
+      "id": "image_6",
+      "parent": "thumbnail_6",
+      "idx": 0,
+      "type": "Image",
+      "src": "333:9742",
+      "props": {
+        "size": {
+          "w": {
+            "raw": 337.907,
+            "_unbound": true
+          },
+          "h": {
+            "raw": 241.8481,
+            "_unbound": true
+          }
+        },
+        "place": {
+          "anchor": "top-start",
+          "offset": {
+            "block": {
+              "raw": -13.8518,
+              "_unbound": true
+            },
+            "inline": {
+              "raw": -15.9032,
+              "_unbound": true
+            }
+          }
+        },
+        "src": "",
+        "alt": "image",
+        "fit": "cover"
+      }
+    },
+    {
+      "id": "content_6",
+      "parent": "stack_18",
+      "idx": 1,
+      "type": "Stack",
+      "src": "333:9743",
+      "props": {
+        "align": "start",
+        "justify": "start",
+        "clip": true,
+        "space": {
+          "py": "space.4",
+          "px": "space.2"
+        },
+        "size": {
+          "w": "full",
+          "h": "full"
+        }
+      }
+    },
+    {
+      "id": "stack_19",
+      "parent": "content_6",
+      "idx": 0,
+      "type": "Stack",
+      "src": "333:9744",
+      "props": {
+        "gap": "space.3",
+        "align": "start",
+        "justify": "between",
+        "size": {
+          "w": "full",
+          "h": "full"
+        }
+      }
+    },
+    {
+      "id": "stack_20",
+      "parent": "stack_19",
+      "idx": 0,
+      "type": "Stack",
+      "src": "333:9745",
+      "props": {
+        "gap": "space.4",
+        "align": "start",
+        "justify": "start",
+        "size": {
+          "w": "full",
+          "h": "auto"
+        }
+      }
+    },
+    {
+      "id": "james_vince_fires_southern_brave_to_firs_4",
+      "parent": "stack_20",
+      "idx": 0,
+      "type": "Text",
+      "src": "333:9746",
+      "props": {
+        "size": {
+          "w": "full",
+          "h": "auto"
+        },
+        "content": "James Vince fires Southern Brave to first win despite Adam Milne heroics",
+        "style": "type.body_md_bold",
+        "tone": "color.text_main_high",
+        "truncate": 2
+      }
+    },
+    {
+      "id": "james_vince_stroked_60_from_38_and_chris_5",
+      "parent": "stack_20",
+      "idx": 1,
+      "type": "Text",
+      "src": "333:9747",
+      "props": {
+        "size": {
+          "w": "full",
+          "h": "auto"
+        },
+        "content": "James Vince stroked 60 from 38 and Chris Jordan produced a late cameo with the bat as Southern Brave finally got their campaign up and running with victory under the lights at the Ageas Bowl. Liam Livingstone produced his first significant contribution of the Hundred with an unbeaten half-century and Adam Milne's 3 for 15 had seemingly set up Birmingham Phoenix for a narrow victory - only for Tom Helm to blink first against Jordan in the final set of five.\nAdvertisement",
+        "style": "type.body_sm_medium",
+        "tone": "color.text_main_medium",
+        "truncate": 1
+      }
+    },
+    {
+      "id": "date_6",
+      "parent": "stack_19",
+      "idx": 1,
+      "type": "Stack",
+      "src": "333:9748",
+      "props": {
+        "direction": "row",
+        "align": "center",
+        "justify": "start",
+        "size": {
+          "w": "auto",
+          "h": "auto"
+        }
+      }
+    },
+    {
+      "id": "mar_22_2025_5",
+      "parent": "date_6",
+      "idx": 0,
+      "type": "Text",
+      "src": "333:9750",
+      "props": {
+        "size": {
+          "w": "auto",
+          "h": "auto"
+        },
+        "content": "Mar 22, 2025",
+        "style": "type.body_sm_regular",
+        "tone": "color.text_main_medium"
+      }
+    }
+  ]
+}

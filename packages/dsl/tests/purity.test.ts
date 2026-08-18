@@ -20,6 +20,9 @@ import { card, registry } from "./helpers.js";
 const PURE_MODULES = [
   "validate.ts",
   "ops.ts",
+  "sha1.ts",
+  "subtree-signature.ts",
+  "collapse.ts",
   "flat.ts",
   "metrics.ts",
   "walk.ts",

@@ -91,16 +91,20 @@ packages/
       cli.ts               fos-tokens build | check | types | tailwind
     tests/                 164 tests, incl. every expected finding on the export
   dsl/
-    fixtures/              flat SDUI trees (player-card.json)
+    fixtures/              flat SDUI trees (player-card.json, news-grid.json)
+      bindings/            { over, as, slice?, fieldMap } for the apply path
     src/
       field.ts             one prop declaration -> Zod, JSON Schema, TS, docs
       flat.ts              flatten / reify, the flat wire format (pure)
       nodes/               8 structural + 10 leaf node declarations
-      validate.ts          S1-S12, T1-T5, quality metrics (pure)
-      ops.ts               tree ops for the repair loop (pure)
+      validate.ts          S1-S14, T1-T5, quality metrics (pure)
+      ops.ts               tree ops for the repair loop, incl. applyCollapse (pure)
+      sha1.ts              hand-rolled sha1, so the pure half imports no node: (pure)
+      subtree-signature.ts "same component?" over DSL subtrees (pure)
+      collapse.ts          proposeCollapse — proposals only, never applied (pure)
       emit/                .d.ts, agent JSON Schema, docs
-      cli.ts               fos-dsl check | types | schema | docs
-    tests/                 129 tests, incl. every acceptance mutation
+      cli.ts               fos-dsl check | types | schema | docs | collapse
+    tests/                 244 tests, incl. every acceptance mutation
   renderer/                the SDK — no Next, no framework
     fixtures/              *.data.json, read by the tests and by apps/web
     public/                self-hosted fonts + local assets (apps/web symlinks it)

@@ -222,6 +222,17 @@
         }
       ],
       "radius": "radius.xs"
+    },
+    "latest_news": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.background_main_container"
+        }
+      ]
+    },
+    "middle_column": {
+      "radius": "radius.md"
     }
   }
 }

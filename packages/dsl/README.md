@@ -244,7 +244,78 @@ Each one keeps `idx` contiguous so the result still reifies:
 - `moveNode` refuses to move a node into its own subtree
 - `wrapIn` gives the wrapper a `synthetic:` src pointing at what it wrapped
 
-## Part 9 — Fixture
+## Part 9 — Subtree signatures and collapse
+
+`subtreeSignature(tree, nodeId)` / `subtreeSignatures(tree)` answer one
+question: **are these two DSL subtrees the same component?** Distinct from the
+IR's `canonicalSignature`, which groups Figma nodes from a designer's sizing
+modes and aspect buckets. This one groups the compiled tree, where the shape has
+already resolved into props. Two hashes, two inputs, two jobs, and deliberately
+no shared code.
+
+`d1:` + the first 10 hex of a sha1 over `{ t: type, p: props, c: [child sigs] }`.
+The prefix is versioned because signatures get stored, and a descriptor change
+that reused the prefix would put two incomparable hashes in one column.
+
+Excluded, because a CMS swaps them: `content`, `alt`, `href`, `label`, `testId`
+and `_meta` at any depth; `Image.src`/`placeholder`, `Icon.name`, `Tabs.options`,
+`Countdown.to`, `Custom.props` per type. `Custom.ref` is kept — the component and
+its version are the shape. Raw numerics bucket to a 4px grid, so 116 and
+116.0001 hash together and 116 and 182 do not.
+
+`truncate` is IN, and it is load-bearing. On the news grid the middle cards clamp
+3 lines of headline and 3 of summary while the trailing cards clamp 2 and 1.
+Those are two variants of a card, not one card showing two articles, and a hash
+that folded them together would propose one Repeater over all five and silently
+drop a line of copy from three of them.
+
+`proposeCollapse(tree)` groups siblings by signature and reports every run of
+two or more. **It changes nothing.** Whether six card slots are one data-driven
+list or six deliberate placements is a statement about the CMS behind the page,
+and the tree does not contain it. It refuses to propose a scattered pair, the
+root's entire child set, or a group whose members already hold a Repeater.
+
+A proposal carries facts and no score. There is deliberately no confidence
+number: on real pages every proposal lands in the same narrow band, a number
+between 0 and 1 invites a threshold, and every collapse needs the same yes from
+the same person whatever the number says.
+
+`varyingContent` is the field a binder actually uses: per template-relative
+node, every content prop that differs across the members. An array per node,
+because an Image's `src` and `alt` routinely both vary. Empty is information —
+on the news grid all three trailing cards carry the same pasted copy, so the
+item's fields cannot be read off the design and have to come from a contract.
+
+`applyCollapse(tree, proposal, binding)` is the only function here that edits.
+It keeps the template, removes the other members, inserts a `Repeater` in the
+template's slot and rewrites the mapped props to `{article.headline}` form.
+Every surviving node keeps its `src`, and the removed members' `src` values —
+every node under them, not just the roots — land on the Repeater as
+`_meta.collapsedFrom`, because `src` is the anchor a pixel diff maps a region
+onto and drift detection joins on.
+
+```bash
+fos-dsl collapse --tree <f>                                        # report
+fos-dsl collapse --tree <f> --apply <i> --binding <f> --out <f>    # edit
+```
+
+Report-only by default. Applying takes an explicit binding file, because a
+collapse with no data source is not a smaller tree — it is a tree that draws one
+card where the design drew three.
+
+`Repeater.slice: [start, end)` windows one source list. The news grid is
+index-tiered — one list of six articles drawn as a lead, two features and three
+briefs — and the tier is chosen by POSITION, which `when` cannot express because
+nothing on article #4 marks it as a brief except being fourth. S13 rejects a
+malformed slice and rejects `slice` alongside `limit`; S14 warns when two
+Repeaters over one source draw overlapping windows.
+
+**`slice` is schema-only today.** The renderer's Repeater understands `limit`
+and ignores `slice`, so a tree that sets one draws the whole list. Setting it is
+opt-in and nothing emits it automatically, but until the renderer lands it, a
+slice is a declaration rather than a behaviour.
+
+## Part 10 — Fixture
 
 `fixtures/player-card.json` is the flat tree for
 `organism_web_cricket_playercard`, validated against the real Southern Brave
@@ -292,6 +363,15 @@ pnpm --filter @fanos/dsl typecheck
   `process.`, `Date.now` and `Math.random`, and both run against in-memory data
 
 ## Divergences from the spec
+
+0. **The news grid yields ONE collapse proposal, not two.** The middle column's
+   two cards are the same component and do not group, because the designer set
+   the thumbnail gap to 0 on one and 8 on the other. That is a real, visible
+   8px; it is in the IR; and it has nothing to do with the image-crop cleanup,
+   which it survives. `tests/subtree-signature.test.ts` proves the gap is the
+   only difference left, by giving them the same gap and watching them merge.
+   Folding them today would move one card's content 8px and call it a tidy-up —
+   the fix belongs in the Figma file.
 
 1. **`space.7` resolves in this theme.** The acceptance criteria expected
    `space.7 -> T1` on the grounds that "the scale stops at space.6", but the
