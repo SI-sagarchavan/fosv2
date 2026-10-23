@@ -44,10 +44,11 @@ import {
 } from "./classify.js";
 import { IdAllocator, isMeaningful, slug } from "./ids.js";
 import { canonicalRef } from "./refs.js";
-import { layoutBox } from "./geometry.js";
+import { layoutBox, quarterTurnOf } from "./geometry.js";
 import {
   button,
   childrenFillRow,
+  iconRef,
   inlineStretch,
   isBand,
   place,
@@ -81,6 +82,16 @@ export interface CompileOptions {
    * rather than silent.
    */
   primitives?: PrimitiveMap;
+  /**
+   * Figma layer-name slugs the tenant has declared to be a named glyph.
+   *
+   * `{ gender_dropdown: "chevron_right" }`. Same shape and same reason as
+   * `primitives`: the fact is a decision someone made in a design file, not
+   * something the IR records, so it is declared once and applied every run
+   * rather than inferred per node. Names not in the map pass through and are
+   * reported as `unknown-icon`, which is the queue this map gets filled from.
+   */
+  icons?: Readonly<Record<string, string>>;
   /**
    * Post-emission cleanup passes. All on by default; see `cleanup.ts`.
    * Turning one off is for regenerating the tree that documents why it exists,
@@ -139,6 +150,8 @@ interface Ctx {
   readonly ids: IdAllocator;
   readonly surfaces: SurfaceResolver;
   readonly primitives: PrimitiveMap;
+  /** Layer-name slug -> registry glyph name. See the `Icon` case in `emit`. */
+  readonly icons: Readonly<Record<string, string>>;
   /** Components seen that the primitive map does not name, for one note each. */
   readonly unmapped: Map<string, { name: string; count: number }>;
   readonly assetsByTarget: Map<string, AssetBinding[]>;
@@ -169,6 +182,7 @@ export function compile(doc: FrameIRDocument, options: CompileOptions): CompileR
     // The document's own names first, so the common case needs no configuration;
     // an explicit entry wins, because it is the one someone typed on purpose.
     primitives: { ...primitivesFromNames(doc), ...(options.primitives ?? {}) },
+    icons: options.icons ?? {},
     unmapped: new Map(),
     assetsByTarget,
     byId,
@@ -396,9 +410,14 @@ function emit(
   if (sp) props.space = sp;
 
   const band = isRoot && isBand(node);
+  /**
+   * The same condition that decides `place` below, and it has to be: a node
+   * that is positioned rather than flowed cannot honour `fill`. See `size`.
+   */
+  const placed = !isRoot && (node.layout.positioning === "absolute" || parentType === "Overlay");
   // `Button.size` is the sm/md/lg enum, which shadows the universal size object
   // — the DSL gives a node's own field precedence, so a box here would be lost.
-  const sz = type === "Button" ? undefined : size(node, isRoot, band);
+  const sz = type === "Button" ? undefined : size(node, isRoot, band, placed);
   if (sz && Object.keys(sz).length > 0) props.size = sz;
 
   if (band) {
@@ -429,11 +448,17 @@ function emit(
   }
 
   let stretched = false;
-  if (!isRoot && (node.layout.positioning === "absolute" || parentType === "Overlay")) {
+  if (placed) {
     // A GROUP has no auto-layout, so Figma reports its children as `auto`
     // positioned even though nothing flows them — their box IS their position.
     // S8 requires an anchor on every Overlay child, and it is right to.
-    props.place = place(node);
+    //
+    // The IR parent is passed because a GROUP is not a coordinate space: see
+    // `place`, which subtracts the origin Figma has already folded into every
+    // one of a group's children. `parent.node` is always the IMMEDIATE IR
+    // parent — a child whose emit returns false takes its whole subtree with
+    // it, so nothing is ever re-parented past a level.
+    props.place = place(node, parent?.node);
 
     /**
      * A child that spans a fluid parent spans it at every width, not just the
@@ -539,6 +564,17 @@ function emit(
         return false;
       }
       Object.assign(props, t);
+      /**
+       * A quarter-turned layer reads along the vertical axis, and the DSL has a
+       * word for it. `rotation` is counter-clockwise as Figma reports it, so +90
+       * reads bottom-to-top. Without this a date strip's "21 JULY" laid out as a
+       * horizontal word inside a 30px column and was clipped to "JU".
+       *
+       * Only quarter turns: the DSL cannot say any other angle, and `size`
+       * already reads the transposed box through `layoutBox`.
+       */
+      const turn = quarterTurnOf(node.geometry.rotation);
+      if (turn) props.orientation = turn;
       break;
     }
     case "Image": {
@@ -565,17 +601,41 @@ function emit(
       // component instance called "Teams", and naming them after that made
       // sixteen different crests indistinguishable.
       const named = iconNameSource(node);
-      props.name = isMeaningful(named.name) ? slug(named.name) : "unknown";
+      /**
+       * `iconRef`, the same normaliser a Button's glyphs go through.
+       *
+       * These two paths used to disagree: a Button's `iconStart` came out as
+       * `chevron_left` and a bare Icon node from the identical layer came out
+       * as `atom_icon_chevron_left`, so half the design's glyphs missed the
+       * registry on a naming convention rather than on a missing drawing.
+       */
+      const derived = isMeaningful(named.name) ? iconRef(named.name) : "unknown";
+      /**
+       * The tenant's alias, when someone has declared one.
+       *
+       * A layer called `gender_dropdown` IS a right chevron, and no amount of
+       * reading the IR will establish that — the name is a product decision
+       * made in a design file, and the IR carries no path data to fall back on.
+       * So it is declared, exactly like `primitives`: proposed from the layer
+       * name, stored against it, and applied deterministically afterwards. The
+       * compiler never guesses; an undeclared name passes through unchanged and
+       * the note below is what asks for the decision.
+       */
+      props.name = ctx.icons[derived] ?? derived;
       const { w, h } = layoutBox(node);
       props.size = raw(Math.max(w, h));
       const tone = canonicalRef(ctx.theme, node.fill?.tokenRef ?? node.stroke?.tokenRef, "color");
       if (tone) props.tone = tone;
-      ctx.notes.push({
-        kind: "unknown-icon",
-        irId: node.id,
-        nodeId: id,
-        message: `icon "${props.name}" from layer name — the IR carries no path data, so verify the glyph`,
-      });
+      if (!ctx.icons[derived]) {
+        ctx.notes.push({
+          kind: "unknown-icon",
+          irId: node.id,
+          nodeId: id,
+          message:
+            `icon "${derived}" from layer name — the IR carries no path data, so verify the glyph. ` +
+            `Map it in the icon alias table if it is a glyph under another name.`,
+        });
+      }
       break;
     }
     case "Divider": {
@@ -796,6 +856,25 @@ function applyPaint(
       });
     }
     return;
+  }
+
+  /**
+   * A fill the theme could not name is a LOST paint even when the node still has
+   * a surface. A pill with a radius and a gradient style the theme spells
+   * differently resolves to `{ radius }` — a surface that exists, paints nothing,
+   * and raised no note, because the check above only fires when the whole spec
+   * is empty. The pills on the fixtures strip lost their fill exactly this way.
+   */
+  const lostFill = source.fill?.tokenRef && !spec.layers && !backgrounds.length;
+  if (lostFill) {
+    ctx.notes.push({
+      kind: "unresolved-paint",
+      irId: node.id,
+      nodeId: id,
+      message:
+        `fill "${source.fill?.tokenRef}" matches no colour or gradient token in this theme — ` +
+        `the surface keeps its radius and border but paints no fill. Check the variable's name against the theme.`,
+    });
   }
   const suggested = isMeaningful(node.name) ? slug(node.name) : `surface_${slug(id)}`;
   const ref = ctx.surfaces.resolve(spec, suggested, node.id);

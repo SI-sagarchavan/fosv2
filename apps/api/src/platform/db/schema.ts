@@ -43,6 +43,8 @@ export const artifactKind = pgEnum("artifact_kind", [
   "conform_report",
   "diff_report",
   "screenshot",
+  "sample_data",
+  "binding_plan",
 ]);
 
 export const runKind = pgEnum("run_kind", ["compile", "conform", "render", "diff", "pipeline"]);

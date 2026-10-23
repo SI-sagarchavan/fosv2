@@ -17,7 +17,12 @@ import { compile } from "./compile.js";
 const USAGE = `fos-compile — deterministic Figma IR -> DSL tree
 
 Usage:
-  fos-compile build --ir <f> --theme <f> [--surfaces <f>] [--out <f>] [--surfaces-out <f>] [--json]
+  fos-compile build --ir <f> --theme <f> [--surfaces <f>] [--icons <f>] [--out <f>] [--surfaces-out <f>] [--json]
+
+  --icons  JSON object mapping a Figma layer-name slug to a registry glyph,
+           e.g. { "gender_dropdown": "chevron_right" }. The compiler will not
+           guess this - see CompileOptions.icons - so an unmapped name is
+           reported as an unknown-icon note, and this file answers that queue.
 `;
 
 function parseArgs(argv: readonly string[]): { command?: string; flags: Record<string, string> } {
@@ -50,8 +55,11 @@ export function run(argv: readonly string[]): number {
     const doc = parseFrameIRDocument(JSON.parse(readFileSync(resolve(required(flags, "ir")), "utf8")));
     const theme = loadTheme(resolve(required(flags, "theme")));
     const surfaces = flags.surfaces ? loadSurfaces(resolve(flags.surfaces)) : undefined;
+    const icons = flags.icons
+      ? (JSON.parse(readFileSync(resolve(flags.icons), "utf8")) as Record<string, string>)
+      : undefined;
 
-    const result = compile(doc, { theme, surfaces });
+    const result = compile(doc, { theme, surfaces, ...(icons ? { icons } : {}) });
 
     /**
      * Validate against the theme's surfaces PLUS the ones this compile needs.

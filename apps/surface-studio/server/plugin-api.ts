@@ -6,7 +6,11 @@
  *   GET  /v1/sync      -> proxied to the control plane's Electric proxy
  *   POST /v1/compile   -> resolves a theme + surface, then starts a run
  *   POST /v1/preview   -> compiles + renders an IR document, nothing persisted
- *   GET  /v1/preview/:run -> the run's compiled tree, rendered as a page
+ *   GET  /v1/preview/:ref -> a run, or a dsl_tree artifact, rendered as a page.
+ *                            ?tree= ?theme= ?surfaces= ?width= ?bg= ?plan=
+ *                            ?data=<artifact id | named dataset>
+ *   POST /v1/inspect   -> IR -> DSL with the per-node join and the gap report
+ *   POST /v1/bindings  -> refs, suggestions and a render, against a sample payload
  *   GET  /public/*        -> renderer fonts and textures, at the path its CSS wants
  *
  * Two reasons this process still exists at all:
@@ -26,7 +30,9 @@ import type { IncomingMessage, ServerResponse } from "node:http";
 import type { Connect, ViteDevServer } from "vite";
 import { authHeaders, loadStudioConfig, type StudioConfig } from "./config.js";
 import { compilePreview } from "./compile-preview.js";
+import type { BindingPlan } from "@fanos/dsl";
 import { renderPreview, resolvePublicAsset } from "./preview.js";
+import { handleInspectRoutes } from "./inspect-routes.js";
 import { compileRequestSchema, previewRequestSchema, studioExportSchema } from "./schema.js";
 
 export function surfaceStudioApi() {
@@ -179,6 +185,18 @@ async function route(
     return;
   }
 
+  if (
+    await handleInspectRoutes(
+      config,
+      { readBody, json, readJsonArtifact, readData, newestTokenSet },
+      path,
+      req,
+      res,
+    )
+  ) {
+    return;
+  }
+
   json(res, 404, { message: "not found" });
 }
 
@@ -257,6 +275,7 @@ async function previewCompile(req: IncomingMessage, res: ServerResponse): Promis
       assets: body.data.assets,
       ...(body.data.width ? { width: body.data.width } : {}),
       ...(body.data.data ? { data: body.data.data } : {}),
+      ...(body.data.icons ? { icons: body.data.icons } : {}),
     });
     json(res, 200, result);
   } catch (err) {
@@ -423,9 +442,31 @@ async function startCompile(
  * is the tree. Reading both from the run rather than from the project's current
  * state is what makes an old preview show what that run actually produced.
  */
+/**
+ * A run id, or a `dsl_tree` artifact id. Same query string either way.
+ *
+ * Four artifacts make a preview — tree, theme, surfaces, data — and every one
+ * of them is `?param=` first, then whatever the target can supply as a default:
+ *
+ *   /v1/preview/<run>       the run's own tree, theme and surface set
+ *   /v1/preview/<artifact>  that tree; theme and surfaces fall back to the
+ *                           project's most recent of each
+ *
+ * The uniformity is the point. `?data=` on a run renders that run's compiled
+ * tree against a data document; `?tree=` on a run renders a DIFFERENT tree
+ * against that run's exact theme and surfaces, which is how you look at a bound
+ * tree painted the way its own compile painted it. Neither combination needed a
+ * new endpoint, and a URL that works on one target works on the other.
+ *
+ * A run's recorded artifacts stay the DEFAULT rather than the rule: an explicit
+ * `?theme=` is somebody typing a different theme on purpose, which is a
+ * legitimate thing to want and visible in the URL. What must never happen is a
+ * run SILENTLY rendering as something it was not — and it cannot, because
+ * nothing here substitutes without being asked in the address bar.
+ */
 async function servePreview(
   config: StudioConfig,
-  runId: string,
+  ref: string,
   url: string,
   res: ServerResponse,
 ): Promise<void> {
@@ -433,54 +474,102 @@ async function servePreview(
   const headers = authHeaders(config);
   const query = new URLSearchParams(url.includes("?") ? url.slice(url.indexOf("?") + 1) : "");
 
-  const runResponse = await fetch(`${base}/runs/${encodeURIComponent(runId)}`, { headers });
-  if (!runResponse.ok) {
-    previewError(res, runResponse.status, `run ${runId} could not be read`);
-    return;
+  const runResponse = await fetch(`${base}/runs/${encodeURIComponent(ref)}`, { headers });
+
+  /** What the target supplies when the query string does not. */
+  let defaults: PreviewRefs = {};
+
+  if (runResponse.ok) {
+    const run = (await runResponse.json()) as {
+      status?: string;
+      input?: { themeArtifact?: string };
+      steps?: Array<{
+        name?: string;
+        outputArtifactId?: string | null;
+        detail?: { surfaceSetArtifact?: string };
+      }>;
+    };
+    const compileStep = run.steps?.find((s) => s.name === "compile");
+    defaults = {
+      tree: compileStep?.outputArtifactId ?? undefined,
+      theme: run.input?.themeArtifact,
+      // Runs from before the pipeline stored one have no surface set. They
+      // render without plates rather than failing — the trace still says what
+      // happened.
+      surfaces: compileStep?.detail?.surfaceSetArtifact,
+    };
+    if (!query.get("tree") && !defaults.tree) {
+      previewError(
+        res,
+        409,
+        run.status === "succeeded"
+          ? "this run produced no compiled tree — pass ?tree=<dsl_tree artifact id> to preview another"
+          : `run is ${run.status ?? "unknown"} — nothing to preview yet`,
+      );
+      return;
+    }
+  } else {
+    // Not a run, so the path segment is the tree itself. An artifact carries no
+    // memory of what it was compiled against, so the project's most recent
+    // theme and surface set are the only defaults there are — right often
+    // enough to be useful, and overridable when they are not.
+    if (!(await artifactExists(base, headers, ref))) {
+      previewError(
+        res,
+        runResponse.status === 404 ? 404 : runResponse.status,
+        `${ref} is neither a run nor a readable artifact`,
+      );
+      return;
+    }
+    defaults = {
+      tree: ref,
+      theme: await latestArtifactId(base, headers, "token_set"),
+      surfaces: await latestArtifactId(base, headers, "surface_set"),
+    };
   }
 
-  const run = (await runResponse.json()) as {
-    status?: string;
-    input?: { themeArtifact?: string };
-    steps?: Array<{
-      name?: string;
-      outputArtifactId?: string | null;
-      detail?: { surfaceSetArtifact?: string };
-    }>;
+  const refs: PreviewRefs = {
+    tree: query.get("tree") ?? defaults.tree,
+    theme: query.get("theme") ?? defaults.theme,
+    surfaces: query.get("surfaces") ?? defaults.surfaces,
+    data: query.get("data") ?? undefined,
+    /**
+     * Only looked up when data was asked for — a plan with nothing to fill is
+     * work for no one. `?plan=` names one explicitly; otherwise the project's
+     * most recent is tried, which is safe because a plan is keyed by `src` and
+     * one belonging to another frame simply drifts and binds nothing.
+     */
+    plan: refsPlan(query),
   };
 
-  const compileStep = run.steps?.find((s) => s.name === "compile");
-  const dslArtifact = compileStep?.outputArtifactId;
-  const themeArtifact = run.input?.themeArtifact;
-  // Runs from before the pipeline stored one have no surface set. They render
-  // without plates rather than failing — the trace still says what happened.
-  const surfaceArtifact = compileStep?.detail?.surfaceSetArtifact;
-
-  if (!dslArtifact || !themeArtifact) {
-    previewError(
-      res,
-      409,
-      run.status === "succeeded"
-        ? "this run produced no compiled tree"
-        : `run is ${run.status ?? "unknown"} — nothing to preview yet`,
-    );
+  if (!refs.tree) {
+    previewError(res, 409, "nothing to render — pass ?tree=<dsl_tree artifact id>");
+    return;
+  }
+  if (!refs.theme) {
+    previewError(res, 409, "no theme to render against — pass ?theme=<token_set artifact id>");
     return;
   }
 
-  const [tree, theme, surfaces] = await Promise.all([
-    readJsonArtifact(base, headers, dslArtifact),
-    readJsonArtifact(base, headers, themeArtifact),
-    surfaceArtifact ? readJsonArtifact(base, headers, surfaceArtifact) : Promise.resolve(null),
-  ]);
-
   try {
-    const width = Number(query.get("width"));
+    const planRef =
+      refs.plan === "latest" ? await latestArtifactId(base, headers, "binding_plan") : refs.plan;
+
+    const [tree, theme, surfaces, data, plan] = await Promise.all([
+      readJsonArtifact(base, headers, refs.tree),
+      readJsonArtifact(base, headers, refs.theme),
+      readOptionalArtifact(base, headers, refs.surfaces),
+      readData(base, headers, refs.data),
+      readOptionalArtifact(base, headers, planRef),
+    ]);
+
     const { html } = await renderPreview({
       tree,
       theme,
       ...(surfaces ? { surfaces } : {}),
-      ...(Number.isFinite(width) && width > 0 ? { width } : {}),
-      ...(query.get("bg") ? { background: `#${query.get("bg")}` } : {}),
+      ...previewOptions(query),
+      ...(data ? { data: data as Record<string, unknown> } : {}),
+      ...(plan ? { plan: plan as BindingPlan } : {}),
     });
 
     res.statusCode = 200;
@@ -494,6 +583,99 @@ async function servePreview(
     // malformed tree, and that message is the whole diagnosis.
     previewError(res, 422, err instanceof Error ? err.message : String(err));
   }
+}
+
+/** The four artifacts a preview resolves, each `?param=` first then defaulted. */
+interface PreviewRefs {
+  tree?: string;
+  theme?: string;
+  surfaces?: string;
+  data?: string;
+  plan?: string | "latest";
+}
+
+/** `?plan=<id>`, or "latest" to look one up — but only when data was given. */
+function refsPlan(query: URLSearchParams): string | "latest" | undefined {
+  const explicit = query.get("plan");
+  if (explicit) return explicit;
+  return query.get("data") ? "latest" : undefined;
+}
+
+async function artifactExists(
+  base: string,
+  headers: Record<string, string>,
+  ref: string,
+): Promise<boolean> {
+  const response = await fetch(`${base}/artifacts/${encodeURIComponent(ref)}`, { headers });
+  return response.ok;
+}
+
+/** `width` and `bg`, parsed once — every preview honours the same query string. */
+function previewOptions(query: URLSearchParams): { width?: number; background?: string } {
+  const width = Number(query.get("width"));
+  const bg = query.get("bg");
+  return {
+    ...(Number.isFinite(width) && width > 0 ? { width } : {}),
+    ...(bg ? { background: `#${bg}` } : {}),
+  };
+}
+
+async function readOptionalArtifact(
+  base: string,
+  headers: Record<string, string>,
+  ref: string | null | undefined,
+): Promise<unknown> {
+  if (!ref) return undefined;
+  return readJsonArtifact(base, headers, ref);
+}
+
+/** A UUID is an artifact; anything else is a name. */
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+/**
+ * `?data=` takes an artifact id OR a named dataset — TEMPORARY for the latter.
+ *
+ * `?data=news-grid` reads `apps/api/data/news-grid.json`, which you can edit and
+ * reload. `?data=<uuid>` reads a `sample_data` artifact, which is immutable and
+ * is what a run should actually record. The named form exists because iterating
+ * on copy against an immutable artifact means a new UUID per keystroke; it is
+ * scaffolding, and the API route it calls says so at length.
+ */
+async function readData(
+  base: string,
+  headers: Record<string, string>,
+  ref: string | null | undefined,
+): Promise<unknown> {
+  if (!ref) return undefined;
+  if (UUID_RE.test(ref)) return readJsonArtifact(base, headers, ref);
+
+  const apiRoot = base.slice(0, base.indexOf("/v1/") + "/v1".length);
+  const response = await fetch(`${apiRoot}/data/${encodeURIComponent(ref)}`, { headers });
+  if (!response.ok) {
+    throw new Error(
+      `no dataset "${ref}" (${response.status}) — expected an artifact id, or a file in apps/api/data/`,
+    );
+  }
+  return response.json();
+}
+
+/**
+ * The newest artifact of a kind in this project.
+ *
+ * A convenience for the artifact path only, and deliberately not used anywhere
+ * a run is involved: a RUN records the exact theme it compiled against, and
+ * substituting "the latest one" there would make an old run render as something
+ * it never was.
+ */
+async function latestArtifactId(
+  base: string,
+  headers: Record<string, string>,
+  kind: string,
+): Promise<string | undefined> {
+  const response = await fetch(`${base}/artifacts?kind=${encodeURIComponent(kind)}&limit=1`, { headers });
+  if (!response.ok) return undefined;
+  const body = (await response.json()) as { artifacts?: { id: string }[]; items?: { id: string }[] };
+  return (body.artifacts ?? body.items ?? [])[0]?.id;
 }
 
 async function readJsonArtifact(

@@ -162,6 +162,45 @@ describe.skipIf(!enabled)("leading trim", () => {
     expect(probe.trim).toBe("none");
   });
 
+  /**
+   * The other half of the clamp story, and the one that was missing.
+   *
+   * Leaving clamped text untrimmed is right — trim shears ascenders under
+   * `overflow: hidden`. But the box still has to OCCUPY Figma's ink height, or
+   * every clamped text stands a leading taller than the design and the column
+   * around it clips. On the news grid that was 10px per text, 20px per card.
+   *
+   * So the element renders full line boxes and pulls its outer edges in with
+   * `margin-block: calc((1cap - 1lh) / 2)`. Rendered height stays `lines × lh`;
+   * occupied height becomes `(lines - 1) × lh + cap`, which is Figma's box.
+   */
+  it("makes CLAMPED text OCCUPY the ink box while still rendering full line boxes", async () => {
+    browser ??= await chromium.launch({ headless: true });
+    const probe = await measure(browser, "news-card", 379, (page) =>
+      page.evaluate(() => {
+        const el = document.querySelector(".fos-text-clamp") as HTMLElement;
+        const cs = getComputedStyle(el);
+        const rendered = el.getBoundingClientRect().height;
+        const mt = parseFloat(cs.marginTop);
+        const mb = parseFloat(cs.marginBottom);
+        const lh = parseFloat(cs.lineHeight);
+        return { rendered, mt, mb, lh, occupied: rendered + mt + mb };
+      }),
+    );
+
+    // Negative, and the same on both edges: half the leading each.
+    expect(probe.mt).toBeLessThan(0);
+    expect(probe.mt).toBeCloseTo(probe.mb, 1);
+
+    // Renders a whole number of full line boxes — nothing is clipped.
+    expect(probe.rendered / probe.lh).toBeCloseTo(Math.round(probe.rendered / probe.lh), 1);
+
+    // …but occupies one line-height less the cap, which is what Figma reports.
+    expect(probe.occupied).toBeCloseTo(probe.rendered + probe.mt + probe.mb, 1);
+    expect(probe.rendered - probe.occupied).toBeGreaterThan(0);
+    expect(probe.rendered - probe.occupied).toBeLessThan(probe.lh);
+  });
+
   it("leaves VERTICAL text untrimmed — trim collapses the outer box off-axis", async () => {
     browser ??= await chromium.launch({ headless: true });
     const probe = await measure(browser, "player-card", 281, (page) =>
@@ -182,3 +221,45 @@ describe.skipIf(!enabled)("leading trim", () => {
     expect(probe.taller).toBe(true);
   });
 });
+
+/**
+ * A clamped text with a declared height keeps that height as its footprint.
+ *
+ * On the fixtures strip the result line is a fixed 30px box of two 18px lines.
+ * The clamp's negative margins are meant to shrink an AUTO box to Figma's ink
+ * height; on this one they shrank an already-correct box, so the card that hugs
+ * it rendered 9.6px short.
+ */
+describe("clamped text with a fixed height", () => {
+  const render = async (size: unknown): Promise<string> => {
+    const { renderToStaticMarkup } = await import("react-dom/server");
+    const { createElement } = await import("react");
+    const { Render } = await import("../src/components/Render.js");
+    const tree = {
+      schemaVersion: "1",
+      nodes: [
+        { id: "root", type: "Stack", parent: null, idx: 0, src: "1:1", props: {} },
+        {
+          id: "t",
+          type: "Text",
+          parent: "root",
+          idx: 0,
+          src: "1:2",
+          props: { content: "two lines of copy", style: "type.body_sm_medium", truncate: 2, ...(size ? { size } : {}) },
+        },
+      ],
+    };
+    return renderToStaticMarkup(createElement(Render, { tree, width: 300 } as never));
+  };
+
+  it("is marked fixed-height when `size.h` is a length", async () => {
+    expect(await render({ h: { raw: 30, _unbound: true } })).toContain("fos-text-fixed-h");
+  });
+
+  it("is not when the height is auto or fill, which is the case the clamp margins are for", async () => {
+    expect(await render({ h: "auto" })).not.toContain("fos-text-fixed-h");
+    expect(await render({ h: "full" })).not.toContain("fos-text-fixed-h");
+    expect(await render(undefined)).not.toContain("fos-text-fixed-h");
+  });
+});
+

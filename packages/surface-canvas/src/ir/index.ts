@@ -24,6 +24,7 @@ export {
   frameIRNodeSchema,
   isValidAssetName,
   parseFrameIRDocument,
+  readability,
   safeParseFrameIRDocument,
 } from "./schema.js";
 
@@ -66,6 +67,7 @@ export type {
   Rect,
   Sizing,
   Stroke,
+  TextCaseValue,
   TextInfo,
   TokenValue,
 } from "./schema.js";

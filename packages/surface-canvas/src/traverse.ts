@@ -738,6 +738,29 @@ async function extractText(node: TextNode, caches: Caches): Promise<TextInfo> {
     if (typeof maxLines === "number" && maxLines > 0) info.maxLines = maxLines;
   }
 
+  /**
+   * The case setting, which `characters` does not carry.
+   *
+   * A heading typed "My account" and set to `UPPER` displays "MY ACCOUNT", and
+   * `node.characters` returns the former. Without this the compiler has no way
+   * to reproduce the design except by uppercasing the string, which corrupts
+   * the value for every other consumer — the DSL's `Text.textCase` exists
+   * precisely so it does not have to.
+   *
+   * `resolveMixed` because case is a range property like every other: a layer
+   * with one uppercased word reports `figma.mixed`, and the first character is
+   * the same fallback used for size and family. `NONE` is not recorded — see
+   * `truncation` above for why absence is the better spelling of a default.
+   */
+  const textCase = resolveMixed<TextCase>(
+    node.textCase,
+    () => node.getRangeTextCase(0, 1),
+    "ORIGINAL",
+  );
+  if (textCase === "UPPER" || textCase === "LOWER" || textCase === "TITLE") {
+    info.textCase = textCase;
+  }
+
   // styleRef carries whichever binding exists — a text style name, else the
   // variable name. Never both; a bound node is never flagged unbound.
   const ref = styleRef ?? variableRef;

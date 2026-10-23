@@ -73,6 +73,16 @@ export const previewRequestSchema = z.object({
    * like a broken preview rather than a missing argument.
    */
   data: z.record(z.unknown()).optional(),
+  /**
+   * Figma layer-name slug -> icon registry glyph.
+   *
+   * The one thing about a glyph that cannot be read off the IR: it carries no
+   * path data, so a layer called `gender_dropdown` is a right chevron only
+   * because someone says so. Sent with the preview rather than stored here
+   * because the panel is where that decision gets made and reviewed; the
+   * compiler applies it deterministically and reports anything unmapped.
+   */
+  icons: z.record(z.string().min(1)).optional(),
 });
 export type PreviewRequest = z.infer<typeof previewRequestSchema>;
 
@@ -106,3 +116,69 @@ export const compileRequestSchema = z.object({
 export type StudioPage = z.infer<typeof studioPageSchema>;
 export type StudioExport = z.infer<typeof studioExportSchema>;
 export type CompileRequest = z.infer<typeof compileRequestSchema>;
+
+/* ------------------------------------------------------------------------- */
+/* The inspector                                                              */
+/* ------------------------------------------------------------------------- */
+
+const planBinding = z.object({ src: z.string().min(1), prop: z.string().min(1), path: z.string().min(1) });
+
+/** A binding plan, as `@fanos/dsl`'s `applyBindingPlan` takes it. */
+export const planSchema = z.object({
+  bind: z.array(planBinding).optional(),
+  collapse: z
+    .array(
+      z.object({
+        over: z.string().min(1),
+        as: z.string().min(1),
+        slice: z.tuple([z.number().int().min(0), z.number().int().min(0)]).optional(),
+        members: z.array(z.string().min(1)).min(1),
+        fields: z.array(planBinding).optional(),
+      }),
+    )
+    .optional(),
+  note: z.string().optional(),
+});
+
+/**
+ * Where the IR and theme come from.
+ *
+ * Either by value or by artifact id. By value is what lets the Playground work
+ * with only the board running — drop a file, see the pipeline — and by id is
+ * what the export pages send, because the board already holds the id and the
+ * bytes are stored.
+ */
+const inspectSource = {
+  ir: z.unknown().optional(),
+  irArtifact: z.string().min(1).optional(),
+  theme: z.unknown().optional(),
+  themeArtifact: z.string().min(1).optional(),
+  width: z.number().int().positive().max(4000).optional(),
+  render: z.boolean().default(false),
+  icons: z.record(z.string().min(1)).optional(),
+};
+
+const needsIr = (b: { ir?: unknown; irArtifact?: string | undefined }): boolean =>
+  b.ir !== undefined || b.irArtifact !== undefined;
+
+export const inspectRequestSchema = z
+  .object(inspectSource)
+  .refine(needsIr, { message: "send `ir` (the document) or `irArtifact` (its id)" });
+
+export const bindingsRequestSchema = z
+  .object({
+    ...inspectSource,
+    /** The sample payload, by value. */
+    data: z.record(z.unknown()).optional(),
+    /** Or a named dataset / `sample_data` artifact id, read server-side. */
+    dataset: z.string().min(1).optional(),
+    plan: planSchema.optional(),
+  })
+  .refine(needsIr, { message: "send `ir` (the document) or `irArtifact` (its id)" });
+
+export const exportStatusRequestSchema = z.object({
+  status: z.enum(["received", "dismissed"]),
+});
+
+export type InspectRequest = z.infer<typeof inspectRequestSchema>;
+export type BindingsRequest = z.infer<typeof bindingsRequestSchema>;

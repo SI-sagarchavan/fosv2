@@ -161,13 +161,36 @@ function RenderNode({
     case "Divider":
       return <Divider node={node} ctx={ctx} />;
     case "Repeater": {
-      const props = node.props as { over?: string; as?: string; limit?: number };
+      const props = node.props as {
+        over?: string;
+        as?: string;
+        limit?: number;
+        slice?: [number, number];
+      };
       const items = resolveList(props.over, ctx.data);
       if (items === undefined) {
         console.warn(`[fos-render] Repeater "${node.id}" — no list at "${props.over}"`);
         return null;
       }
-      const capped = typeof props.limit === "number" ? items.slice(0, props.limit) : items;
+      /**
+       * `slice` windows the list; `limit` caps it from the front.
+       *
+       * Either/or, never both — S13 rejects a tree that sets the two, because
+       * they answer the same question twice. An index-tiered grid needs the
+       * window: one list of six articles drawn as a lead, two features and
+       * three briefs, where the tier is decided by POSITION and no field on the
+       * item marks it.
+       *
+       * `Array.prototype.slice` already clamps, so a window past the end of a
+       * short list draws what there is rather than throwing — the page renders
+       * short instead of not at all, which is the right failure for a section
+       * whose CMS came back with four items instead of six.
+       */
+      const capped = Array.isArray(props.slice)
+        ? items.slice(props.slice[0], props.slice[1])
+        : typeof props.limit === "number"
+          ? items.slice(0, props.limit)
+          : items;
       const alias = props.as ?? "item";
       return (
         <>

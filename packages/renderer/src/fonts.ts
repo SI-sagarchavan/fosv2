@@ -37,6 +37,20 @@ export const FONT_FACE_CSS = `
   font-display: block;
   src: url("/public/fonts/montserrat-700.woff2") format("woff2");
 }
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: block;
+  src: url("/public/fonts/inter-variable.woff2") format("woff2");
+}
+@font-face {
+  font-family: "Poppins";
+  font-style: normal;
+  font-weight: 500;
+  font-display: block;
+  src: url("/public/fonts/poppins-500.woff2") format("woff2");
+}
 `;
 
 /** Families the harness asserts are loaded (not fallbacks). */

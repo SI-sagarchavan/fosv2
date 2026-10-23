@@ -22,7 +22,7 @@ const FIT_MAP: Record<string, string> = {
 
 export function Image({ node, ctx }: { node: Node; ctx: NodeRenderContext }) {
   const props = node.props as Record<string, unknown>;
-  const resolved = resolveNode(props, { flexChild: ctx.flexChild });
+  const resolved = resolveNode(props, { flexChild: ctx.flexChild, parentDirection: ctx.flexRow ? "row" : "column" });
 
   const srcTemplate = typeof props.src === "string" ? props.src : "";
   const altTemplate = typeof props.alt === "string" ? props.alt : "";

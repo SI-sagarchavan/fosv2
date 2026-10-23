@@ -452,7 +452,6 @@
       "type": "Stack",
       "src": "333:9685",
       "props": {
-        "gap": "space.3",
         "align": "start",
         "justify": "between",
         "size": {
@@ -645,7 +644,6 @@
       "type": "Stack",
       "src": "333:9698",
       "props": {
-        "gap": "space.3",
         "align": "start",
         "justify": "between",
         "size": {
@@ -858,7 +856,6 @@
       "type": "Stack",
       "src": "333:9714",
       "props": {
-        "gap": "space.3",
         "align": "start",
         "justify": "between",
         "size": {
@@ -1054,7 +1051,6 @@
       "type": "Stack",
       "src": "333:9729",
       "props": {
-        "gap": "space.3",
         "align": "start",
         "justify": "between",
         "size": {
@@ -1250,7 +1246,6 @@
       "type": "Stack",
       "src": "333:9744",
       "props": {
-        "gap": "space.3",
         "align": "start",
         "justify": "between",
         "size": {

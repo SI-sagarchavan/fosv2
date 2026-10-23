@@ -12,7 +12,7 @@ const VERTICAL = new Set(["vertical-up", "vertical-down"]);
 export function Text({ node, ctx }: { node: Node; ctx: NodeRenderContext }) {
   const props = node.props as Record<string, unknown>;
   // `align` on a Text is text-align, not flex cross-axis — see StyleContext.
-  const resolved = resolveNode(props, { flexChild: ctx.flexChild, alignIsTextAlign: true });
+  const resolved = resolveNode(props, { flexChild: ctx.flexChild, parentDirection: ctx.flexRow ? "row" : "column", alignIsTextAlign: true });
 
   const contentRaw = typeof props.content === "string" ? props.content : "";
   const { value, unresolved } = interpolate(contentRaw, ctx.data);
@@ -37,6 +37,16 @@ export function Text({ node, ctx }: { node: Node; ctx: NodeRenderContext }) {
 
   const classes = [resolved.className, "fos-text", typeClass];
   if (truncate !== undefined) classes.push("fos-text-clamp");
+  /**
+   * A clamped text with a DECLARED height already has its box: Figma pinned it
+   * (a fixed 30px for two 18px lines), and that box is what the layout around it
+   * was drawn against. The clamp's margins exist to shrink an AUTO box down to
+   * the ink height; applied to a fixed one they shrink it a second time, so the
+   * card that hugs it came out 9.6px short and every sibling sat 4.8px low.
+   */
+  if (truncate !== undefined && hasFixedHeight(props.size)) classes.push("fos-text-fixed-h");
+  if (props.trim === "none") classes.push("fos-text-untrimmed");
+  if (props.wrap === false) classes.push("fos-text-nowrap");
 
   const style = { ...resolved.style };
   if (tone?.startsWith("color.")) style.color = cssVar(tone);
@@ -79,6 +89,26 @@ export function Text({ node, ctx }: { node: Node; ctx: NodeRenderContext }) {
    */
   if (vertical) classes.push("fos-text-has-vertical");
 
+  /**
+   * `align` on vertical text means along the READING axis, as in Figma, where a
+   * rotated layer's alignment turns with it. `text-align` on the horizontal outer
+   * element cannot do that — it moves the rotated span across the box, not along
+   * it — so the outer box becomes a column that places the span: `start` is where
+   * reading begins (the bottom for vertical-up, the top for vertical-down). The
+   * line box is centred across the box, matching Figma's cap-height-wide box.
+   */
+  if (vertical) {
+    const align = typeof props.align === "string" ? props.align : "start";
+    const up = orientation === "vertical-up";
+    const along: Record<string, string> = up
+      ? { start: "flex-end", center: "center", end: "flex-start" }
+      : { start: "flex-start", center: "center", end: "flex-end" };
+    style.display = "flex";
+    style.flexDirection = "column";
+    style.alignItems = "center";
+    style.justifyContent = along[align] ?? along.start!;
+  }
+
   return (
     <Tag
       className={classes.filter(Boolean).join(" ")}
@@ -100,4 +130,11 @@ export function Text({ node, ctx }: { node: Node; ctx: NodeRenderContext }) {
       )}
     </Tag>
   );
+}
+
+/** `size.h` is a length (raw px or a token), not `auto` or `full`. */
+function hasFixedHeight(size: unknown): boolean {
+  const h = (size as { h?: unknown } | undefined)?.h;
+  if (h === undefined || h === null) return false;
+  return h !== "auto" && h !== "full";
 }

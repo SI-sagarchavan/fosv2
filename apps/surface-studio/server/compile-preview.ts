@@ -40,6 +40,15 @@ export interface CompilePreviewInput {
   width?: number;
   /** Sample payload for a bound tree's `{path}` bindings. See `PreviewSource`. */
   data?: Record<string, unknown>;
+  /**
+   * Layer-name slug -> icon registry glyph, forwarded to the compiler.
+   *
+   * Without it every glyph whose Figma name is not already the registry's name
+   * previews as a dashed placeholder — four disclosure chevrons on the
+   * fan-preferences page — and the panel cannot tell a naming mismatch from a
+   * missing drawing. See `icons` in `CompileOptions`.
+   */
+  icons?: Readonly<Record<string, string>>;
 }
 
 /** What the panel shows beside the picture. */
@@ -73,7 +82,7 @@ export async function compilePreview(input: CompilePreviewInput): Promise<Compil
   const theme = themes[0];
   if (!theme) throw new Error("the theme carries no tokens");
 
-  const result = compile(doc, { theme });
+  const result = compile(doc, { theme, ...(input.icons ? { icons: input.icons } : {}) });
 
   /**
    * Assets resolve to data URIs, which is what `ASSET_PUBLISHER=data-uri` does

@@ -22,6 +22,24 @@ export const ARTIFACT_KINDS = [
   "conform_report",
   "diff_report",
   "screenshot",
+  /**
+   * The data document a bound tree's `{path}` bindings resolve against.
+   *
+   * A sample, not the CMS: static bytes standing in for whatever will feed the
+   * surface in production, so a bound tree can be previewed, diffed and
+   * reviewed before any integration exists. Content-addressed like everything
+   * else, so the exact bytes a screenshot was taken against stay recoverable.
+   */
+  "sample_data",
+  /**
+   * How a compiled tree becomes a bound one: which nodes carry which data path,
+   * and which siblings are one component repeated.
+   *
+   * Keyed by `src` — the Figma node id — so one plan survives many compiles of
+   * the same frame. See `applyBindingPlan` in @fanos/dsl, which reports what it
+   * could not land rather than writing it.
+   */
+  "binding_plan",
 ] as const;
 
 export type ArtifactKind = (typeof ARTIFACT_KINDS)[number];
@@ -48,6 +66,8 @@ export const DEFAULT_MEDIA_TYPE: Record<ArtifactKind, string> = {
   conform_report: "application/json",
   diff_report: "application/json",
   screenshot: "image/png",
+  sample_data: "application/json",
+  binding_plan: "application/json",
 };
 
 /**

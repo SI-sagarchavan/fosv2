@@ -21,7 +21,7 @@ import { existsSync, readFileSync } from "node:fs";
 import { dirname, join, normalize, resolve, sep } from "node:path";
 import { fileURLToPath } from "node:url";
 
-import type { FlatTree } from "@fanos/dsl";
+import { applyBindingPlan, hasBindings, type BindingPlan, type FlatTree } from "@fanos/dsl";
 import { FONT_FACE_CSS, Render } from "@fanos/renderer";
 import {
   emitCss,
@@ -64,9 +64,24 @@ export interface PreviewSource {
    * `{section.title}` placeholders.
    */
   data?: Record<string, unknown>;
+  /**
+   * Applied before rendering, when the tree has no bindings of its own.
+   *
+   * A compiled tree keeps Figma's literal characters, so handing it `data`
+   * changes nothing — which is why `?data=` on a fresh run looks broken. A plan
+   * is what turns one into the other, and it is keyed by `src`, so applying one
+   * that belongs to a different frame is a no-op rather than damage: every
+   * entry drifts and the tree comes back untouched.
+   *
+   * Skipped entirely when the tree is ALREADY bound. A tree that has been
+   * through the authoring step must not be re-bound on the way to a screen.
+   */
+  plan?: BindingPlan;
 }
 
 export interface RenderedPreview {
+  /** What a binding plan did, when one was applied. Absent when none was. */
+  binding?: { bound: number; collapsed: number; drift: string[] };
   html: string;
   width: number;
 }
@@ -94,7 +109,15 @@ export async function renderPreview(source: PreviewSource): Promise<RenderedPrev
     ...(surfaces ? { surfaces } : {}),
   });
 
-  const tree = source.tree as FlatTree;
+  const compiled = source.tree as FlatTree;
+  const applied =
+    source.plan && !hasBindings(compiled) ? applyBindingPlan(compiled, source.plan) : undefined;
+  if (applied?.drift.length) {
+    // Named, never silent: what a plan could not land is the review queue, and
+    // a preview that quietly showed less than was asked for is how it is missed.
+    for (const d of applied.drift) console.warn(`[preview] plan drift (${d.reason}): ${d.message}`);
+  }
+  const tree = applied?.tree ?? compiled;
   const width = source.width ?? rootWidthOf(tree) ?? DEFAULT_WIDTH;
 
   /**
@@ -147,7 +170,19 @@ ${markup}
 </body>
 </html>`;
 
-  return { html, width };
+  return {
+    html,
+    width,
+    ...(applied
+      ? {
+          binding: {
+            bound: applied.bound,
+            collapsed: applied.collapsed,
+            drift: applied.drift.map((d) => `${d.reason}: ${d.message}`),
+          },
+        }
+      : {}),
+  };
 }
 
 /**

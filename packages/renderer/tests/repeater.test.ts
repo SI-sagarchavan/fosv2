@@ -66,3 +66,50 @@ describe("Repeater", () => {
     expect(html.match(/data-fos-repeat="/g)).toHaveLength(2);
   });
 });
+
+/**
+ * `slice` — the index-tiered grid.
+ *
+ * One list of articles drawn as a lead, then features, then briefs, where the
+ * tier is decided by POSITION. `when` cannot say this: nothing on article #4
+ * marks it as a brief except being fourth.
+ */
+describe("Repeater.slice", () => {
+  async function withProps(props: Record<string, unknown>): Promise<string> {
+    const { renderToStaticMarkup } = await import("react-dom/server");
+    const { createElement } = await import("react");
+    const { Render } = await import("../src/components/Render.js");
+    const t = tree();
+    Object.assign(nodeById(t, "videos")!.props as Record<string, unknown>, props);
+    return renderToStaticMarkup(createElement(Render, { tree: t, data: data(), width: 1366 } as never));
+  }
+
+  const titles = () => (data().section as { videos: { title: string }[] }).videos.map((v) => v.title);
+  const esc = (s: string) => s.replace(/'/g, "&#x27;");
+
+  it("draws its window and nothing else", async () => {
+    const html = await withProps({ slice: [1, 3] });
+    expect(html.match(/data-fos-repeat="/g)).toHaveLength(2);
+    expect(html).toContain(esc(titles()[1]!));
+    expect(html).toContain(esc(titles()[2]!));
+    expect(html).not.toContain(esc(titles()[0]!));
+    expect(html).not.toContain(esc(titles()[3]!));
+  });
+
+  it("is end-exclusive", async () => {
+    expect((await withProps({ slice: [0, 1] })).match(/data-fos-repeat="/g)).toHaveLength(1);
+  });
+
+  /**
+   * A CMS that returns four items where the design assumed six should render a
+   * short section, not a blank one. `Array.prototype.slice` clamps for us; this
+   * pins that we rely on it.
+   */
+  it("clamps a window that runs past the end of the list", async () => {
+    expect((await withProps({ slice: [2, 99] })).match(/data-fos-repeat="/g)).toHaveLength(2);
+  });
+
+  it("wins over limit, which S13 forbids alongside it anyway", async () => {
+    expect((await withProps({ slice: [0, 3], limit: 1 })).match(/data-fos-repeat="/g)).toHaveLength(3);
+  });
+});

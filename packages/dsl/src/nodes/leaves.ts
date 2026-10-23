@@ -26,6 +26,20 @@ export const LEAF_NODES: NodeSpec[] = [
        * uppercase the data, which corrupts the value for every other consumer.
        */
       textCase: opt(f.enum("none", "upper", "lower", "title")),
+      /**
+       * Figma's per-layer vertical trim. `cap` (the default) hugs cap-height to
+       * baseline, which is what a file with "Vertical trim" on draws; `none`
+       * keeps the full line box. Files differ — one design system trims every
+       * layer, another trims none — so a renderer-wide choice is wrong for half
+       * of them.
+       */
+      trim: opt(f.enum("cap", "none"), { doc: 'default "cap"' }),
+      /**
+       * `false` for Figma's auto-width text: one line that never wraps, with its
+       * spaces kept. Without it a hugging label in a narrow absolute context
+       * breaks at min-content ("view / all").
+       */
+      wrap: opt(f.bool(), { doc: "default true" }),
       as: opt(f.enum("h1", "h2", "h3", "h4", "h5", "h6", "p", "span")),
     },
   },
@@ -82,6 +96,27 @@ export const LEAF_NODES: NodeSpec[] = [
       action: req(f.action()),
       loading: opt(f.bool()),
       disabled: opt(f.bool()),
+      /**
+       * Fill the inline axis instead of hugging the label.
+       *
+       * The universal `size` object cannot say this on a Button: `size` is
+       * already the sm/md/lg enum here, and a node's own field wins. So a
+       * design's full-width submit — Figma's `sizing.w: "fill"`, which is what
+       * every form's primary action uses — had no spelling at all, and compiled
+       * to a pill the width of its label. On the fan-preferences page that was
+       * a 710px SAVE bar rendering at 68px.
+       */
+      block: opt(f.bool()),
+      /**
+       * How the label is DISPLAYED, exactly as on `Text`.
+       *
+       * A button's label is a Figma text layer and carries the same case
+       * setting, for the same reason: the file stores "save" and shows "SAVE".
+       * Without this the only way to get the design's case is to uppercase the
+       * label string, which is content, and which a translator would then have
+       * to undo.
+       */
+      textCase: opt(f.enum("none", "upper", "lower", "title")),
     },
   },
 

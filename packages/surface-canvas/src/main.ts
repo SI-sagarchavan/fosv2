@@ -124,6 +124,17 @@ interface State {
   lastActivityId: string | null;
   /** Outbound Surface Studio client. Never blocks a lint. */
   api: ApiClient | null;
+  /**
+   * The last failure, kept so `ui-ready` can replay it.
+   *
+   * `fail()` posts into an iframe that may not be listening yet — boot's own
+   * catch fires before `figma.showUI` has a panel on the other end whenever the
+   * failure is early enough. Every other piece of boot state is replayed on
+   * `ui-ready` for exactly that reason; the error was the one that was not, so a
+   * plugin that failed to start showed a loading placeholder forever with the
+   * diagnosis posted into the void.
+   */
+  error: string | null;
 }
 
 const state: State = {
@@ -143,6 +154,7 @@ const state: State = {
   quietUntil: 0,
   lastActivityId: null,
   api: null,
+  error: null,
 };
 
 // ---------------------------------------------------------------------------
@@ -238,6 +250,10 @@ async function handle(message: UiMessage): Promise<void> {
       applyPanelSize(state.panelState);
       postSelection();
       if (state.report) postReport(state.report, "full");
+      // Replayed like everything else above. A failure that happened before the
+      // iframe existed is the one a reader most needs, and it is the one that
+      // was previously lost.
+      if (state.error) post({ type: "error", message: state.error });
       // ALWAYS, not just when there is no report. `busy` starts true in the
       // panel and is only ever cleared by a status message, so a run that
       // finished before the iframe was listening would otherwise leave it stuck
@@ -342,6 +358,9 @@ async function handle(message: UiMessage): Promise<void> {
 // ---------------------------------------------------------------------------
 
 async function fullLint(repick = false): Promise<void> {
+  // A fresh attempt clears the last verdict. Without this the banner from a
+  // failure three actions ago sits above a report that succeeded.
+  state.error = null;
   const root = await resolveRoot(repick);
   if (!root) {
     fail("This page has no frame to check. Add a frame, or select the one you want checked.");
@@ -374,7 +393,22 @@ async function fullLint(repick = false): Promise<void> {
 }
 
 function runLint(scope: "full" | "incremental"): void {
-  if (!state.ir || !state.snapshot) return;
+  /**
+   * Say so, rather than returning into silence.
+   *
+   * Both of these are set earlier in `fullLint`, so a miss here means a step
+   * before it bailed without throwing. The panel cannot tell that apart from
+   * "still working" — no report, no status, no error — which is precisely the
+   * stuck "Reading the page…" this exists to prevent.
+   */
+  if (!state.ir || !state.snapshot) {
+    fail(
+      !state.ir
+        ? "The page was read but produced no document to lint — nothing to report."
+        : "No theme snapshot to lint against — reconciliation produced nothing.",
+    );
+    return;
+  }
   // An incremental re-lint patches subtrees in place under the SAME root object,
   // which would otherwise hit the memoized slot walk and report the score from
   // before the edit. Dropping it here means every lint sees the tree as it is.
@@ -1592,5 +1626,6 @@ function status(message: string, isBusy = true): void {
 
 function fail(message: string): void {
   console.log(`[fanos-studio] ${message}`);
+  state.error = message;
   post({ type: "error", message });
 }

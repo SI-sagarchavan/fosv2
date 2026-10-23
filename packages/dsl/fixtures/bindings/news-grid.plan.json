@@ -1,0 +1,117 @@
+{
+  "note": "Keyed by src \u2014 the Figma node id. Node ids come from layer names and move when a designer renames, reorders or edits placeholder copy; src does not.",
+  "bind": [
+    {
+      "src": "333:9502",
+      "prop": "content",
+      "path": "news.eyebrow"
+    },
+    {
+      "src": "333:9503",
+      "prop": "label",
+      "path": "news.cta"
+    },
+    {
+      "src": "333:9677",
+      "prop": "src",
+      "path": "news.items.0.thumbnail"
+    },
+    {
+      "src": "I333:9679;13448:62717",
+      "prop": "content",
+      "path": "news.items.0.headline"
+    },
+    {
+      "src": "I333:9679;13448:62718",
+      "prop": "content",
+      "path": "news.items.0.summary"
+    },
+    {
+      "src": "I333:9679;13448:62722",
+      "prop": "content",
+      "path": "news.items.0.date"
+    },
+    {
+      "src": "333:9683",
+      "prop": "src",
+      "path": "news.items.1.thumbnail"
+    },
+    {
+      "src": "333:9687",
+      "prop": "content",
+      "path": "news.items.1.headline"
+    },
+    {
+      "src": "333:9688",
+      "prop": "content",
+      "path": "news.items.1.summary"
+    },
+    {
+      "src": "333:9691",
+      "prop": "content",
+      "path": "news.items.1.date"
+    },
+    {
+      "src": "333:9696",
+      "prop": "src",
+      "path": "news.items.2.thumbnail"
+    },
+    {
+      "src": "333:9700",
+      "prop": "content",
+      "path": "news.items.2.headline"
+    },
+    {
+      "src": "333:9701",
+      "prop": "content",
+      "path": "news.items.2.summary"
+    },
+    {
+      "src": "333:9704",
+      "prop": "content",
+      "path": "news.items.2.date"
+    },
+    {
+      "src": "I333:9503;13031:7717;13031:7501",
+      "prop": "content",
+      "path": "news.cta"
+    }
+  ],
+  "collapse": [
+    {
+      "over": "news.items",
+      "as": "article",
+      "slice": [
+        3,
+        6
+      ],
+      "members": [
+        "333:9708",
+        "333:9723",
+        "333:9738"
+      ],
+      "fields": [
+        {
+          "src": "333:9712",
+          "prop": "src",
+          "path": "thumbnail"
+        },
+        {
+          "src": "333:9716",
+          "prop": "content",
+          "path": "headline"
+        },
+        {
+          "src": "333:9717",
+          "prop": "content",
+          "path": "summary"
+        },
+        {
+          "src": "333:9720",
+          "prop": "content",
+          "path": "date"
+        }
+      ]
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { FONT_FACE_CSS } from "@fanos/renderer";
-import "@fanos/renderer/styles.css";
+// import "@fanos/renderer/styles.css";
 
 export const metadata = {
   title: "fos-render harness",

@@ -108,6 +108,31 @@
 }
 
 /**
+ * A Stack is a containing block too.
+ *
+ * `place` is not exclusive to Overlay children. Figma treats an absolutely
+ * positioned child as an exception INSIDE an auto-layout frame, not as an
+ * abandonment of it, so the compiler keeps such a frame a Stack and puts
+ * `place` on the one child Figma placed — see `classify` in @fanos/compile,
+ * which argues the case at length and measured what demoting the frame to an
+ * Overlay costs.
+ *
+ * That intent only survives if the Stack is positioned. Without this rule the
+ * placed child resolves its insets against the nearest positioned ANCESTOR,
+ * which for a row nested six frames deep is the page root: the fan-preferences
+ * player rows each hold an absolutely-placed plate and a remove button, and all
+ * eight of them flew out of their cards and stacked up against the right edge
+ * of the document.
+ *
+ * `relative` with no offsets moves nothing and paints nothing. It establishes a
+ * containing block, and a stacking context only for a box that sets `z-index`
+ * — which is what `place.z` means anyway.
+ */
+.fos-stack {
+  position: relative;
+}
+
+/**
  * Absolute fill box. Token surface paint lives on the CHILD so tokens can keep
  * `position: relative` for inset ::before borders without collapsing this box.
  */
@@ -354,6 +379,51 @@
  * Must stay AFTER `.fos-text` — equal specificity, so source order decides.
  */
 .fos-text-clamp,
-.fos-text-has-vertical {
+.fos-text-has-vertical,
+.fos-text-untrimmed {
   text-box: normal;
+}
+
+/* Figma auto-width text: one line, spaces as authored. */
+.fos-text-nowrap {
+  white-space: pre;
+}
+
+/**
+ * …but a clamped node still has to OCCUPY the ink box.
+ *
+ * The exclusion above is right about shearing: clamping implies
+ * `overflow: hidden`, so a cap-height top edge cuts every ascender on the first
+ * line and an alphabetic bottom edge cuts the descenders on the last. Rendered
+ * with `text-box: trim-both` the news grid's summaries visibly lost the tops of
+ * their J, V and C and the tails of their g, p and y.
+ *
+ * What was wrong was the second half of the argument — that trim buys nothing
+ * here because a truncating Figma node carries an explicit height. That is true
+ * of `I1:5131;10090:3705` and false of this design: every clamped text on the
+ * news grid is `autoResize: HEIGHT`, so the DSL says `size.h: "auto"` and the
+ * box comes from the leading after all. Left untrimmed they stood 10px taller
+ * than Figma each, 20px per card, and the lead card's column clipped.
+ *
+ * So: keep the full line boxes — nothing is clipped, nothing is sheared — and
+ * pull the outer edges in with margin instead. The element still RENDERS at
+ * `lines × line-height`; it only OCCUPIES `(lines - 1) × line-height + cap`,
+ * which is Figma's box. `1cap` and `1lh` are the browser's own metrics for the
+ * element's actual font, so this needs no per-typeface table and stays correct
+ * when the type token changes.
+ *
+ * Half the leading per edge: `(1cap - 1lh) / 2` is negative whenever cap height
+ * is below the line height, which is every text style in the system.
+ */
+.fos-text-clamp {
+  margin-block: calc((1cap - 1lh) / 2);
+}
+
+/**
+ * Same pull on the top edge, so the ink still starts at the box's top; an equal
+ * and opposite push on the bottom, so the footprint stays the DECLARED height
+ * instead of losing the leading a second time. Occupied = h − half + half = h.
+ */
+.fos-text-clamp.fos-text-fixed-h {
+  margin-block: calc((1cap - 1lh) / 2) calc((1lh - 1cap) / 2);
 }

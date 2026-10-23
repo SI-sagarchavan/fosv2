@@ -82,12 +82,13 @@ const ArrowUpRight: IconRenderer = ({ size, color, className }) => (
   </svg>
 );
 
-/** Ticket stub, for the GET TICKETS button. */
+/** Ticket stub, for the GET TICKETS button — notched sides, dashed perforation. */
 const Ticket: IconRenderer = ({ size, color, className }) => (
   <svg className={className} width={size} height={size} viewBox="0 0 16 14" fill="none" aria-hidden>
     <path d="M1.6 2.2h12.8a.8.8 0 0 1 .8.8v1.6a2.4 2.4 0 0 0 0 4.8V11a.8.8 0 0 1-.8.8H1.6A.8.8 0 0 1 .8 11V9.4a2.4 2.4 0 0 0 0-4.8V3a.8.8 0 0 1 .8-.8z"
       stroke={color ?? "currentColor"} strokeWidth="1.1" fill="none" />
-    <path d="M6.2 4.6v4.8M9.8 4.6v4.8" stroke={color ?? "currentColor"} strokeWidth="1.1" strokeLinecap="round" />
+    {/* The perforation: a dashed divider down the middle — stub, bar, stub. */}
+    <path d="M8 2.4v1.4M8 5.3v3.4M8 10.2v1.4" stroke={color ?? "currentColor"} strokeWidth="1.1" strokeLinecap="round" />
   </svg>
 );
 
@@ -108,6 +109,128 @@ const Check: IconRenderer = ({ size, color, className }) => (
       strokeLinejoin="round"
     />
   </svg>
+);
+
+/**
+ * The interface set: the glyphs a compiled design asks for by name.
+ *
+ * These are not brand artwork, which is why they belong in code rather than in
+ * an asset store. Every one of them appeared on the fan-preferences page as a
+ * dashed "?" — four disclosure chevrons, five remove buttons, an add, an edit
+ * and a sign-out — because the registry held only the seven match-context
+ * glyphs the fixtures page needed. A control the user is meant to press is not
+ * something to render a placeholder for.
+ *
+ * Stroked, 1.5 at 16px, round caps: the same weight as `Check` above, so a row
+ * mixing them does not look like two icon sets.
+ */
+const stroke = (color?: string) => ({
+  stroke: color ?? "currentColor",
+  strokeWidth: 1.5,
+  strokeLinecap: "round" as const,
+  strokeLinejoin: "round" as const,
+  fill: "none",
+});
+
+const Frame = ({
+  size,
+  className,
+  children,
+}: {
+  size: number;
+  className?: string;
+  children: ReactElement | ReactElement[];
+}) => (
+  <svg
+    className={className}
+    width={size}
+    height={size}
+    viewBox="0 0 16 16"
+    fill="none"
+    aria-hidden
+  >
+    {children}
+  </svg>
+);
+
+const ChevronRight: IconRenderer = ({ size, color, className }) => (
+  <Frame size={size} className={className}>
+    <path d="M6 3.5 10.5 8 6 12.5" {...stroke(color)} />
+  </Frame>
+);
+
+const ChevronLeft: IconRenderer = ({ size, color, className }) => (
+  <Frame size={size} className={className}>
+    <path d="M10 3.5 5.5 8 10 12.5" {...stroke(color)} />
+  </Frame>
+);
+
+const ChevronDown: IconRenderer = ({ size, color, className }) => (
+  <Frame size={size} className={className}>
+    <path d="M3.5 6 8 10.5 12.5 6" {...stroke(color)} />
+  </Frame>
+);
+
+const ChevronUp: IconRenderer = ({ size, color, className }) => (
+  <Frame size={size} className={className}>
+    <path d="M3.5 10 8 5.5 12.5 10" {...stroke(color)} />
+  </Frame>
+);
+
+/** Remove. A bare rule — the enclosing circle is the button's surface, not the glyph. */
+const Minus: IconRenderer = ({ size, color, className }) => (
+  <Frame size={size} className={className}>
+    <path d="M4 8h8" {...stroke(color)} />
+  </Frame>
+);
+
+const Plus: IconRenderer = ({ size, color, className }) => (
+  <Frame size={size} className={className}>
+    <path d="M8 4v8M4 8h8" {...stroke(color)} />
+  </Frame>
+);
+
+const X: IconRenderer = ({ size, color, className }) => (
+  <Frame size={size} className={className}>
+    <path d="M4 4l8 8M12 4l-8 8" {...stroke(color)} />
+  </Frame>
+);
+
+/** Edit — a pencil on the diagonal, nib at bottom-left. */
+const Pencil: IconRenderer = ({ size, color, className }) => (
+  <Frame size={size} className={className}>
+    <path d="M11.2 2.4a1.4 1.4 0 0 1 2 2L5.5 12.1 2.6 13l.9-2.9 7.7-7.7Z" {...stroke(color)} />
+    <path d="M10 3.6l2.4 2.4" {...stroke(color)} />
+  </Frame>
+);
+
+/** Sign out — a door with an arrow leaving it. */
+const SignOut: IconRenderer = ({ size, color, className }) => (
+  <Frame size={size} className={className}>
+    <path d="M9.5 2.5H4a1 1 0 0 0-1 1v9a1 1 0 0 0 1 1h5.5" {...stroke(color)} />
+    <path d="M10 5.5 13 8l-3 2.5M6.5 8H13" {...stroke(color)} />
+  </Frame>
+);
+
+/** Search. */
+const Search: IconRenderer = ({ size, color, className }) => (
+  <Frame size={size} className={className}>
+    <circle cx="7" cy="7" r="4" {...stroke(color)} />
+    <path d="M10 10l3 3" {...stroke(color)} />
+  </Frame>
+);
+
+/** A shaft and a head. Carousel controls are these inside a ring, not chevrons. */
+const ArrowLeft: IconRenderer = ({ size, color, className }) => (
+  <Frame size={size} className={className}>
+    <path d="M13.5 8H2.8M7.2 3.6 2.8 8l4.4 4.4" {...stroke(color)} strokeWidth={1.25} />
+  </Frame>
+);
+
+const ArrowRight: IconRenderer = ({ size, color, className }) => (
+  <Frame size={size} className={className}>
+    <path d="M2.5 8h10.7M8.8 3.6 13.2 8l-4.4 4.4" {...stroke(color)} strokeWidth={1.25} />
+  </Frame>
 );
 
 const Unknown: IconRenderer = ({ size, color, className }) => (
@@ -134,6 +257,24 @@ export const ICON_REGISTRY: Record<string, IconRenderer> = {
   ticket: Ticket,
   globe: Globe,
   check: Check,
+
+  // The interface set. See the block above.
+  arrow_left: ArrowLeft,
+  arrow_right: ArrowRight,
+  chevron_right: ChevronRight,
+  chevron_left: ChevronLeft,
+  chevron_down: ChevronDown,
+  chevron_up: ChevronUp,
+  minus: Minus,
+  plus: Plus,
+  x: X,
+  close: X,
+  pencil: Pencil,
+  pencil_simple: Pencil,
+  edit: Pencil,
+  sign_out: SignOut,
+  signout: SignOut,
+  search: Search,
 };
 
 export function renderIcon(

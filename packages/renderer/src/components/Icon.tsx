@@ -9,7 +9,7 @@ import { renderIcon } from "./icons.js";
 
 export function Icon({ node, ctx }: { node: Node; ctx: NodeRenderContext }) {
   const props = node.props as Record<string, unknown>;
-  const resolved = resolveNode(props, { flexChild: ctx.flexChild });
+  const resolved = resolveNode(props, { flexChild: ctx.flexChild, parentDirection: ctx.flexRow ? "row" : "column" });
 
   const name = typeof props.name === "string" ? props.name : "unknown";
   let size = 16;

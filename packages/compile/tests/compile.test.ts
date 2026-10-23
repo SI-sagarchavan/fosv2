@@ -626,11 +626,34 @@ describe("hug that cannot hug", () => {
   });
 
   it("leaves hug alone when even one child is in flow", () => {
+    // Auto-layout, so `auto` positioning really does mean in flow. In a
+    // `mode: "none"` parent it does not — see the test below.
     const s = sizeOf(
-      parent({ kids: [kid("1:3", "absolute", 72, 40), kid("1:4", "auto", 60, 40)] }),
+      parent({
+        mode: "horizontal",
+        kids: [kid("1:3", "absolute", 72, 40), kid("1:4", "auto", 60, 40)],
+      }),
     );
     expect(s?.w).toBe("auto");
     expect(s?.h).toBe("auto");
+  });
+
+  /**
+   * A frame with NO auto-layout flows nothing, whatever Figma calls its
+   * children's positioning.
+   *
+   * Figma reports them as `auto` because there is no layout for them to be an
+   * exception to, and `emit` gives every one of them a `place` regardless. So
+   * reading `positioning` alone concluded "these are in flow" about children
+   * about to be taken out of it, and the hug collapsed to zero: the
+   * fan-preferences followed-players grid is a 710x116 frame of four placed
+   * rows, and it rendered 0px tall with the consent line and the SAVE bar
+   * pulled up into the rows above.
+   */
+  it("pins a hug on a frame with no auto-layout, whatever its children report", () => {
+    const s = sizeOf(parent({ kids: [kid("1:3", "auto", 72, 40), kid("1:4", "auto", 60, 40)] }));
+    expect(s?.w).toEqual({ raw: 333, _unbound: true });
+    expect(s?.h).toEqual({ raw: 40, _unbound: true });
   });
 
   /** Flow, not node type: an auto-layout Stack fails identically. */
@@ -1267,7 +1290,9 @@ describe("declared primitives", () => {
    * holds the label and a glyph. `atom_button` in the news section is exactly
    * this, and reading the outer frame gives a button with no padding.
    */
-  function frame(over: { label?: string | null; paint?: string; type?: string; name?: string } = {}) {
+  function frame(
+    over: { label?: string | null; paint?: string; type?: string; name?: string; surface?: string; border?: string } = {},
+  ) {
     const label =
       over.label === null
         ? []
@@ -1330,6 +1355,8 @@ describe("declared primitives", () => {
                 id: "2:2",
                 name: "atom_button_master",
                 type: "INSTANCE" as const,
+                ...(over.surface ? { fill: { tokenRef: over.surface, unbound: false } } : {}),
+                ...(over.border ? { stroke: { tokenRef: over.border, weight: 1, unbound: false } } : {}),
                 layout: row(16, 6),
                 geometry: at(0, 0, 118, 32),
                 childCount: label.length + 1,
@@ -1435,6 +1462,32 @@ describe("declared primitives", () => {
       (n) => n.type === "Button",
     );
     expect(b?.props).toMatchObject({ variant: "filled", styleN: 3 });
+  });
+
+  /**
+   * Families mixed inside one button — the Southern Brave hospitality cards: a
+   * filled/1 red surface, an outline/1 border, an outline/3 white label. The eye
+   * sees a red filled button; reading the label first made it an invisible
+   * white-on-transparent outline. Surface, then border, then label.
+   */
+  it("lets the surface decide when a button mixes families", () => {
+    const doc = frame({
+      paint: "button/outline/style_3/text/default",
+      surface: "button/filled/style_1/surface/default",
+      border: "button/outline/style_1/border/default",
+    });
+    const b = compile(doc, { theme, surfaces, primitives: { [KEY]: "Button" } }).tree.nodes.find(
+      (n) => n.type === "Button",
+    );
+    expect(b?.props).toMatchObject({ variant: "filled", styleN: 1 });
+  });
+
+  it("falls back to the border when there is no surface", () => {
+    const doc = frame({ paint: "button/outline/style_3/text/default", border: "button/outline/style_2/border/default" });
+    const b = compile(doc, { theme, surfaces, primitives: { [KEY]: "Button" } }).tree.nodes.find(
+      (n) => n.type === "Button",
+    );
+    expect(b?.props).toMatchObject({ variant: "outline", styleN: 2 });
   });
 
   it("takes size from the label's type token and padding from the drawn box", () => {
@@ -1826,3 +1879,52 @@ describe("full-width bands", () => {
  * painting over each other — or not at all, and the unmarked ones came out as
  * boxes and placeholders stacked on top of the picture.
  */
+/**
+ * A layer turned a quarter reads along the vertical axis. The compiler used to
+ * lay it out as a horizontal word in a 30px column — "21 JULY" came out "JU".
+ */
+describe("quarter-turned text", () => {
+  const orientationAt = (rotation: number): unknown => {
+    const doc = ir("news-card");
+    const find = (n: FrameIRDocument["root"]): FrameIRDocument["root"] | undefined =>
+      n.text?.characters === "Mar 23, 2025" ? n : n.children.map(find).find(Boolean);
+    const node = find(doc.root)!;
+    node.geometry.rotation = rotation;
+    const tree = compile(doc, { theme, surfaces }).tree;
+    return (tree.nodes.find((n) => n.src === node.id)?.props as { orientation?: unknown }).orientation;
+  };
+
+  it("reads bottom-to-top at +90 (counter-clockwise, as Figma reports it)", () => {
+    expect(orientationAt(90)).toBe("vertical-up");
+  });
+
+  it("reads top-to-bottom at -90 and at 270", () => {
+    expect(orientationAt(-90)).toBe("vertical-down");
+    expect(orientationAt(270)).toBe("vertical-down");
+  });
+
+  it("leaves upright text alone, and does not invent an angle the DSL cannot say", () => {
+    expect(orientationAt(0)).toBeUndefined();
+    expect(orientationAt(45)).toBeUndefined();
+  });
+});
+
+/**
+ * A fill the theme cannot name used to vanish without a word whenever the node
+ * also had a radius, because the surface was non-empty. The fixtures strip's
+ * MEN/WOMEN pills lost their gradient that way.
+ */
+describe("a fill that matches no token", () => {
+  it("is reported even when the node keeps a radius", () => {
+    const doc = ir("fixture-card");
+    const find = (n: FrameIRDocument["root"]): FrameIRDocument["root"] | undefined =>
+      n.fill && n.radius?.tokenRef && canonicalRef(theme, n.radius.tokenRef, "radius") ? n : n.children.map(find).find(Boolean);
+    const node = find(doc.root);
+    expect(node, "fixture has a filled, rounded frame").toBeDefined();
+    node!.fill = { tokenRef: "prim/horiz_nonexistent_9/0", unbound: false };
+
+    const result = compile(doc, { theme, surfaces });
+    const note = result.notes.find((x) => x.kind === "unresolved-paint" && x.irId === node!.id);
+    expect(note?.message).toContain("prim/horiz_nonexistent_9/0");
+  });
+});

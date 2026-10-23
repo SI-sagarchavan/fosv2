@@ -1,7 +1,7 @@
 /**
  * Uploaded background assets: parse, name, bind, stamp onto the IR.
  */
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import {
   applyAssetBindings,
   bindingKey,
@@ -20,6 +20,7 @@ import {
   assetRef,
   IR_VERSION,
   parseFrameIRDocument,
+  readability,
   type AssetBinding,
   type FrameIRDocument,
   type FrameIRNode,
@@ -94,12 +95,14 @@ function doc(root: FrameIRNode, irVersion: FrameIRDocument["irVersion"] = "1.6.0
 }
 
 /**
- * The failure a plugin reload produces before the services catch up.
+ * A plugin reloaded before the services catch up.
  *
- * Zod's own answer lists every version the build accepts and omits the one that
- * actually arrived, which reads like the document is malformed when the reader
- * is simply older. That cost two rounds of head-scratching the first time it
- * happened, so the parser explains it instead.
+ * This used to be a hard failure for ANY unrecognised version, which made every
+ * additive bump a stop-the-world event: the 1.8.0 `textCase` bump refused to
+ * parse in a studio process that had merely been started before the build. A
+ * minor bump adds optional fields and nothing else, so the document is readable
+ * and the only real news is that the reader is behind — say it once, read it,
+ * and keep going. A MAJOR gap is the case that genuinely cannot be read.
  */
 describe("a document from a newer plugin", () => {
   const from = (version: string) => ({
@@ -107,11 +110,27 @@ describe("a document from a newer plugin", () => {
     irVersion: version,
   });
 
-  it("says the reader is behind, and what to do about it", () => {
+  it("reads a newer MINOR, because a minor bump only adds optional fields", () => {
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    try {
+      expect(parseFrameIRDocument(from("1.99.0")).irVersion).toBe("1.99.0");
+      expect(warn).toHaveBeenCalledWith(expect.stringMatching(/reads Frame IR up to/));
+      expect(warn).toHaveBeenCalledWith(expect.stringMatching(/rebuild and restart/i));
+    } finally {
+      warn.mockRestore();
+    }
+  });
+
+  it("refuses a newer MAJOR, which is where fields move or disappear", () => {
     expect(() => parseFrameIRDocument(from("9.9.9"))).toThrowError(
-      /reads Frame IR up to .*, and the document says 9\.9\.9/,
+      /reads Frame IR .*and the document says 9\.9\.9 — a MAJOR/,
     );
-    expect(() => parseFrameIRDocument(from("9.9.9"))).toThrowError(/rebuild and restart/);
+    expect(() => parseFrameIRDocument(from("9.9.9"))).toThrowError(/rebuild and restart/i);
+  });
+
+  /** Version first, so a moved field cannot disguise a major-version gap. */
+  it("names the major gap even when the rest of the document is unreadable too", () => {
+    expect(() => parseFrameIRDocument({ irVersion: "9.9.9" })).toThrowError(/a MAJOR/);
   });
 
   it("leaves every other validation failure as the ZodError it was", () => {
@@ -120,8 +139,19 @@ describe("a document from a newer plugin", () => {
     expect(() => parseFrameIRDocument(broken)).not.toThrowError(/rebuild and restart/);
   });
 
+  it("rejects something that is not a version at all", () => {
+    expect(() => parseFrameIRDocument(from("banana"))).toThrowError(/MAJOR\.MINOR\.PATCH/);
+  });
+
   it("still parses the version this build writes", () => {
     expect(parseFrameIRDocument(from(IR_VERSION)).irVersion).toBe(IR_VERSION);
+  });
+
+  it("classifies each direction", () => {
+    expect(readability(IR_VERSION)).toBe("ok");
+    expect(readability("1.1.0")).toBe("ok");
+    expect(readability("1.99.0")).toBe("ahead");
+    expect(readability("2.0.0")).toBe("major");
   });
 });
 

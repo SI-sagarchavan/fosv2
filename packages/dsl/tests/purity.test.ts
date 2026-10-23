@@ -23,6 +23,7 @@ const PURE_MODULES = [
   "sha1.ts",
   "subtree-signature.ts",
   "collapse.ts",
+  "bind.ts",
   "flat.ts",
   "metrics.ts",
   "walk.ts",

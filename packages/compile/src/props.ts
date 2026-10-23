@@ -8,7 +8,12 @@
  * different viewport and one pinned to the width it was exported at.
  */
 
-import type { FrameIRNode, Layout, TokenValue } from "@fanos/surface-canvas/ir";
+import type {
+  FrameIRNode,
+  Layout,
+  TextCaseValue,
+  TokenValue,
+} from "@fanos/surface-canvas/ir";
 import { DEFAULT_BREAKPOINTS, type Breakpoints, type NormalizedTheme } from "@fanos/tokens";
 import { canonicalRef } from "./refs.js";
 import { flowChildren } from "./classify.js";
@@ -143,7 +148,12 @@ export function isBand(n: FrameIRNode, breakpoints: Breakpoints = DEFAULT_BREAKP
  * of five hand-written trees found 9 of 44 raw sizes contradicting the IR this
  * way, every one of them avoidable.
  */
-export function size(n: FrameIRNode, isRoot: boolean, band = false): SizeProps | undefined {
+export function size(
+  n: FrameIRNode,
+  isRoot: boolean,
+  band = false,
+  placed = false,
+): SizeProps | undefined {
   const out: SizeProps = {};
   const { w, h } = n.layout.sizing;
   const box = layoutBox(n);
@@ -165,12 +175,31 @@ export function size(n: FrameIRNode, isRoot: boolean, band = false): SizeProps |
 
   const pin = unhuggableAxes(n);
 
+  /**
+   * `fill` means nothing on a node nothing is flowing.
+   *
+   * Figma keeps reporting `sizing: fill` on a child it has taken OUT of the
+   * layout — an absolutely-positioned child, or any child of a frame with no
+   * auto-layout at all. There is no parent axis left to fill, and the box the
+   * designer drew is the only statement about size in play. Believing the flag
+   * turns it into `width: 100%` of a parent it was never measured against.
+   *
+   * That is what collapsed the followed-players grid: four 347px rows placed
+   * two-up inside a 710px frame each came out `w: "full"`, so all four went
+   * full width, the grid lost a column and 104px of height, and everything
+   * below it — consent line, SAVE bar — rode up into the rows.
+   *
+   * `hug` is left alone. A placed node's content still flows inside it, so hug
+   * is reproducible for the same reasons `unhuggableAxes` already sets out.
+   */
+  const fillIsMeaningless = placed;
+
   if (w === "hug") out.w = pin.w ? raw(box.w) : "auto";
-  else if (w === "fill") out.w = "full";
+  else if (w === "fill" && !fillIsMeaningless) out.w = "full";
   else out.w = raw(box.w);
 
   if (h === "hug") out.h = pin.h ? raw(box.h) : "auto";
-  else if (h === "fill") out.h = "full";
+  else if (h === "fill" && !fillIsMeaningless) out.h = "full";
   else out.h = raw(box.h);
 
   return out;
@@ -204,10 +233,34 @@ export function size(n: FrameIRNode, isRoot: boolean, band = false): SizeProps |
  */
 export function unhuggableAxes(n: FrameIRNode): { w: boolean; h: boolean } {
   if ((n.children ?? []).length === 0) return { w: false, h: false };
-  if (flowChildren(n).length > 0) return { w: false, h: false };
+  if (!nothingFlows(n)) return { w: false, h: false };
 
   const { w, h } = n.layout.sizing;
   return { w: w === "hug", h: h === "hug" };
+}
+
+/**
+ * Is there anything inside this node for CSS to size against?
+ *
+ * Two ways to have nothing, and only one of them was being checked.
+ *
+ *   - every child is marked `positioning: absolute`. That is `flowChildren`,
+ *     and it covers an auto-layout frame with placed children.
+ *   - the node has NO auto-layout. Figma then reports each child as `auto`
+ *     positioned — there is no layout for them to be an exception to — but
+ *     nothing flows them either: their box IS their position, which is why
+ *     `emit` gives every child of an Overlay a `place`. Reading `positioning`
+ *     alone therefore said "these children are in flow" about children the
+ *     compiler was about to take out of flow.
+ *
+ * The consequence was a hug that collapsed. The followed-players grid is a
+ * 710x116 frame with no auto-layout holding four placed rows; it compiled to
+ * `h: "auto"`, rendered 0px tall, and pulled the consent line and the SAVE bar
+ * up into the rows above them. This condition and the one `emit` uses to write
+ * `place` have to be the same condition, or one of them is wrong.
+ */
+function nothingFlows(n: FrameIRNode): boolean {
+  return n.layout.mode === "none" || flowChildren(n).length === 0;
 }
 
 export interface PlaceProps {
@@ -218,17 +271,73 @@ export interface PlaceProps {
 /**
  * Absolute placement, always from the top-left.
  *
- * `relBbox` is measured from the parent's top-left, so `top-start` plus the raw
- * offsets is an exact transcription. Picking a "nicer" anchor — mid, end —
- * would mean inferring intent the IR does not record, and getting it wrong
- * moves the node.
+ * `top-start` plus a raw offset is an exact transcription. Picking a "nicer"
+ * anchor — mid, end — would mean inferring intent the IR does not record, and
+ * getting it wrong moves the node.
+ *
+ * The offset comes from `bbox`, not `relBbox`, and that is the whole substance
+ * of this function. `relBbox` carries Figma's `node.x`/`node.y`, which are NOT
+ * the node's offset inside its parent in two common cases:
+ *
+ *   1. **Inside a GROUP.** A group is not a coordinate space. Figma reports its
+ *      children in the space of the group's own parent, so a group at x=16
+ *      holding a child reported at x=28.36 does not hold that child 28.36px
+ *      from its own left edge — it is 12.36px in. Transcribing the number adds
+ *      the group's origin a second time, once per level of nesting. Measured on
+ *      the fan-preferences frame: every player photo sat 12px right of its
+ *      plate, and a header texture landed 77px off.
+ *
+ *   2. **On a rotated node.** `node.x`/`node.y` is the transform origin, which
+ *      for a half-turn is the box's BOTTOM-RIGHT. One of the two header
+ *      textures is rotated 180°, and its reported x was a full box-width — 763px
+ *      — past where the design puts it: the largest single deviation in the file.
+ *
+ * `bbox` has neither problem. It is `absoluteBoundingBox`: page coordinates,
+ * axis-aligned, already post-rotation. The difference between a node's and its
+ * parent's is the offset CSS wants, for groups, rotations and ordinary frames
+ * alike — and it is the same quantity `@fanos/conform` derives the expected box
+ * from, so the compiler and the gate can no longer disagree about where a node
+ * belongs.
+ *
+ * `relBbox` remains the fallback for a node with no parent to measure against.
+ *
+ * @param parent the node this one is placed inside, when there is one. Omit it
+ *               only where none exists, never to save a lookup: absent means
+ *               "fall back to relBbox", which is the behaviour being fixed.
  */
-export function place(n: FrameIRNode): PlaceProps {
-  const { x, y } = n.geometry.relBbox;
+export function place(n: FrameIRNode, parent?: FrameIRNode): PlaceProps {
+  const { x, y } = parentRelative(n, parent);
   const offset: PlaceProps["offset"] = {};
   if (Math.abs(y) > 0.001) offset.block = raw(y);
   if (Math.abs(x) > 0.001) offset.inline = raw(x);
   return Object.keys(offset).length > 0 ? { anchor: "top-start", offset } : { anchor: "top-start" };
+}
+
+/**
+ * Where a node's painted box starts inside its parent's. See {@link place}.
+ *
+ * Matched on CENTRES rather than corners, which matters for exactly one case
+ * and is identical everywhere else. `bbox` is the axis-aligned envelope AFTER
+ * rotation while `layoutBox` is the rectangle this compiler can actually emit;
+ * for an upright node, a half turn and a quarter turn those are the same size,
+ * so corner and centre agree to the pixel. For an arbitrary angle they do not:
+ * the header's 34.8°-rotated gradient plate has a 1068x1172 envelope around a
+ * 596x1013 box, and pinning the small rectangle to the big envelope's corner
+ * throws it 200px up and left of the artwork it stands in for.
+ *
+ * The rectangle is an approximation either way — the IR carries no path data,
+ * so a rotated plate becomes an upright one; see `isDecorativeVector`. Centring
+ * it is the approximation that stays where the design's mass is.
+ */
+function parentRelative(n: FrameIRNode, parent?: FrameIRNode): { x: number; y: number } {
+  if (!parent) return { x: n.geometry.relBbox.x, y: n.geometry.relBbox.y };
+
+  const box = layoutBox(n);
+  const env = n.geometry.bbox;
+  return {
+    x: env.x - parent.geometry.bbox.x + (env.w - box.w) / 2,
+    y: env.y - parent.geometry.bbox.y + (env.h - box.h) / 2,
+  };
 }
 
 /**
@@ -356,14 +465,31 @@ export interface StackProps {
   wrap?: boolean;
 }
 
+/**
+ * Distribution modes where Figma IGNORES `itemSpacing`.
+ *
+ * Figma disables the spacing field the moment auto-layout is set to distribute:
+ * the children go edge to edge and whatever number was last in the box is
+ * leftover state, not a gap. CSS does not agree — `gap` is a floor and
+ * `justify-content` distributes what is left AFTER it — so emitting both counts
+ * the spacing twice.
+ *
+ * Measured on the points table, whose header row is 800px wide with six columns
+ * summing to 488 and a stale `itemSpacing` of 113. Emitting both put five 113px
+ * gaps into an 800px row: 1053px of content, 253px of overflow, and the FORM
+ * and PTS columns pushed off the page.
+ */
+const DISTRIBUTES = new Set(["between", "around", "evenly"]);
+
 export function stack(theme: NormalizedTheme, layout: Layout): StackProps {
   const out: StackProps = {};
   // Column is the DSL default, so writing it adds nothing.
   if (layout.mode === "horizontal") out.direction = "row";
+  const justify = layout.justify ? JUSTIFY[layout.justify] : undefined;
   const gap = length(theme, layout.gap);
-  if (gap !== undefined) out.gap = gap;
+  if (gap !== undefined && !(justify && DISTRIBUTES.has(justify))) out.gap = gap;
   if (layout.align && ALIGN[layout.align]) out.align = ALIGN[layout.align];
-  if (layout.justify && JUSTIFY[layout.justify]) out.justify = JUSTIFY[layout.justify];
+  if (justify) out.justify = justify;
   if (layout.wrap) out.wrap = true;
   return out;
 }
@@ -377,6 +503,8 @@ export interface ButtonProps {
   iconEnd?: string;
   action: { kind: "none" };
   space?: SpaceProps;
+  block?: boolean;
+  textCase?: "none" | "upper" | "lower" | "title";
 }
 
 /**
@@ -425,7 +553,14 @@ function buttonFamily(ref: string | undefined): { variant: string; styleN: numbe
 }
 
 /** `atom_icon_arrow_up_right` -> `arrow_up_right`. The prefix is the marker, not the glyph. */
-function iconRef(name: string): string {
+/**
+ * A layer name, normalised to the registry's naming.
+ *
+ * `Atom_Icon_Chevron_Left` -> `chevron_left`. The `atom_`/`icon_` prefixes are
+ * a Figma organisational convention, not part of the glyph's identity, and a
+ * name that keeps them misses a registry that does not.
+ */
+export function iconRef(name: string): string {
   return slug(name).replace(/^(?:atom_)?icons?_/, "");
 }
 
@@ -450,11 +585,21 @@ export function button(theme: NormalizedTheme, n: FrameIRNode): ButtonProps | un
   const text = firstText(body);
   if (!text?.text) return undefined;
 
+  /**
+   * The SURFACE decides, then the border, then the label.
+   *
+   * Designers mix families inside one button: the Southern Brave hospitality
+   * cards bind a `filled/style_1` red surface, an `outline/style_1` border and an
+   * `outline/style_3` white label. What the eye sees is a red filled button, and
+   * reading the label first called it outline/3 — white on transparent, invisible
+   * on a white card. An outline button has no surface, so its border speaks next;
+   * a link has neither, so the label is the last word, not the first.
+   */
   const family =
-    buttonFamily(canonicalRef(theme, text.fill?.tokenRef, "color")) ??
     buttonFamily(canonicalRef(theme, body.fill?.tokenRef, "color")) ??
+    buttonFamily(canonicalRef(theme, n.fill?.tokenRef, "color")) ??
     buttonFamily(canonicalRef(theme, body.stroke?.tokenRef, "color")) ??
-    buttonFamily(canonicalRef(theme, n.fill?.tokenRef, "color"));
+    buttonFamily(canonicalRef(theme, text.fill?.tokenRef, "color"));
 
   const typeRef = canonicalRef(theme, text.text.styleRef, "type");
   const size = /^type\.button_(sm|md|lg)$/.exec(typeRef ?? "")?.[1];
@@ -480,6 +625,22 @@ export function button(theme: NormalizedTheme, n: FrameIRNode): ButtonProps | un
   const padding = space(theme, body.layout);
   if (padding) out.space = padding;
 
+  /**
+   * A button Figma sets to fill its row is a full-width button.
+   *
+   * Read off the OUTER node rather than the body: the instance is what the
+   * layout sizes, and the master inside it hugs regardless. This is the one
+   * piece of `size` a Button can carry — see `Button.block` in @fanos/dsl for
+   * why the universal size object cannot say it — and without it every form's
+   * primary action compiled to a pill the width of its label.
+   */
+  if (n.layout.sizing.w === "fill") out.block = true;
+
+  // The label layer's own case setting — see `Text` below, and `Button.textCase`
+  // in @fanos/dsl. Read from the layer the label came from, not from the
+  // instance, because that is where Figma records it.
+  if (text.text.textCase) out.textCase = TEXT_CASE[text.text.textCase];
+
   return out;
 }
 
@@ -488,24 +649,146 @@ export interface TextProps {
   style: string;
   tone?: string;
   truncate?: number;
+  textCase?: "none" | "upper" | "lower" | "title";
+  trim?: "none";
+  wrap?: false;
 }
 
 /**
- * @returns undefined when the text style cannot be resolved — a Text with no
- *          `style` is invalid, so the caller reports it rather than emitting
- *          a tree that fails its own schema.
+ * The type token whose four properties are the ones this layer actually has.
+ *
+ * Figma splits a text style across several variables — `typeface/body`,
+ * `size/body_sm`, a weight — so a layer can be fully bound in Figma and still
+ * report a `styleRef` that names none of the theme's composite type tokens.
+ * `size/body_sm` is not `type.body_sm_regular`; it is one third of it.
+ *
+ * The name cannot be repaired, but the VALUES can be read: family, size,
+ * weight and line height are all in the IR, and a theme type token is exactly
+ * those four numbers. So when the name misses, the quadruple is matched
+ * against the theme directly.
+ *
+ * Exact only, and deliberately so — see `matchType` in the plugin, which is
+ * the same rule for the same reason. A 15/22 Medium is not "nearly" `body_md`
+ * at 16/24, it is a fifth style nobody declared, and rounding it in would put
+ * a value in the tree that the design does not contain.
+ *
+ * Desktop first because that is the breakpoint a 1366px frame was drawn at;
+ * the others are tried after so a mobile-only style still lands.
+ */
+function matchTypeToken(theme: NormalizedTheme, n: FrameIRNode): string | undefined {
+  const t = n.text;
+  if (!t || t.lineHeight === "auto") return undefined;
+
+  const weight = resolveWeight(t.fontWeight);
+  if (weight === undefined) return undefined;
+  const family = t.fontFamily.trim().toLowerCase();
+  if (family.length === 0) return undefined;
+
+  const near = (a: number, b: number): boolean => Math.abs(a - b) <= 0.5;
+
+  for (const bp of ["desktop", "tablet", "mobile"] as const) {
+    const hits: string[] = [];
+    for (const [leaf, style] of theme.type[bp]) {
+      if (
+        style.family.trim().toLowerCase() === family &&
+        near(style.size, t.fontSize) &&
+        style.weight === weight &&
+        near(style.lineHeight, t.lineHeight)
+      ) {
+        hits.push(leaf);
+      }
+    }
+    // Shortest name, then alphabetical: deterministic, and the shortest name is
+    // the least qualified one, which is the family's base style.
+    const winner = hits.sort((a, b) => a.length - b.length || (a < b ? -1 : a > b ? 1 : 0))[0];
+    if (winner) return `type.${winner}`;
+  }
+  return undefined;
+}
+
+/**
+ * Figma stores weight as a face name (`Bold`); the theme is always numeric.
+ *
+ * Duplicated from the plugin's `match/type.ts` rather than imported: that
+ * module is inside the plugin's pure half and importing it here would pull the
+ * health-report types across a package boundary for one lookup table.
+ */
+const WEIGHT_BY_FACE: Readonly<Record<string, number>> = {
+  thin: 100,
+  hairline: 100,
+  extralight: 200,
+  ultralight: 200,
+  light: 300,
+  regular: 400,
+  normal: 400,
+  book: 400,
+  medium: 500,
+  semibold: 600,
+  demibold: 600,
+  bold: 700,
+  extrabold: 800,
+  ultrabold: 800,
+  black: 900,
+  heavy: 900,
+};
+
+function resolveWeight(weight: string | number): number | undefined {
+  if (typeof weight === "number") return weight;
+  const key = weight.toLowerCase().replace(/italic|oblique/g, "").replace(/[\s_-]+/g, "");
+  return key.length === 0 ? 400 : WEIGHT_BY_FACE[key];
+}
+
+/**
+ * @returns undefined when the text style cannot be resolved even by value — a
+ *          Text with no `style` is invalid, so the caller reports it rather
+ *          than emitting a tree that fails its own schema.
  */
 export function text(theme: NormalizedTheme, n: FrameIRNode): TextProps | undefined {
   if (!n.text) return undefined;
-  const style = canonicalRef(theme, n.text.styleRef, "type");
+  const style = canonicalRef(theme, n.text.styleRef, "type") ?? matchTypeToken(theme, n);
   if (!style) return undefined;
   const out: TextProps = { content: n.text.characters, style };
   const tone = canonicalRef(theme, n.fill?.tokenRef, "color");
   if (tone) out.tone = tone;
   const clamp = truncateLines(n);
   if (clamp !== undefined) out.truncate = clamp;
+  /**
+   * Figma's per-layer case setting, which is presentation and not content.
+   *
+   * The file stores "My account" and displays "MY ACCOUNT". Dropping this was
+   * the only reason a page of correctly-bound headings rendered in the wrong
+   * case, and the alternative — uppercasing the characters — would corrupt the
+   * string for every other consumer of the same tree. Figma's `ORIGINAL` is
+   * absent from the IR rather than recorded — see `textCaseSchema` — so there
+   * is no default to filter out here.
+   */
+  if (n.text.textCase) out.textCase = TEXT_CASE[n.text.textCase];
+  if (isUntrimmed(n)) out.trim = "none";
+  // Auto-width never wraps in Figma. A clamp already owns the line count.
+  if (n.text.autoResize === "WIDTH_AND_HEIGHT" && clamp === undefined) out.wrap = false;
   return out;
 }
+
+/**
+ * Whether Figma drew this layer WITHOUT vertical trim.
+ *
+ * The IR does not carry `leadingTrim`, but the box gives it away: untrimmed, a
+ * layer is exactly `lines × lineHeight` tall; trimmed, it hugs cap-height to
+ * baseline and comes out several pixels short of that. Only a match counts —
+ * anything else keeps the renderer's default, which is the trimmed box.
+ */
+function isUntrimmed(n: FrameIRNode): boolean {
+  const t = n.text;
+  if (!t || typeof t.lineHeight !== "number" || !(t.lines > 0)) return false;
+  return Math.abs(n.geometry.relBbox.h - t.lines * t.lineHeight) <= 0.5;
+}
+
+/** Figma's `textCase` -> the DSL's `textCase`. `SMALL_CAPS*` has no DSL spelling. */
+const TEXT_CASE: Readonly<Record<TextCaseValue, "upper" | "lower" | "title">> = {
+  UPPER: "upper",
+  LOWER: "lower",
+  TITLE: "title",
+};
 
 /**
  * The line clamp, from whichever way Figma expressed it.

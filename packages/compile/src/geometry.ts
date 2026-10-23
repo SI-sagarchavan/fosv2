@@ -30,3 +30,16 @@ export function isQuarterTurn(rotation: number | undefined): boolean {
   if (typeof rotation !== "number" || !Number.isFinite(rotation)) return false;
   return Math.abs(Math.abs(((rotation % 180) + 180) % 180) - 90) < 0.5;
 }
+
+/**
+ * Which way a quarter-turned layer reads, or undefined for any other angle.
+ *
+ * `rotation` is counter-clockwise, as Figma reports it: +90 turns the layer's
+ * text to read bottom-to-top, -90 (= 270) top-to-bottom.
+ */
+export function quarterTurnOf(rotation: number | undefined): "vertical-up" | "vertical-down" | undefined {
+  if (!isQuarterTurn(rotation)) return undefined;
+  const turn = (((rotation as number) % 360) + 360) % 360;
+  // isQuarterTurn accepts 90 and 270 (and their drift); 90 reads up.
+  return Math.abs(turn - 90) < 1 ? "vertical-up" : "vertical-down";
+}

@@ -30,7 +30,36 @@ export interface StyleContext {
    * "share the free space" on a row, but plain `width: 100%` on a column —
    * `flex: 1 1 0` there sizes the MAIN axis and zeroes the child's height.
    */
+  /**
+   * DORMANT. No component forwards this, so both branches keyed on it below —
+   * `size.w: "full"` on a row and `size.h: "full"` on a column — have never
+   * executed. Measured before leaving it that way:
+   *
+   *   - wiring it naively regresses. `flex: 1 1 0` on a column child needs a
+   *     definite parent height to distribute; inside a hugging column it
+   *     resolves to nothing and the news grid's lead card collapses to 0px.
+   *     `flex: 1 1 auto` is the basis that survives both cases.
+   *   - wiring it with that correction is exactly NEUTRAL: 116 C2 errors across
+   *     six fixtures before and after, and a hand-built row of a `full` child
+   *     beside a hugging one lays out identically either way, because the hug
+   *     child's min-content size already protects it.
+   *
+   * So it stays dormant deliberately: a behaviour change with no demonstrated
+   * benefit is how a renderer acquires bugs nobody can bisect. Waking it needs
+   * a case that proves it, not a tidy-up.
+   */
   flexRow?: boolean;
+  /**
+   * Which way the parent Stack runs. Read ONLY by the no-shrink rule below.
+   *
+   * Deliberately not `flexRow`. That flag also gates the `size.w: "full"` and
+   * `size.h: "full"` branches, and it turns out no component has ever forwarded
+   * it — so those branches are dormant, and switching them on regresses this
+   * very page: the lead card's inner stack takes `flex: 1 1 0` inside an
+   * auto-height parent and collapses to 0px. Waking them is a real fix worth
+   * making on its own, with its own evidence. It is not this fix.
+   */
+  parentDirection?: "row" | "column";
   /**
    * `align` is spelled the same on Stack and on Text but means different
    * things: flex cross-axis on a Stack, `text-align` on a Text. Without this
@@ -249,6 +278,20 @@ function mapSize(
       style.width = "auto";
     } else {
       applyRespProp(style, "width", "w", size.w, dataAttrs, "size.w");
+      /**
+       * An explicit width on a ROW child is a statement, not a suggestion.
+       *
+       * Same bug as the ratio guard below, one prop over. Flex items shrink by
+       * default, so a 182px thumbnail beside a `width: 100%` content column
+       * gives up its space the moment the row is narrower than its contents
+       * want — on the news grid it rendered 121.3px, 60.7px under the design,
+       * and the content column pocketed every one of those pixels.
+       *
+       * Only on the MAIN axis. Cross-axis width in a column is not what flex
+       * redistributes, and pinning shrink there would freeze a child that is
+       * supposed to give way.
+       */
+      if (ctx.flexChild && ctx.parentDirection === "row") style.flexShrink = "0";
     }
   }
   if (size.h !== undefined) {
@@ -261,9 +304,32 @@ function mapSize(
       // 34px). On a ROW, `h: fill` really is cross-axis, and 100% is correct.
       style.flex = "1 1 0";
       style.minHeight = "0";
+    } else if (size.h === "full" && ctx.flexChild && ctx.parentDirection === "row") {
+      /**
+       * On a ROW, `h: fill` is a CROSS-AXIS stretch — `align-self`, not a
+       * percentage.
+       *
+       * `height: 100%` needs a definite parent height to resolve against. A row
+       * that hugs its content has none, so the percentage goes indefinite and
+       * silently becomes `auto`: the child sizes to its own content instead of
+       * to the tallest sibling. On the news grid that is the whole lead-card
+       * bug — the column rendered 363.8px against a 380px row, its inner stack
+       * lost 16px it was supposed to have, and `clip: true` cut the overflow
+       * off the top and bottom.
+       *
+       * `stretch` is also what survives `align-items: center` on the parent,
+       * which is exactly the combination Figma produced here and CSS otherwise
+       * resolves the other way.
+       */
+      style.alignSelf = "stretch";
     } else if (size.h === "full") style.height = "100%";
     else if (size.h === "auto") style.height = "auto";
-    else applyRespProp(style, "height", "h", size.h, dataAttrs, "size.h");
+    else {
+      applyRespProp(style, "height", "h", size.h, dataAttrs, "size.h");
+      // The mirror: in a COLUMN, height is the main axis, so an explicit one
+      // is what flex would otherwise take back.
+      if (ctx.flexChild && ctx.parentDirection === "column") style.flexShrink = "0";
+    }
   }
   if (size.minW !== undefined) applyRespProp(style, "minWidth", "min-w", size.minW, dataAttrs, "size.minW");
   if (size.maxW !== undefined) applyRespProp(style, "maxWidth", "max-w", size.maxW, dataAttrs, "size.maxW");

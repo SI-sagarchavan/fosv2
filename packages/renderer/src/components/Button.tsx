@@ -57,6 +57,14 @@ const PADDING: Record<string, { px: string; py: string }> = {
   lg: { px: "space.6", py: "space.3_5" },
 };
 
+/** `textCase` -> CSS `text-transform`. `none` is written, so it can override. */
+const BUTTON_TEXT_CASE: Record<string, string | undefined> = {
+  none: "none",
+  upper: "uppercase",
+  lower: "lowercase",
+  title: "capitalize",
+};
+
 /** The glyph size that sits with each label size without dominating it. */
 const ICON_PX: Record<string, number> = { sm: 14, md: 16, lg: 20 };
 
@@ -88,7 +96,7 @@ function paint(variant: string, styleN: number, part: string, state: string): st
 
 export function Button({ node, ctx }: { node: Node; ctx: NodeRenderContext }) {
   const props = node.props as Record<string, unknown>;
-  const resolved = resolveNode(props, { flexChild: ctx.flexChild });
+  const resolved = resolveNode(props, { flexChild: ctx.flexChild, parentDirection: ctx.flexRow ? "row" : "column" });
 
   const variant = typeof props.variant === "string" ? props.variant : "filled";
   const styleN = typeof props.styleN === "number" ? props.styleN : 1;
@@ -122,6 +130,21 @@ export function Button({ node, ctx }: { node: Node; ctx: NodeRenderContext }) {
   // convention where the author said nothing.
   if (!declaredSpace?.px && !declaredSpace?.p) style.paddingInline = cssVar(pad.px);
   if (!declaredSpace?.py && !declaredSpace?.p) style.paddingBlock = cssVar(pad.py);
+  /**
+   * `block` fills the inline axis. A button is inline-flex by default so it
+   * hugs its label; a form's primary action is the design's full-width bar and
+   * has to be able to say so. `flex-basis` as well as `width` because the
+   * common case is a Button in a column Stack, where `width: 100%` alone still
+   * leaves flex sizing from the content.
+   */
+  if (props.block === true) {
+    style.width = "100%";
+    style.flexBasis = "100%";
+  }
+  // Presentation, not content — the label string keeps whatever case the design
+  // file stores. Same map and same reasoning as `Text`.
+  const transform = BUTTON_TEXT_CASE[String(props.textCase)];
+  if (transform) style.textTransform = transform;
 
   const classes = [
     "fos-button",

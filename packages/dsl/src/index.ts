@@ -127,6 +127,8 @@ export {
 export { sha1Hex } from "./sha1.js";
 export { proposeCollapse } from "./collapse.js";
 export type { CollapseProposal, VaryingContent } from "./collapse.js";
+export { applyBindingPlan, hasBindings } from "./bind.js";
+export type { BindingPlan, BindResult, Drift, DriftReason, PlanBinding, PlanCollapse } from "./bind.js";
 
 // Part 8 — tree operations
 export {

@@ -15,6 +15,7 @@ export function Box({
 }) {
   const resolved = resolveNode(node.props as Record<string, unknown>, {
     flexChild: ctx.flexChild,
+    parentDirection: ctx.flexRow ? "row" : "column",
   });
   return (
     <div

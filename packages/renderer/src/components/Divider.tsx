@@ -10,7 +10,7 @@ import { styleToReact } from "./dom.js";
  */
 export function Divider({ node, ctx }: { node: Node; ctx: NodeRenderContext }) {
   const props = node.props as Record<string, unknown>;
-  const resolved = resolveNode(props, { flexChild: ctx.flexChild });
+  const resolved = resolveNode(props, { flexChild: ctx.flexChild, parentDirection: ctx.flexRow ? "row" : "column" });
 
   const orientation = props.orientation === "vertical" ? "vertical" : "horizontal";
   const tone = typeof props.tone === "string" ? props.tone : undefined;

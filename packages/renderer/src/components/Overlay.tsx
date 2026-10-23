@@ -33,7 +33,7 @@ export function Overlay({
   children?: ReactNode;
 }) {
   const props = node.props as Record<string, unknown>;
-  const resolved = resolveNode(props, { flexChild: ctx.flexChild });
+  const resolved = resolveNode(props, { flexChild: ctx.flexChild, parentDirection: ctx.flexRow ? "row" : "column" });
   const clip = props.clip === true;
 
   const classes = ["fos-overlay", resolved.className];
@@ -53,7 +53,19 @@ export function Overlay({
     .join(" ");
 
   const rootStyle = { ...resolved.style };
-  rootStyle.position = "relative";
+  /**
+   * `relative` unless this Overlay is itself a placed child.
+   *
+   * An Overlay has to be a containing block for the children it anchors, and
+   * `relative` is how it becomes one. But an Overlay nested inside another
+   * Overlay — or inside a Stack, which is now positioned too — carries its own
+   * `place`, and `resolveNode` has already written `position: absolute` for it.
+   * Overwriting that turned the anchor's insets into a relative NUDGE from
+   * wherever flow happened to put the box: the fan-preferences player plates
+   * became flex items at the end of their row and landed 272px right of the
+   * design. `absolute` is a containing block just as well, so nothing is lost.
+   */
+  if (rootStyle.position !== "absolute") rootStyle.position = "relative";
   // Fill the Render width so aspect-ratio resolves to a real height.
   if (!rootStyle.width) rootStyle.width = "100%";
   if (clip) rootStyle.overflow = "hidden";

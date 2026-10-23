@@ -66,8 +66,21 @@ import { z } from "zod";
  * Hidden nodes are not in the document: they are skipped during traversal, as
  * in 1.0.0. Should that ever change, it is a version bump, not a silent one —
  * a corpus row's node set must be inferable from its `irVersion` alone.
+ *
+ * 1.8.0 — adds `textCase` to a text node.
+ *
+ * `characters` is what the designer TYPED; `textCase` is how Figma displays it.
+ * A heading typed "My account" with `textCase: UPPER` reads "MY ACCOUNT" on the
+ * canvas, and the IR reported only the former — so every uppercased label in
+ * every design compiled to mixed case and no downstream pass could tell that
+ * something had been lost. The DSL has carried `Text.textCase` from the start
+ * for exactly this; the reader was the missing half.
+ *
+ * Absent on 1.1.0–1.7.0 documents and absent whenever Figma says `ORIGINAL`,
+ * which is the same convention `truncation` uses: the default is spelled by not
+ * being there.
  */
-export const IR_VERSION = "1.7.0" as const;
+export const IR_VERSION = "1.8.0" as const;
 export const IR_VERSIONS = [
   "1.1.0",
   "1.2.0",
@@ -76,7 +89,16 @@ export const IR_VERSIONS = [
   "1.5.0",
   "1.6.0",
   "1.7.0",
+  "1.8.0",
 ] as const;
+
+/**
+ * MAJOR.MINOR.PATCH, and nothing else.
+ *
+ * Declared up here because `frameIRDocumentSchema` is built at module load and
+ * would hit this in its temporal dead zone from further down the file.
+ */
+const SEMVER = /^\d+\.\d+\.\d+$/;
 
 /** pluginData key on the export root. The list of bindings lives on the frame. */
 export const ASSET_PLUGIN_KEY = "fanos/assets";
@@ -333,6 +355,17 @@ export type Effect = z.infer<typeof effectSchema>;
 export const truncationSchema = z.enum(["ENDING"]);
 export type Truncation = z.infer<typeof truncationSchema>;
 
+/**
+ * Figma's `textCase`, minus the default.
+ *
+ * `ORIGINAL` is not recorded — absence means it. `SMALL_CAPS` and
+ * `SMALL_CAPS_FORCED` are also absent, and that IS lossy: the DSL has no
+ * spelling for small caps, so recording it here would put a value in the
+ * corpus that nothing downstream could act on.
+ */
+export const textCaseSchema = z.enum(["UPPER", "LOWER", "TITLE"]);
+export type TextCaseValue = z.infer<typeof textCaseSchema>;
+
 export const textSchema = z.object({
   characters: z.string(),
   styleRef: z.string().optional(),
@@ -361,6 +394,14 @@ export const textSchema = z.object({
    * count the box itself implies.
    */
   maxLines: z.number().optional(),
+  /**
+   * How Figma DISPLAYS `characters` (1.8.0+).
+   *
+   * Presentation, not content — see `textCaseSchema`. Absent means Figma's
+   * `ORIGINAL`, so a 1.7.0 document and an uncased layer are indistinguishable
+   * here, and both lead to the same place: no transform.
+   */
+  textCase: textCaseSchema.optional(),
 });
 export type TextInfo = z.infer<typeof textSchema>;
 
@@ -462,7 +503,20 @@ export const frameIRDocumentSchema = z.object({
   pageName: z.string(),
   rootNodeId: z.string(),
   extractedAt: z.string(),
-  irVersion: z.enum(IR_VERSIONS),
+  /**
+   * Not `z.enum(IR_VERSIONS)`, and that is the point.
+   *
+   * The enum rejected every version this build had not been compiled against,
+   * which made an ADDITIVE bump a hard stop for every reader that had not been
+   * restarted yet. Every bump so far has added optional fields and nothing else
+   * — 1.8.0 added `textCase` — so a 1.7.0 reader handed a 1.8.0 document is not
+   * looking at anything it cannot read: it is looking at one key it will ignore.
+   *
+   * So the shape is checked here and COMPATIBILITY is decided in
+   * `parseFrameIRDocument`, which can tell a newer minor (fine, say so) from a
+   * newer major (refuse) — see `isReadable`.
+   */
+  irVersion: z.string().regex(SEMVER, "irVersion must be MAJOR.MINOR.PATCH"),
   breakpointHint: z.number(),
   root: frameIRNodeSchema,
   /**
@@ -488,32 +542,95 @@ export const frameIRDocumentSchema = z.object({
 export type FrameIRDocument = z.infer<typeof frameIRDocumentSchema>;
 
 /**
+ * Can this build read a document that says `version`?
+ *
+ * Forward compatibility is decided by the MAJOR, because that is the only part
+ * of the version that has ever been allowed to break a reader:
+ *
+ *   - same major, newer minor or patch — READABLE. Every minor bump in this
+ *     schema's history added optional fields and changed nothing existing, so a
+ *     reader one behind sees a document with one key it does not know, and Zod
+ *     strips unknown keys. Refusing it bought nothing and cost a hard stop
+ *     every time a plugin reload landed before a service restart.
+ *   - older, in the list — READABLE, as before. A corpus row must not lose its
+ *     history to a feature change.
+ *   - newer MAJOR — NOT readable. A major is reserved for the change this
+ *     cannot survive: a field that moves, changes meaning, or goes away. There
+ *     the document really is unreadable and guessing would be worse.
+ *
+ * @returns `"ok"`, `"ahead"` (readable, but the reader is behind), or `"major"`.
+ */
+export function readability(version: string): "ok" | "ahead" | "major" {
+  if ((IR_VERSIONS as readonly string[]).includes(version)) return "ok";
+
+  // An unparseable version is treated as a major gap: refusing something this
+  // build cannot even name is the safe direction. `parseFrameIRDocument` never
+  // gets here with one — it checks the shape first, so the caller is told the
+  // version is malformed rather than told a story about deployment skew.
+  const major = (v: string) => Number(v.split(".")[0]);
+  const theirs = major(version);
+  if (!Number.isFinite(theirs)) return "major";
+  return theirs > major(IR_VERSION) ? "major" : "ahead";
+}
+
+
+/**
+ * Said once per process, not once per document.
+ *
+ * A studio that previews forty frames from a newer plugin should mention the
+ * skew once. Repeating it forty times trains everyone to ignore it.
+ */
+const warned = new Set<string>();
+
+/**
  * Runtime validator. Returns the parsed document or throws a ZodError — except
  * for one case it can explain far better than Zod can.
  *
- * A plugin that has been reloaded ahead of the service reading its exports
- * produces a version this build has never heard of, and the raw failure is a
- * wall of enum JSON that names every version EXCEPT the one that would tell you
- * what happened. The document is almost certainly fine; the reader is old. That
- * is a deployment fact, not a schema fact, so it is worth saying out loud —
- * twice over in development, where "the dist changed but this process started
- * before it" is a normal Tuesday.
+ * A plugin reloaded ahead of the service reading its exports used to produce a
+ * hard failure here, and a wall of enum JSON that named every version EXCEPT
+ * the one that arrived. Now an additive skew is READ, with one warning naming
+ * the remedy, and only a major-version gap is refused — see `readability`. The
+ * document is almost always fine and the reader is simply old, which is a
+ * deployment fact rather than a schema fact.
  */
 export function parseFrameIRDocument(input: unknown): FrameIRDocument {
+  /**
+   * The version is read BEFORE the shape, so the diagnosis survives the damage.
+   *
+   * A major-ahead document is exactly the one whose other fields have moved, so
+   * checking the shape first would answer "root.geometry is malformed" when the
+   * true answer is "this reader is a major version behind". Version first, and
+   * the explanation is the one worth having.
+   */
+  const declared = (input as { irVersion?: unknown } | null)?.irVersion;
+  /**
+   * Only a well-formed version is worth a compatibility verdict. Anything else
+   * — a missing field, a number, "banana" — is a malformed document, and the
+   * schema's own regex says so far better than a story about deployment skew.
+   */
+  if (typeof declared === "string" && SEMVER.test(declared)) {
+    const verdict = readability(declared);
+    if (verdict === "major") {
+      throw new Error(
+        `this build reads Frame IR ${IR_VERSION} and the document says ${declared} — a MAJOR ` +
+          `version ahead, which is reserved for changes that move or remove fields, so it ` +
+          `cannot be read as-is. Rebuild and restart the service (in development, a process ` +
+          `started before the last build still holds the old schema).`,
+      );
+    }
+    if (verdict === "ahead" && !warned.has(declared)) {
+      warned.add(declared);
+      console.warn(
+        `[fos-ir] this build reads Frame IR up to ${IR_VERSION}, and the document says ` +
+          `${declared}. Reading it anyway — a minor bump only adds optional fields — but ` +
+          `anything new in it is being ignored. Rebuild and restart to pick it up (in ` +
+          `development, a process started before the last build still holds the old schema).`,
+      );
+    }
+  }
+
   const result = frameIRDocumentSchema.safeParse(input);
   if (result.success) return result.data;
-
-  const stale = result.error.issues.find(
-    (issue) => issue.path.length === 1 && issue.path[0] === "irVersion",
-  );
-  if (stale) {
-    const sent = (input as { irVersion?: unknown } | null)?.irVersion;
-    throw new Error(
-      `this build reads Frame IR up to ${IR_VERSION}, and the document says ${String(sent)}. ` +
-        `Whatever produced it is newer than whatever is reading it — rebuild and restart the ` +
-        `service (in development, a process started before the last build still holds the old schema).`,
-    );
-  }
   throw result.error;
 }
 

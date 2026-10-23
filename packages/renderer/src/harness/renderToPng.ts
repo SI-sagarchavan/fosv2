@@ -266,12 +266,32 @@ export async function measureNodeBoxes(
           if (seen.has(id)) continue;
           seen.add(id);
           const r = el.getBoundingClientRect();
+          /**
+           * The MARGIN box, not the border box.
+           *
+           * Almost every node has no margin and the two are identical. Clamped
+           * text does: it renders full CSS line boxes so nothing is sheared by
+           * `overflow: hidden`, and pulls its outer edges in with a negative
+           * `margin-block` so it OCCUPIES Figma's ink box — see
+           * `.fos-text-clamp` in styles.css. The border box is therefore
+           * deliberately taller than the space the node takes, and comparing it
+           * to the IR reports a 10px error on text that is laying out exactly
+           * right.
+           *
+           * The space a node occupies in flow is what the IR's box describes,
+           * so that is the rectangle to measure.
+           */
+          const cs = getComputedStyle(el);
+          const mt = parseFloat(cs.marginTop) || 0;
+          const mb = parseFloat(cs.marginBottom) || 0;
+          const ml = parseFloat(cs.marginLeft) || 0;
+          const mr = parseFloat(cs.marginRight) || 0;
           out.push({
             id,
-            x: r.left - origin.left,
-            y: r.top - origin.top,
-            w: r.width,
-            h: r.height,
+            x: r.left - origin.left - ml,
+            y: r.top - origin.top - mt,
+            w: r.width + ml + mr,
+            h: r.height + mt + mb,
           });
         }
         return out;

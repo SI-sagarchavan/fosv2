@@ -1,0 +1,1 @@
+ALTER TYPE "public"."artifact_kind" ADD VALUE 'binding_plan';

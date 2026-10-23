@@ -13,6 +13,7 @@ import { ZodError } from "zod";
 import type { AppContext } from "../../context.js";
 import { isAppError } from "../../kernel/errors.js";
 import { registerArtifactRoutes } from "../../modules/artifacts/adapters/routes.js";
+import { registerDataRoutes } from "../../modules/artifacts/adapters/data-routes.js";
 import { registerExportRoutes } from "../../modules/exports/adapters/routes.js";
 import { registerProjectRoutes } from "../../modules/projects/adapters/routes.js";
 import { registerRunRoutes } from "../../modules/runs/adapters/routes.js";
@@ -126,6 +127,8 @@ export function buildServer(ctx: AppContext): FastifyInstance {
     async (api) => {
       await registerProjectRoutes(api, ctx);
       await registerArtifactRoutes(api, ctx);
+      // TEMPORARY. See data-routes.ts — scaffolding, not the durable form.
+      await registerDataRoutes(api);
       await registerSurfaceRoutes(api, ctx);
       await registerRunRoutes(api, ctx);
       await registerSyncRoutes(api, ctx);
