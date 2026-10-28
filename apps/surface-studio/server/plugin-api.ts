@@ -9,6 +9,9 @@
  *   GET  /v1/preview/:ref -> a run, or a dsl_tree artifact, rendered as a page.
  *                            ?tree= ?theme= ?surfaces= ?width= ?bg= ?plan=
  *                            ?data=<artifact id | named dataset>
+ *   GET  /v1/sections     -> generated sections on disk (no Figma, no control plane)
+ *   GET  /v1/sections/:name/summary -> news, video and photo counts for one section
+ *   GET  /v1/sections/:name -> one of them rendered as a page. ?width= ?bg=
  *   POST /v1/inspect   -> IR -> DSL with the per-node join and the gap report
  *   POST /v1/bindings  -> refs, suggestions and a render, against a sample payload
  *   GET  /public/*        -> renderer fonts and textures, at the path its CSS wants
@@ -33,6 +36,7 @@ import { compilePreview } from "./compile-preview.js";
 import type { BindingPlan } from "@fanos/dsl";
 import { renderPreview, resolvePublicAsset } from "./preview.js";
 import { handleInspectRoutes } from "./inspect-routes.js";
+import { describeSection, listSections, loadSection } from "./sections.js";
 import { compileRequestSchema, previewRequestSchema, studioExportSchema } from "./schema.js";
 
 export function surfaceStudioApi() {
@@ -182,6 +186,33 @@ async function route(
 
   if (path.startsWith("/v1/preview/") && req.method === "GET") {
     await servePreview(config, path.slice("/v1/preview/".length), url, res);
+    return;
+  }
+
+  // Off the control plane on purpose, like POST /v1/preview: a generated
+  // section is files in the repo, so it renders with only the board running.
+  if (path === "/v1/sections" && req.method === "GET") {
+    json(res, 200, { sections: listSections() });
+    return;
+  }
+
+  const summary = path.match(/^\/v1\/sections\/([^/]+)\/summary$/);
+  if (summary && req.method === "GET") {
+    try {
+      const detail = describeSection(decodeURIComponent(summary[1]!));
+      if (!detail) {
+        json(res, 404, { message: `no section "${summary[1]}"` });
+        return;
+      }
+      json(res, 200, detail);
+    } catch (err) {
+      json(res, 422, { message: err instanceof Error ? err.message : String(err) });
+    }
+    return;
+  }
+
+  if (path.startsWith("/v1/sections/") && req.method === "GET") {
+    await serveSection(decodeURIComponent(path.slice("/v1/sections/".length)), url, res);
     return;
   }
 
@@ -581,6 +612,29 @@ async function servePreview(
   } catch (err) {
     // A tree the renderer refuses is the interesting case: `reify` throws on a
     // malformed tree, and that message is the whole diagnosis.
+    previewError(res, 422, err instanceof Error ? err.message : String(err));
+  }
+}
+
+/**
+ * A generated section from `packages/dsl/fixtures/sections/`, rendered live —
+ * the current renderer, the CDN's real images, links that go to the tenant.
+ */
+async function serveSection(name: string, url: string, res: ServerResponse): Promise<void> {
+  const query = new URLSearchParams(url.includes("?") ? url.slice(url.indexOf("?") + 1) : "");
+  try {
+    const section = loadSection(name);
+    if (!section) {
+      previewError(res, 404, `no section "${name}" — GET /v1/sections lists the ones on disk`);
+      return;
+    }
+    const { title: _title, ...source } = section;
+    const { html } = await renderPreview({ ...source, ...previewOptions(query) });
+    res.statusCode = 200;
+    res.setHeader("Content-Type", "text/html; charset=utf-8");
+    res.setHeader("Cache-Control", "no-store");
+    res.end(html);
+  } catch (err) {
     previewError(res, 422, err instanceof Error ? err.message : String(err));
   }
 }

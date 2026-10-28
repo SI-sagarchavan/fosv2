@@ -49,10 +49,48 @@
   --flex-direction-base: initial;  --flex-direction-md: initial;  --flex-direction-lg: initial;
   --align-items-base: initial;     --align-items-md: initial;     --align-items-lg: initial;
   --justify-content-base: initial; --justify-content-md: initial; --justify-content-lg: initial;
+  /* What a responsive prop reads inline: its value at THIS breakpoint. Unset
+     below md, so the inline `var(--x-cur, var(--x-base))` falls to base. */
+  --p-cur: initial;
+  --px-cur: initial;
+  --py-cur: initial;
+  --pt-cur: initial;
+  --pb-cur: initial;
+  --pl-cur: initial;
+  --pr-cur: initial;
+  --gap-cur: initial;
+  --w-cur: initial;
+  --h-cur: initial;
+  --min-w-cur: initial;
+  --max-w-cur: initial;
+  --min-h-cur: initial;
+  --max-h-cur: initial;
+  --flex-direction-cur: initial;
+  --align-items-cur: initial;
+  --justify-content-cur: initial;
+  --text-align-cur: initial;
 }
 
 @media (min-width: 768px) {
   .fos-node {
+    --p-cur: var(--p-md, var(--p-base));
+    --px-cur: var(--px-md, var(--px-base));
+    --py-cur: var(--py-md, var(--py-base));
+    --pt-cur: var(--pt-md, var(--pt-base));
+    --pb-cur: var(--pb-md, var(--pb-base));
+    --pl-cur: var(--pl-md, var(--pl-base));
+    --pr-cur: var(--pr-md, var(--pr-base));
+    --gap-cur: var(--gap-md, var(--gap-base));
+    --w-cur: var(--w-md, var(--w-base));
+    --h-cur: var(--h-md, var(--h-base));
+    --min-w-cur: var(--min-w-md, var(--min-w-base));
+    --max-w-cur: var(--max-w-md, var(--max-w-base));
+    --min-h-cur: var(--min-h-md, var(--min-h-base));
+    --max-h-cur: var(--max-h-md, var(--max-h-base));
+    --flex-direction-cur: var(--flex-direction-md, var(--flex-direction-base));
+    --align-items-cur: var(--align-items-md, var(--align-items-base));
+    --justify-content-cur: var(--justify-content-md, var(--justify-content-base));
+    --text-align-cur: var(--text-align-md, var(--text-align-base));
     gap: var(--gap-md, var(--gap-base, revert-layer));
     padding: var(--p-md, var(--p-base, revert-layer));
     padding-inline: var(--px-md, var(--px-base, revert-layer));
@@ -71,6 +109,24 @@
 
 @media (min-width: 1280px) {
   .fos-node {
+    --p-cur: var(--p-lg, var(--p-md, var(--p-base)));
+    --px-cur: var(--px-lg, var(--px-md, var(--px-base)));
+    --py-cur: var(--py-lg, var(--py-md, var(--py-base)));
+    --pt-cur: var(--pt-lg, var(--pt-md, var(--pt-base)));
+    --pb-cur: var(--pb-lg, var(--pb-md, var(--pb-base)));
+    --pl-cur: var(--pl-lg, var(--pl-md, var(--pl-base)));
+    --pr-cur: var(--pr-lg, var(--pr-md, var(--pr-base)));
+    --gap-cur: var(--gap-lg, var(--gap-md, var(--gap-base)));
+    --w-cur: var(--w-lg, var(--w-md, var(--w-base)));
+    --h-cur: var(--h-lg, var(--h-md, var(--h-base)));
+    --min-w-cur: var(--min-w-lg, var(--min-w-md, var(--min-w-base)));
+    --max-w-cur: var(--max-w-lg, var(--max-w-md, var(--max-w-base)));
+    --min-h-cur: var(--min-h-lg, var(--min-h-md, var(--min-h-base)));
+    --max-h-cur: var(--max-h-lg, var(--max-h-md, var(--max-h-base)));
+    --flex-direction-cur: var(--flex-direction-lg, var(--flex-direction-md, var(--flex-direction-base)));
+    --align-items-cur: var(--align-items-lg, var(--align-items-md, var(--align-items-base)));
+    --justify-content-cur: var(--justify-content-lg, var(--justify-content-md, var(--justify-content-base)));
+    --text-align-cur: var(--text-align-lg, var(--text-align-md, var(--text-align-base)));
     gap: var(--gap-lg, var(--gap-md, var(--gap-base, revert-layer)));
     padding: var(--p-lg, var(--p-md, var(--p-base, revert-layer)));
     padding-inline: var(--px-lg, var(--px-md, var(--px-base, revert-layer)));

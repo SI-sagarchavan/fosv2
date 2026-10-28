@@ -99,8 +99,23 @@ export function emitTypes(): string {
     ].join("\n"),
   );
   out.push("");
-  out.push("/** Phase 2 — present so trees round-trip; contents are not validated yet. */");
-  out.push("export type Predicate = Record<string, unknown>;");
+  out.push(
+    [
+      "/** A data path and exactly one operator. A list means all must hold. */",
+      "export type Scalar = string | number | boolean | null;",
+      "export type Condition = { path: string } & (",
+      "  | { eq: Scalar }",
+      "  | { ne: Scalar }",
+      "  | { in: Scalar[] }",
+      "  | { exists: boolean }",
+      "  | { gt: number }",
+      "  | { gte: number }",
+      "  | { lt: number }",
+      "  | { lte: number }",
+      ");",
+      "export type Predicate = Condition | Condition[];",
+    ].join("\n"),
+  );
   out.push("");
 
   out.push("// --- universal props ------------------------------------------------------");

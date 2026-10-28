@@ -18,6 +18,7 @@ import { isRespObject, isSignedTokenRef, refCategory, SEMVER_REF_RE, unsignRef }
 import { LAYOUT_PROP_NAMES, REPEATER_FORBIDDEN_PROPS } from "./universal.js";
 import { walkProps } from "./walk.js";
 import { zodOfFields, type FieldType } from "./field.js";
+import { checkBindings, checkPipes } from "./contract.js";
 
 export const ISSUE_CODES = [
   "S1", // reify failed: cycle, orphan, multi-root, idx gap
@@ -39,6 +40,14 @@ export const ISSUE_CODES = [
   "T3", // Resp<> wrapper around a TypeToken
   "T4", // Resp breakpoint key not in the tokens package config
   "T5", // ref resolves but is the wrong category for this prop
+  // B — bindings. B4 runs always; the rest need `data` (see contract.ts).
+  "B1", // a {path}, Repeater.over or when.path is not in the data
+  "B2", // wrong shape for the slot: an object drawn as text, over not a list
+  "B3", // path walks through a CAST page key (data.1) — bind items (warning)
+  "B4", // unknown pipe or wrong arity; date on a non-date (warning)
+  "B5", // ISO date drawn without a date pipe (warning)
+  "B6", // CDN {{RATIO}} image with no ratio (warning) or an unservable one
+  "B7", // when compares against a type the field never holds (warning)
 ] as const;
 
 export type IssueCode = (typeof ISSUE_CODES)[number];
@@ -58,6 +67,12 @@ export interface ValidateOptions {
   registry: Registry;
   /** Defaults to the tokens package's own breakpoint keys. */
   breakpointKeys?: readonly string[];
+  /**
+   * A sample of the data this tree will be rendered against — for a CAST
+   * template, `{ news: fromCastFlow(response) }`. When given, every binding is
+   * checked against it (B1–B7). Without it only the pipe names are (B4).
+   */
+  data?: unknown;
 }
 
 export interface ValidationResult {
@@ -503,6 +518,10 @@ export function validate(tree: FlatTree, options: ValidateOptions): ValidationRe
       }
     }
   }
+
+  // --- B: bindings ---------------------------------------------------------
+  issues.push(...checkPipes(tree));
+  if (options.data !== undefined) issues.push(...checkBindings(tree, options.data));
 
   const errors = issues.filter((i) => i.severity === "error");
   const warnings = issues.filter((i) => i.severity === "warning");

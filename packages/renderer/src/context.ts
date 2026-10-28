@@ -13,6 +13,15 @@ export interface RenderConfig {
   assets?: AssetContext;
   /** Theme slug for data-fos-theme when CSS is scoped by attr. */
   themeSlug?: string;
+  /**
+   * The tenant site that root-relative URLs in bound data belong to, e.g.
+   * `https://dc.surface.fan-os.net`. A CAST payload's images are
+   * `/static-assets/…`; rendered anywhere but the tenant's own domain (Studio,
+   * the harness) they would otherwise be requested from the wrong host.
+   */
+  origin?: string;
+  /** IANA zone for the `date` pipe. Defaults to UTC, so SSR is deterministic. */
+  timeZone?: string;
 }
 
 export interface NodeRenderContext extends RenderConfig {

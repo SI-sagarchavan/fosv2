@@ -20,6 +20,8 @@
  */
 import {
   applyBindingPlan,
+  lookup,
+  parseRefs,
   proposeCollapse,
   type BindingPlan,
   type CollapseProposal,
@@ -41,7 +43,6 @@ import type {
 import { runPipeline, surfacesForRender, wireTree } from "./pipeline.js";
 import { renderPreview } from "./preview.js";
 
-const REF_RE = /\{([A-Za-z_][A-Za-z0-9_.]*)\}/g;
 
 /** Props that carry a value a CMS could own. */
 const BINDABLE_PROPS = ["content", "label", "alt", "src", "href", "to"] as const;
@@ -63,7 +64,7 @@ export function collectRefs(tree: FlatTree): RawRef[] {
   const out: RawRef[] = [];
   const visit = (nodeId: string, value: unknown, prop: string): void => {
     if (typeof value === "string") {
-      for (const m of value.matchAll(REF_RE)) out.push({ nodeId, prop, path: m[1] as string });
+      for (const ref of parseRefs(value)) out.push({ nodeId, prop, path: ref.path });
     } else if (Array.isArray(value)) {
       value.forEach((v, i) => visit(nodeId, v, `${prop}[${i}]`));
     } else if (value !== null && typeof value === "object") {
@@ -72,7 +73,8 @@ export function collectRefs(tree: FlatTree): RawRef[] {
   };
   for (const node of tree.nodes) {
     for (const [k, v] of Object.entries(node.props)) {
-      if (k === "_meta") continue;
+      // `when` holds data paths, not templates; `_meta` is prose.
+      if (k === "_meta" || k === "when") continue;
       visit(node.id, v, k);
     }
   }
@@ -82,16 +84,6 @@ export function collectRefs(tree: FlatTree): RawRef[] {
 export const countRefs = (tree: FlatTree): number => collectRefs(tree).length;
 export const countRepeaters = (tree: FlatTree): number =>
   tree.nodes.filter((n) => n.type === "Repeater").length;
-
-/** Doc-level dot-path read. Arrays are not indexed — the renderer's rule. */
-function lookup(data: unknown, path: string): unknown {
-  let cur: unknown = data;
-  for (const part of path.split(".")) {
-    if (cur === null || cur === undefined || typeof cur !== "object") return undefined;
-    cur = (cur as Record<string, unknown>)[part];
-  }
-  return cur;
-}
 
 /** Repeater ancestors of a node, nearest first, with the alias each introduces. */
 function scopesOf(tree: FlatTree, node: FlatNode, byId: Map<string, FlatNode>): Array<{ as: string; over: string }> {

@@ -12,6 +12,7 @@
  */
 
 import { syntheticSrc, type FlatNode, type FlatTree } from "./flat.js";
+import { mapRefPaths } from "./binding.js";
 
 export class TreeOpError extends Error {
   readonly nodeId: string | undefined;
@@ -237,11 +238,18 @@ export interface CollapseOptions {
   id?: string;
 }
 
-/** `{section.briefs.2.headline}` -> `{brief.headline}`, for one array and alias. */
+/**
+ * `{section.briefs.2.headline}` -> `{brief.headline}`, for one array and alias.
+ * Pipes ride along: `{news.items.4.published_date | date:"MMM DD"}` keeps its
+ * `| date:"MMM DD"`.
+ */
 function realias(value: string, over: string, as: string): string {
-  const escaped = over.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-  const re = new RegExp(`\\{${escaped}\\.\\d+((?:\\.[A-Za-z_][A-Za-z0-9_]*)*)\\}`, "g");
-  return value.replace(re, (_match, rest: string) => `{${as}${rest}}`);
+  const prefix = `${over}.`;
+  return mapRefPaths(value, (path) => {
+    if (!path.startsWith(prefix)) return path;
+    const m = path.slice(prefix.length).match(/^\d+(\..+)?$/);
+    return m ? `${as}${m[1] ?? ""}` : path;
+  });
 }
 
 /** Rewrite every string in a props bag, at any depth. */

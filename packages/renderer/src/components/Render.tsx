@@ -6,7 +6,7 @@
  */
 
 import type { FlatTree, Node } from "@fanos/dsl";
-import { childrenOf, reify, rootOf } from "@fanos/dsl";
+import { childrenOf, evaluateWhen, lookup, reify, rootOf } from "@fanos/dsl";
 import type { NodeRenderContext, RenderConfig } from "../context.js";
 import { Box } from "./Box.js";
 import { Button } from "./Button.js";
@@ -22,6 +22,8 @@ export interface RenderProps {
   data?: RenderConfig["data"];
   assets?: RenderConfig["assets"];
   themeSlug?: string;
+  origin?: RenderConfig["origin"];
+  timeZone?: RenderConfig["timeZone"];
   /** Optional root width in px (harness sets this). */
   width?: number;
   /**
@@ -40,13 +42,13 @@ export interface RenderProps {
   designWidth?: number;
 }
 
-export function Render({ tree, data, assets, themeSlug, width, designWidth }: RenderProps) {
+export function Render({ tree, data, assets, themeSlug, origin, timeZone, width, designWidth }: RenderProps) {
   // Validate structure early — reify throws on broken trees.
   reify(tree);
   const root = rootOf(tree);
   if (!root) return null;
 
-  const ctx: NodeRenderContext = { data, assets, themeSlug };
+  const ctx: NodeRenderContext = { data, assets, themeSlug, origin, timeZone };
   const scale = width && designWidth && designWidth > 0 ? width / designWidth : 1;
   const scaled = scale !== 1;
 
@@ -96,12 +98,8 @@ export function Render({ tree, data, assets, themeSlug, width, designWidth }: Re
 /** Resolve a dotted path to an array, for Repeater.over. */
 function resolveList(path: string | undefined, data: unknown): unknown[] | undefined {
   if (!path) return undefined;
-  let cur: unknown = data;
-  for (const seg of path.split(".")) {
-    if (cur === null || typeof cur !== "object") return undefined;
-    cur = (cur as Record<string, unknown>)[seg];
-  }
-  return Array.isArray(cur) ? cur : undefined;
+  const list = lookup(data, path);
+  return Array.isArray(list) ? list : undefined;
 }
 
 function RenderNode({
@@ -113,6 +111,14 @@ function RenderNode({
   tree: FlatTree;
   ctx: NodeRenderContext;
 }) {
+  /**
+   * `when` gates the node and its whole subtree, in the node's own scope — so
+   * inside a Repeater it tests the item: the play badge on a video, the
+   * duration chip only when there is a duration. A node that does not draw
+   * leaves no box, exactly as fanxp's `WithVisibilityControl` returns null.
+   */
+  if (!evaluateWhen((node.props as { when?: unknown }).when, ctx.data)) return null;
+
   const kids = childrenOf(tree, node.id);
   const childCtxFor = (parentType: string): NodeRenderContext => {
     // A Resp direction carries its base in `base`; default is column.

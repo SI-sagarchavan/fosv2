@@ -13,6 +13,7 @@ import {
   markRaw,
   resolveDuration,
   resolveValue,
+  respVar,
 } from "./value.js";
 
 export interface StyleContext {
@@ -192,7 +193,7 @@ export function resolveNode(
         style["--flex-direction-base"] = o.base;
         if (o.md) style["--flex-direction-md"] = o.md;
         if (o.lg) style["--flex-direction-lg"] = o.lg;
-        style.flexDirection = "var(--flex-direction-base)";
+        style.flexDirection = respVar("flex-direction", Boolean(o.md || o.lg));
       }
     } else {
       style.flexDirection = "column";
@@ -367,7 +368,7 @@ function mapEnumResp(
     style[`--${varStem}-base`] = map[o.base] ?? o.base;
     if (o.md) style[`--${varStem}-md`] = map[o.md] ?? o.md;
     if (o.lg) style[`--${varStem}-lg`] = map[o.lg] ?? o.lg;
-    style[cssCamel] = `var(--${varStem}-base)`;
+    style[cssCamel] = respVar(varStem, Boolean(o.md || o.lg));
   }
 }
 

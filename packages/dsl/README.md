@@ -197,6 +197,21 @@ Shape errors are suppressed wherever a token rule already explained the same
 value in better words — `Text.style: "color.core_neu_00"` reports T2 alone, not
 T2 plus a confusing union-mismatch.
 
+### Binding
+
+Checked against a data SAMPLE when `validate(tree, { registry, data })` is given
+one; B4's pipe names are checked always. See Part 11.
+
+| code | rule |
+| --- | --- |
+| B1 | a `{path}`, `Repeater.over` or `when` path is not in the data — the message lists the fields that are |
+| B2 | right path, wrong shape: an object drawn as text, `over` not a list |
+| B3 | path walks through a CAST page key (`data.1`) — **warning** |
+| B4 | unknown pipe or wrong arity; `date` on a non-date is a **warning** |
+| B5 | an ISO timestamp drawn without `date` — **warning** |
+| B6 | a CDN `{{RATIO}}` image with no `ratio` (**warning**) or a ratio the CDN does not serve |
+| B7 | `when` compares against a type the field never holds — **warning** |
+
 ### Quality — counted, never blocking
 
 `rawValueCount` (split: space / color / size / duration / other + total),
@@ -341,6 +356,42 @@ the current token file, so the two badge Boxes need Raw width/height and their
 Icons need a Raw size. That is correct and expected — it drops to zero the day
 design ops populates those scales, and it is not worked around.
 `rawPositionCount` is 0.
+
+## Part 11 — Data binding
+
+`src/binding.ts` is the only module that knows what a ref means; the web
+renderer, the native bundler and the validator all go through it.
+
+```
+{news.items.0.title}                              a path; numeric segments index arrays
+{article.published_date | date:"MMM DD, YYYY"}    pipes, left to right
+{article.duration | default:"Watch"}              fallback for missing / null / ""
+when: { path: "article.asset_type_id", eq: 4 }     draw only when the data says so
+when: [{ path: "…", eq: 4 }, { path: "…", exists: true }]   a list ANDs
+```
+
+- **Pipes are closed** — `date` and `default`. Every renderer must implement each
+  one identically. Renaming, joining and URL building are the CAST hook's job
+  (its JSONata already does them); a pipe only does what depends on the design.
+  `date` speaks fanxp's `formatDate` tokens, with the zone always explicit
+  (render option, default UTC) so SSR is deterministic.
+- **`when` is not recursive** — one condition or a flat AND list, each with
+  exactly one of `eq ne in exists gt gte lt lte`. `in` is OR on one field,
+  `ne`/`exists:false` are NOT. The agent emits it through a JSON schema, and
+  recursive schemas are what structured output fails on.
+- **A CAST response is normalised before a tree sees it.** `fromCastFlow`
+  mirrors `attachWorkflowOutput` in @sikit/renderer: `{ data: { "1": [...] } }`
+  is keyed by PAGE number, so a tree binds `news.items`, never `data.1` (B3).
+- **`{{RATIO}}` is not a ref.** It is the media CDN's crop slot; the Image fills
+  it from its own `ratio` (`16/9` → `16-9`, none → `0` = 16:9). An unlisted ratio
+  gets a 1×1 pixel with a 200, so B6 checks it against `CDN_RATIOS`.
+- **Plans can `set`.** Binding real data needs props that are not paths — a
+  crop per thumbnail, a `when` on a badge — so a plan's `set` entries write
+  literal props by `src`, after binding and collapsing.
+
+`fixtures/bindings/news-grid.cast.plan.json` binds the compiled news grid to
+`fixtures/cast/dc-news.flow.json`, a real CMS Listing response, and validates
+with no B findings; the hand-shaped `news-grid.plan.json` fails B1 against it.
 
 ## Tests
 

@@ -77,6 +77,14 @@ export interface PreviewSource {
    * through the authoring step must not be re-bound on the way to a screen.
    */
   plan?: BindingPlan;
+  /**
+   * The tenant site the data's root-relative URLs belong to. A CAST payload's
+   * images are `/static-assets/…` and its links `/news/…`; rendered on :3000
+   * without this, every one of them is requested from Studio and 404s.
+   */
+  origin?: string;
+  /** IANA zone for the `date` pipe; UTC when unset. */
+  timeZone?: string;
 }
 
 export interface RenderedPreview {
@@ -148,6 +156,8 @@ export async function renderPreview(source: PreviewSource): Promise<RenderedPrev
       tree,
       assets,
       ...(source.data ? { data: source.data } : {}),
+      ...(source.origin ? { origin: source.origin } : {}),
+      ...(source.timeZone ? { timeZone: source.timeZone } : {}),
       ...(fluid ? {} : { width }),
     }),
   );

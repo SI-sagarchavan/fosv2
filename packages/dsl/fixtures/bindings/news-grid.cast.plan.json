@@ -1,0 +1,124 @@
+{
+  "note": "The news grid bound to a real CAST flow response (CMS Listing hook, Delhi Capitals). Render against { news: fromCastFlow(response) }: the tree binds news.items, never data.1 — that key is the page number. Eyebrow and CTA stay literal: they are template config (data.title, cta.view_more), not hook output. `set` gives each thumbnail the crop its box needs, since the CDN cuts whatever {{RATIO}} says.",
+  "bind": [
+    {
+      "src": "333:9677",
+      "prop": "src",
+      "path": "news.items.0.thumbnail_image"
+    },
+    {
+      "src": "I333:9679;13448:62717",
+      "prop": "content",
+      "path": "news.items.0.title"
+    },
+    {
+      "src": "I333:9679;13448:62718",
+      "prop": "content",
+      "path": "news.items.0.desc"
+    },
+    {
+      "src": "I333:9679;13448:62722",
+      "prop": "content",
+      "path": "news.items.0.published_date | date:\"MMM DD, YYYY\""
+    },
+    {
+      "src": "333:9683",
+      "prop": "src",
+      "path": "news.items.1.thumbnail_image"
+    },
+    {
+      "src": "333:9687",
+      "prop": "content",
+      "path": "news.items.1.title"
+    },
+    {
+      "src": "333:9688",
+      "prop": "content",
+      "path": "news.items.1.desc"
+    },
+    {
+      "src": "333:9691",
+      "prop": "content",
+      "path": "news.items.1.published_date | date:\"MMM DD, YYYY\""
+    },
+    {
+      "src": "333:9696",
+      "prop": "src",
+      "path": "news.items.2.thumbnail_image"
+    },
+    {
+      "src": "333:9700",
+      "prop": "content",
+      "path": "news.items.2.title"
+    },
+    {
+      "src": "333:9701",
+      "prop": "content",
+      "path": "news.items.2.desc"
+    },
+    {
+      "src": "333:9704",
+      "prop": "content",
+      "path": "news.items.2.published_date | date:\"MMM DD, YYYY\""
+    }
+  ],
+  "collapse": [
+    {
+      "over": "news.items",
+      "as": "article",
+      "slice": [
+        3,
+        6
+      ],
+      "members": [
+        "333:9708",
+        "333:9723",
+        "333:9738"
+      ],
+      "fields": [
+        {
+          "src": "333:9712",
+          "prop": "src",
+          "path": "thumbnail_image"
+        },
+        {
+          "src": "333:9716",
+          "prop": "content",
+          "path": "title"
+        },
+        {
+          "src": "333:9717",
+          "prop": "content",
+          "path": "desc"
+        },
+        {
+          "src": "333:9720",
+          "prop": "content",
+          "path": "published_date | date:\"MMM DD, YYYY\""
+        }
+      ]
+    }
+  ],
+  "set": [
+    {
+      "src": "333:9677",
+      "prop": "ratio",
+      "value": "16/9"
+    },
+    {
+      "src": "333:9683",
+      "prop": "ratio",
+      "value": "1/1"
+    },
+    {
+      "src": "333:9696",
+      "prop": "ratio",
+      "value": "1/1"
+    },
+    {
+      "src": "333:9712",
+      "prop": "ratio",
+      "value": "1/1"
+    }
+  ]
+}

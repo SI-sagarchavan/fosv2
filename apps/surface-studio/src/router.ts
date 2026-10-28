@@ -6,6 +6,7 @@ import { useEffect, useState } from "react";
  * a reload, a pasted link and a second tab with nothing configured.
  *
  *   #/                         the board
+ *   #/sections[/:name]         a section on the surface; news is the first
  *   #/export/:id[/:tab]        one export
  *   #/playground[/:tab]        any IR, dropped in
  *   #/pipeline                 how the trip works

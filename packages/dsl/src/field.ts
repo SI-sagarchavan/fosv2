@@ -11,6 +11,7 @@
 
 import { z } from "zod";
 import type { Category } from "@fanos/tokens";
+import { CONDITION_OPS, predicateSchema } from "./binding.js";
 import {
   ANCHORS,
   PERCENT_RE,
@@ -118,13 +119,9 @@ export const actionSchema = z.discriminatedUnion("kind", [
 
 export type Action = z.infer<typeof actionSchema>;
 
-/**
- * `when` carries a predicate whose shape is a phase-2 concern. The schema is
- * present so trees round-trip and so the field is not invented ad hoc later,
- * but nothing validates its contents yet.
- */
-export const predicateSchema = z.record(z.unknown());
-export type Predicate = z.infer<typeof predicateSchema>;
+/** `when`'s condition language lives with the rest of binding — see `binding.ts`. */
+export { predicateSchema };
+export type { Predicate } from "./binding.js";
 
 export const rawSchema = z.object({ raw: z.unknown(), _unbound: z.literal(true) }).strict();
 export const rawNumberSchema = z.object({ raw: z.number(), _unbound: z.literal(true) }).strict();
@@ -378,9 +375,34 @@ function jsonOfType(type: FieldType, ctx: JsonContext): JsonSchema {
           ]),
         ],
       }));
-    // Phase 2. Present so trees round-trip; deliberately unconstrained.
-    case "predicate":
-      return { type: "object" };
+    // One condition or a flat list of them, never nested: recursive schemas
+    // are what structured output fails on. "Exactly one operator" is beyond
+    // what the schema can say without minProperties, so S12 enforces it.
+    case "predicate": {
+      const scalar = { anyOf: [{ type: "string" }, { type: "number" }, { type: "boolean" }, { type: "null" }] };
+      const condition = defineOnce(ctx, "Condition", () => {
+        const ops: Record<string, JsonSchema> = {
+          eq: scalar,
+          ne: scalar,
+          in: { type: "array", items: scalar, minItems: 1 },
+          exists: { type: "boolean" },
+          gt: { type: "number" },
+          gte: { type: "number" },
+          lt: { type: "number" },
+          lte: { type: "number" },
+        };
+        return {
+          type: "object",
+          description: `A data path and exactly one of ${CONDITION_OPS.join(", ")}.`,
+          properties: { path: { type: "string" }, ...ops },
+          required: ["path"],
+          additionalProperties: false,
+        };
+      });
+      return defineOnce(ctx, "Predicate", () => ({
+        anyOf: [condition, { type: "array", items: condition, minItems: 1 }],
+      }));
+    }
     case "opaque":
       return { type: "object" };
     case "array":

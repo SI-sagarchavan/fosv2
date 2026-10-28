@@ -15,6 +15,10 @@ import type { DataBag } from "../resolve/data.js";
 
 export interface RenderToPngOptions {
   data?: DataBag;
+  /** Tenant site for root-relative URLs in `data` (a CAST payload's `/static-assets/…`). */
+  origin?: string;
+  /** IANA zone for the `date` pipe; UTC when unset. */
+  timeZone?: string;
   /** Pre-emitted theme CSS (from emitCss). Required for correct pixels. */
   themeCss: string;
   width: number;
@@ -155,6 +159,8 @@ async function buildPage(tree: FlatTree, options: RenderToPngOptions): Promise<B
       assets: LOCAL_ASSET_CONTEXT,
       width,
       ...(options.designWidth ? { designWidth: options.designWidth } : {}),
+      ...(options.origin ? { origin: options.origin } : {}),
+      ...(options.timeZone ? { timeZone: options.timeZone } : {}),
     }),
   );
 

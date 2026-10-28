@@ -16,6 +16,7 @@ Studio stores nothing. The board reads Postgres through the control plane's Elec
 | Route | What it is |
 | --- | --- |
 | `#/` | **Board.** Every export, with search, status filter (awaiting / compiled / dismissed), file filter, sort, grid or list, and dismiss / restore. |
+| `#/sections` | **Sections.** The first product surface: one news listing, split into news, video and photos, with the section rendered underneath. |
 | `#/export/:id` | One export. **Overview** (plates, compile trace, run preview), **Render**, **IR**, **DSL**, **Gaps**, **Data & logic**. |
 | `#/playground` | The same views over any IR file you drop in. Needs only Studio — no control plane, no Postgres. |
 | `#/pipeline` | How a frame becomes a page, what each stage loses, and what exists for connecting data and logic. |
@@ -40,6 +41,9 @@ Studio stores nothing. The board reads Postgres through the control plane's Elec
 | `GET /v1/preview/:ref` | a run or `dsl_tree` artifact, rendered as a page |
 | `POST /v1/inspect` | IR → DSL, the per-node join, the gap report. `ir` by value or `irArtifact` by id |
 | `POST /v1/bindings` | refs, suggestions and a render against a sample payload and plan |
+| `GET /v1/sections` | generated sections on disk |
+| `GET /v1/sections/:name/summary` | news, video and photo counts for one section |
+| `GET /v1/sections/:name` | one section rendered as a page |
 | `GET /v1/datasets[/:name]` | named sample datasets served by the control plane |
 | `GET /v1/blobs/:id` | artifact bytes (plates, IR) |
 

@@ -1,0 +1,12 @@
+{
+  "title": "Straight from the Capital",
+  "note": "Composed from scratch — no Figma frame. Bound to a real Delhi Capitals CMS Listing response; headings and CTA labels are hardcoded template copy. surfaces.json holds only the surfaces this design composes from theme tokens; the theme's own set is listed first and these are merged over it.",
+  "tree": "tree.json",
+  "theme": "../../../../tokens/fixtures/southern-brave.json",
+  "surfaces": ["../../../../tokens/surfaces/southern-brave.json", "surfaces.json"],
+  "data": {
+    "news": { "castFlow": "../../cast/dc-news.flow.json" }
+  },
+  "origin": "https://dc.surface.fan-os.net",
+  "background": "#0a0e29"
+}

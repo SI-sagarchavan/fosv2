@@ -15,7 +15,7 @@ export function Text({ node, ctx }: { node: Node; ctx: NodeRenderContext }) {
   const resolved = resolveNode(props, { flexChild: ctx.flexChild, parentDirection: ctx.flexRow ? "row" : "column", alignIsTextAlign: true });
 
   const contentRaw = typeof props.content === "string" ? props.content : "";
-  const { value, unresolved } = interpolate(contentRaw, ctx.data);
+  const { value, unresolved } = interpolate(contentRaw, ctx.data, { timeZone: ctx.timeZone });
   if (unresolved.length) {
     for (const w of formatUnresolvedWarnings(node.id, "content", unresolved)) {
       console.warn(w);

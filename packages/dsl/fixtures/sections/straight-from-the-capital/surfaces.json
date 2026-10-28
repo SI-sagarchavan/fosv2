@@ -1,0 +1,99 @@
+{
+  "assets": {},
+  "surfaces": {
+    "dispatch_band": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.background_sec_surface"
+        },
+        {
+          "type": "gradient",
+          "ref": "gradient.prim_horiz_1",
+          "opacity": 60
+        }
+      ]
+    },
+    "dispatch_rule": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.core_prim_500"
+        }
+      ]
+    },
+    "dispatch_frame": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.background_sec_container"
+        }
+      ],
+      "radius": "radius.lg"
+    },
+    "dispatch_thumb": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.background_sec_container"
+        }
+      ],
+      "radius": "radius.md"
+    },
+    "dispatch_reel": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.background_sec_container"
+        }
+      ],
+      "radius": "radius.lg"
+    },
+    "dispatch_tag_red": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.core_prim_500"
+        }
+      ],
+      "radius": "radius.xs"
+    },
+    "dispatch_tag_light": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.core_sec_50"
+        }
+      ],
+      "radius": "radius.xs"
+    },
+    "dispatch_play": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.core_prim_500"
+        }
+      ],
+      "radius": "radius.rounded",
+      "shadow": "shadow.lg"
+    },
+    "dispatch_chip": {
+      "layers": [
+        {
+          "type": "color",
+          "ref": "color.core_sec_900",
+          "opacity": 70
+        }
+      ],
+      "borders": [
+        {
+          "width": 1,
+          "color": "color.core_neu_00",
+          "opacity": 20,
+          "radius": "radius.rounded"
+        }
+      ],
+      "radius": "radius.rounded"
+    }
+  }
+}

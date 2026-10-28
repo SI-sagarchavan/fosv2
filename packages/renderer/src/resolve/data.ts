@@ -1,50 +1,37 @@
 /**
- * Dot-path data interpolation for Text.content / Image.src / Image.alt.
+ * Data interpolation for bound props — Text.content, Image.src/alt, Button.label
+ * and Button.action.href.
  *
- * Phase 1 is static-fidelity, but the diff needs real values.
- * No expressions, no eval — only `{path.to.value}` substitution.
+ * The grammar (`{path | pipe:arg}`), the pipes and the lookup live in
+ * `@fanos/dsl`'s `binding.ts`, so this renderer, the native bundler and the
+ * validator cannot disagree about what a ref means. This file only adapts it to
+ * the renderer's call sites. No expressions, no eval.
  *
- * Unresolved paths render the literal token and emit a warning — never
- * the string "undefined".
+ * Unresolved refs render as their literal text and emit a warning — never the
+ * string "undefined", and never "null" for a present-but-empty field.
  */
 
-export type DataBag = Record<string, unknown>;
+import { lookup as lookupPath, resolveTemplate, type ResolveOptions } from "@fanos/dsl";
 
-const TOKEN_RE = /\{([A-Za-z_][A-Za-z0-9_.]*)\}/g;
+export type DataBag = Record<string, unknown>;
 
 export interface InterpolateResult {
   value: string;
   unresolved: string[];
 }
 
-/**
- * Replace every `{path}` in `template` with the value at that path in `data`.
- * Newlines and other characters in resolved values are preserved.
- */
-export function interpolate(template: string, data: DataBag | undefined | null): InterpolateResult {
-  if (!template.includes("{")) return { value: template, unresolved: [] };
-  const unresolved: string[] = [];
-  const value = template.replace(TOKEN_RE, (match, path: string) => {
-    const hit = lookup(data, path);
-    if (hit === undefined) {
-      unresolved.push(path);
-      return match; // keep literal `{path}`
-    }
-    return String(hit);
-  });
-  return { value, unresolved };
+/** Replace every `{ref}` in `template` with its value in `data`. */
+export function interpolate(
+  template: string,
+  data: DataBag | undefined | null,
+  options: ResolveOptions = {},
+): InterpolateResult {
+  return resolveTemplate(template, data ?? undefined, options);
 }
 
-/** Dot-path lookup. Arrays are not indexed; only object keys. */
+/** Dot-path lookup; a numeric segment indexes an array. */
 export function lookup(data: unknown, path: string): unknown {
-  if (data === null || data === undefined) return undefined;
-  const parts = path.split(".");
-  let cur: unknown = data;
-  for (const part of parts) {
-    if (cur === null || cur === undefined || typeof cur !== "object") return undefined;
-    cur = (cur as Record<string, unknown>)[part];
-  }
-  return cur;
+  return lookupPath(data, path);
 }
 
 /** Log unresolved paths once per call site. Pure-friendly: returns warnings. */

@@ -27,7 +27,7 @@
  * and the fallback in the stylesheet applies.
  */
 
-import type { Node } from "@fanos/dsl";
+import { absolutize, type Node } from "@fanos/dsl";
 import { cssClassName, cssVar } from "@fanos/tokens";
 import { resolveNode } from "../resolve/style.js";
 import { formatUnresolvedWarnings, interpolate } from "../resolve/data.js";
@@ -87,6 +87,20 @@ function actionOf(value: unknown): Action {
   return { kind: "none" };
 }
 
+/**
+ * A navigate href is data as often as a label is — a card's CTA goes to the
+ * item's `detail_url`. Interpolated the same way, then anchored to the tenant
+ * like an image: a CAST `detail_url` is `/news/…`, which is right on the
+ * tenant's own site and a dead link in Studio or any preview.
+ */
+function boundAction(action: Action, ctx: NodeRenderContext): Action {
+  if (action.kind !== "navigate") return action;
+  const href = action.href.includes("{")
+    ? interpolate(action.href, ctx.data, { timeZone: ctx.timeZone }).value
+    : action.href;
+  return { ...action, href: absolutize(href, ctx.origin) };
+}
+
 /** `color.button_filled_style_2_surface_on_hover`, if the theme publishes it. */
 function paint(variant: string, styleN: number, part: string, state: string): string {
   // `no-padding` is spelled with an underscore in the token names.
@@ -103,11 +117,11 @@ export function Button({ node, ctx }: { node: Node; ctx: NodeRenderContext }) {
   const size = typeof props.size === "string" && SIZES.has(props.size) ? props.size : "md";
   const disabled = props.disabled === true;
   const loading = props.loading === true;
-  const action = actionOf(props.action);
+  const action = boundAction(actionOf(props.action), ctx);
 
   // The label is content, so it interpolates like any other bound string.
   const labelRaw = typeof props.label === "string" ? props.label : "";
-  const { value: label, unresolved } = interpolate(labelRaw, ctx.data);
+  const { value: label, unresolved } = interpolate(labelRaw, ctx.data, { timeZone: ctx.timeZone });
   if (unresolved.length) {
     for (const w of formatUnresolvedWarnings(node.id, "label", unresolved)) console.warn(w);
   }

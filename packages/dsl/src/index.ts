@@ -128,7 +128,33 @@ export { sha1Hex } from "./sha1.js";
 export { proposeCollapse } from "./collapse.js";
 export type { CollapseProposal, VaryingContent } from "./collapse.js";
 export { applyBindingPlan, hasBindings } from "./bind.js";
-export type { BindingPlan, BindResult, Drift, DriftReason, PlanBinding, PlanCollapse } from "./bind.js";
+export type { BindingPlan, BindResult, Drift, DriftReason, PlanBinding, PlanCollapse, PlanSet } from "./bind.js";
+
+// Data binding — the ref grammar, pipes, `when`, CAST payloads, the B rules
+export {
+  absolutize,
+  CDN_RATIOS,
+  CONDITION_OPS,
+  conditionSchema,
+  evaluateCondition,
+  evaluateWhen,
+  fillImageRatio,
+  formatDate,
+  hasRef,
+  lookup,
+  mapRefPaths,
+  parseRefs,
+  PATH_RE,
+  PIPES,
+  RATIO_SLOT,
+  refRegex,
+  resolveTemplate,
+} from "./binding.js";
+export type { Condition, Pipe, PipeSpec, Ref, ResolveOptions, ResolveResult, Scalar } from "./binding.js";
+export { fromCastFlow } from "./cast.js";
+export type { CastData, CastPagination } from "./cast.js";
+export { checkBindings, checkPipes, inferShape } from "./contract.js";
+export type { Shape } from "./contract.js";
 
 // Part 8 — tree operations
 export {

@@ -118,7 +118,12 @@ export const universalFields: Fields = {
   platform: opt(f.arr(f.enum(...PLATFORMS))),
   semantics: opt(f.obj(semanticsFields)),
   testId: opt(f.str()),
-  when: opt(f.predicate(), { doc: "phase 2 — schema present, contents unvalidated" }),
+  /**
+   * Draw this node only when the data says so — the video badge on a video,
+   * the duration chip when there is a duration. Evaluated in the node's own
+   * scope, so inside a Repeater it can test the item. See `binding.ts`.
+   */
+  when: opt(f.predicate(), { doc: '{ path, eq|ne|in|exists|gt|gte|lt|lte } or a list (all must hold)' }),
   _meta: opt(f.obj(metaFields)),
 };
 

@@ -25,7 +25,7 @@ import { FONT_FACE_CSS } from "./fonts.js";
 const USAGE = `fos-render — headless SDUI render + pixel diff
 
 Usage:
-  fos-render png    --tree <f> --data <f> --theme <f> [--surfaces <f>] --out <f> [--width n] [--viewport n] [--design-width n] [--background #rrggbb]
+  fos-render png    --tree <f> --data <f> --theme <f> [--surfaces <f>] --out <f> [--width n] [--viewport n] [--design-width n] [--background #rrggbb] [--origin https://tenant] [--time-zone Area/City]
   fos-render boxes  --tree <f> --data <f> --theme <f> [--surfaces <f>] [--out <f>] [--width n] [--viewport n] [--design-width n]
   fos-render diff   --tree <f> --data <f> --theme <f> --expected <f> --out <dir> [--width n]
   fos-render report --tree <f> --data <f> --theme <f> --expected <f> [--width n]
@@ -101,6 +101,8 @@ export async function run(argv: readonly string[]): Promise<number> {
           viewport,
           ...(designWidth ? { designWidth } : {}),
           ...(background ? { background } : {}),
+          ...(flags.origin ? { origin: flags.origin } : {}),
+          ...(flags["time-zone"] ? { timeZone: flags["time-zone"] } : {}),
         });
         writePng(resolve(required(flags, "out")), buf);
         process.stdout.write(`wrote ${flags.out} (${buf.length} bytes)\n`);

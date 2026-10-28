@@ -135,11 +135,25 @@ export function applyRespProp(
   style[`--${varStem}-base`] = values.base;
   if (values.md !== undefined) style[`--${varStem}-md`] = values.md;
   if (values.lg !== undefined) style[`--${varStem}-lg`] = values.lg;
-  style[cssProp] = `var(--${varStem}-base)`;
+  style[cssProp] = respVar(varStem, values.md !== undefined || values.lg !== undefined);
   for (const bp of rawPaths) {
     const path = bp ? `${propPath}.${bp}` : propPath;
     markRaw(dataAttrs, path);
   }
+}
+
+/**
+ * The inline value for a prop, given whether it varies by breakpoint.
+ *
+ * An inline declaration beats every class rule, so a breakpoint rule cannot
+ * override `gap: var(--gap-base)` — which is how every `Resp` value used to stay
+ * at its base at every width. A responsive prop instead reads `--gap-cur`, which
+ * `styles.css` resolves per breakpoint ON THE ELEMENT from its own `-md`/`-lg`
+ * vars, falling back to base. A single value keeps the plain form, so a tree
+ * without `Resp` objects emits exactly what it did before.
+ */
+export function respVar(varStem: string, responsive: boolean): string {
+  return responsive ? `var(--${varStem}-cur, var(--${varStem}-base))` : `var(--${varStem}-base)`;
 }
 
 export function markRaw(dataAttrs: Record<string, string>, propPath: string): void {

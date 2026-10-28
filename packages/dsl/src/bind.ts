@@ -28,6 +28,7 @@ import type { FlatNode, FlatTree } from "./flat.js";
 import { allFields, nodeSpec } from "./nodes/index.js";
 import { proposeCollapse } from "./collapse.js";
 import { applyCollapse, setProp, TreeOpError } from "./ops.js";
+import { hasRef } from "./binding.js";
 
 export interface PlanBinding {
   /** The Figma node id, NOT the DSL node id. */
@@ -49,9 +50,26 @@ export interface PlanCollapse {
   fields?: PlanBinding[];
 }
 
+/**
+ * A literal prop the binding needs that is not a `{path}`.
+ *
+ * Binding real data is more than pointing text at fields. A CAST thumbnail is
+ * `/static-assets/media/{{RATIO}}-<file>`, and the crop the CDN cuts comes from
+ * the Image's `ratio` — which a compiled tree never sets on a fill image, so a
+ * 1:1 card would be served the 16:9 default. And a video badge is only a
+ * binding once it has a `when`. Applied after `bind` and `collapse`, so it can
+ * reach a Repeater's template and test the item by its alias.
+ */
+export interface PlanSet {
+  src: string;
+  prop: string;
+  value: unknown;
+}
+
 export interface BindingPlan {
   bind?: PlanBinding[];
   collapse?: PlanCollapse[];
+  set?: PlanSet[];
   /** Free text. Ignored here; it travels with the plan for whoever reads it. */
   note?: string;
 }
@@ -193,6 +211,27 @@ export function applyBindingPlan(tree: FlatTree, plan: BindingPlan): BindResult 
     }
   }
 
+  for (const entry of plan.set ?? []) {
+    const node = find(next, entry.src);
+    if (!node) {
+      drift.push({
+        reason: "missing",
+        src: entry.src,
+        message: `src ${entry.src} is not in this tree — "${entry.prop}" not set`,
+      });
+      continue;
+    }
+    if (!accepts(node.type, entry.prop)) {
+      drift.push({
+        reason: "wrong-type",
+        src: entry.src,
+        message: `src ${entry.src} compiled to a ${node.type}, which has no "${entry.prop}" — not set`,
+      });
+      continue;
+    }
+    next = setProp(next, node.id, entry.prop, entry.value);
+  }
+
   return { tree: next, bound, collapsed, drift };
 }
 
@@ -211,7 +250,5 @@ function accepts(type: string, prop: string): boolean {
  * Cheap enough to call before deciding whether a plan needs applying.
  */
 export function hasBindings(tree: FlatTree): boolean {
-  return tree.nodes.some((n) =>
-    Object.values(n.props).some((v) => typeof v === "string" && /\{[A-Za-z_][A-Za-z0-9_.]*\}/.test(v)),
-  );
+  return tree.nodes.some((n) => Object.values(n.props).some(hasRef));
 }

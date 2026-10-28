@@ -4,8 +4,10 @@ import { Board } from "./pages/Board.js";
 import { ExportPage } from "./pages/ExportPage.js";
 import { Pipeline } from "./pages/Pipeline.js";
 import { Playground } from "./pages/Playground.js";
+import { Sections } from "./pages/Sections.js";
 
 const NAV = [
+  { to: "/sections", label: "Sections", match: (p: string[]) => p[0] === "sections" },
   { to: "/", label: "Board", match: (p: string[]) => p.length === 0 || p[0] === "export" },
   { to: "/playground", label: "Playground", match: (p: string[]) => p[0] === "playground" },
   { to: "/pipeline", label: "Pipeline", match: (p: string[]) => p[0] === "pipeline" },
@@ -41,6 +43,8 @@ export function App() {
       <main>
         {section === "export" && id ? (
           <ExportPage id={id} tab={tab} node={node} />
+        ) : section === "sections" ? (
+          <Sections name={id} />
         ) : section === "playground" ? (
           <Playground tab={id} node={node} />
         ) : section === "pipeline" ? (
